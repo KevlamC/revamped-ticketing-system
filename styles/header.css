@@ -1,0 +1,114 @@
+/* ===== HEADER BAR ===== */
+.site-header {
+  width: 100%;
+  background-color: #0a0e1a;
+  border-bottom: 1px solid #1f2937; /* gray-800 */
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.5rem; /* 24px */
+  padding-bottom: 1.5rem;
+}
+
+/* Logo */
+.logo-text {
+  font-size: 1.875rem; /* ~30px */
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #d1d5db;
+}
+
+/* Nav links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 3rem; /* 48px */
+}
+
+.nav-link {
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.95rem;
+  color: #9ca3af; /* gray-400 */
+  transition: color 0.15s linear;
+}
+
+.nav-link.is-primary,
+.nav-link:hover {
+  color: #d1d5db; /* gray-300 / white hover */
+}
+
+/* Right side action bar */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* 16px */
+}
+
+/* Search */
+.search-wrapper {
+  position: relative;
+}
+
+.search-input {
+  width: 16rem; /* 256px */
+  padding: 0.5rem 0.75rem;
+  padding-left: 2.5rem; /* space for icon */
+  background-color: #1a1f2e;
+  border: 1px solid #374151; /* gray-700 */
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #d1d5db;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #6b7280; /* gray-500 */
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #6b7280; /* gray-500 */
+  opacity: 0.9;
+}
+
+/* Sign In button (text only) */
+.signin-btn {
+  background: none;
+  border: none;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s linear;
+}
+
+.signin-btn:hover {
+  color: #ffffff;
+}
+
+/* Tickets CTA */
+.tickets-btn {
+  background: linear-gradient(to right, #ef4444, #db2777);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: filter 0.15s linear;
+}
+
+.tickets-btn:hover {
+  filter: brightness(1.05);
+}

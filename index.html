@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theatrum – Now Playing</title>
+
+    <!-- Global / layout / typography / shared styles -->
+    <link rel="stylesheet" href="styles/base.css" />
+    <!-- Header / nav / search bar -->
+    <link rel="stylesheet" href="styles/header.css" />
+    <!-- Now Playing section / filters / cards -->
+    <link rel="stylesheet" href="styles/movies.css" />
+  </head>
+
+  <body>
+    <div class="page-shell">
+      <!-- ===== HEADER ===== -->
+      <header class="site-header">
+        <div class="content-wrapper site-header-inner">
+          <!-- Logo -->
+          <div class="logo">
+            <div class="logo-text">THEATRUM</div>
+          </div>
+
+          <!-- Nav -->
+          <nav class="nav-links">
+            <a class="nav-link is-primary" href="#">Now Playing</a>
+            <a class="nav-link" href="#">Coming Soon</a>
+            <a class="nav-link" href="#">Offers</a>
+            <a class="nav-link" href="#">Locations</a>
+          </nav>
+
+          <!-- Right side actions -->
+          <div class="header-actions">
+            <!-- Search -->
+            <div class="search-wrapper">
+              <input
+                class="search-input"
+                type="text"
+                placeholder="Search movies..."
+              />
+              <!-- Search icon -->
+              <svg
+                class="search-icon icon"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="6"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+
+            <!-- Sign in -->
+            <button class="signin-btn">Sign In</button>
+
+            <!-- Buy tickets -->
+            <button class="tickets-btn">Buy Tickets</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <main class="content-wrapper section-block">
+        <!-- Section header -->
+        <section class="section-header">
+          <h2 class="section-title">Now Playing</h2>
+          <p class="section-subtitle">
+            TODAY • PREMIUM FORMATS • DOLBY ATMOS
+          </p>
+        </section>
+
+        <!-- Filters + Sort -->
+        <section class="filter-row">
+          <!-- Filter buttons -->
+          <div class="filter-buttons">
+            <button class="filter-btn--active">All Movies</button>
+            <button class="filter-btn">Action</button>
+            <button class="filter-btn">Drama</button>
+            <button class="filter-btn">Sci-Fi</button>
+          </div>
+
+          <!-- Sort dropdown (static for now) -->
+          <button class="sort-btn">
+            <span>Sort by Title</span>
+            <svg
+              class="chevron-down-icon icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+        </section>
+
+        <!-- Movie grid -->
+        <section class="movie-grid">
+          <!-- Card 1 -->
+          <div class="movie-card">
+            <div class="movie-poster-wrapper">
+              <img
+                src="https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+                alt="Dune Part Two"
+              />
+              <div class="movie-overlay"></div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="movie-card">
+            <div class="movie-poster-wrapper">
+              <img
+                src="https://image.tmdb.org/t/p/w500/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg"
+                alt="F1 The Movie"
+              />
+              <div class="movie-overlay"></div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="movie-card">
+            <div class="movie-poster-wrapper">
+              <img
+                src="https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
+                alt="Oppenheimer"
+              />
+              <div class="movie-overlay"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

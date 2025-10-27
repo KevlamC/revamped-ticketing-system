@@ -1,0 +1,134 @@
+/* ===== Filter + Sort row ===== */
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  row-gap: 1rem;
+}
+
+.filter-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Active filter (gradient pill) */
+.filter-btn--active {
+  background: linear-gradient(to right, #ef4444, #db2777);
+  border-radius: 9999px;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* Inactive filter (dark pill) */
+.filter-btn {
+  background-color: #1a1f2e;
+  border-radius: 9999px;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9ca3af; /* gray-400 */
+  cursor: pointer;
+  transition: color 0.15s linear;
+}
+
+.filter-btn:hover {
+  color: #d1d5db;
+}
+
+/* Sort pill */
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #1a1f2e;
+  border-radius: 9999px;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.15s linear;
+}
+
+.sort-btn:hover {
+  color: #d1d5db;
+}
+
+.chevron-down-icon {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+}
+
+/* ===== Movie grid ===== */
+.movie-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem; /* 24px */
+}
+
+@media (min-width: 768px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.movie-card {
+  background-color: #1a1f2e;
+  border-radius: 1rem; /* ~rounded-2xl */
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transform: translateZ(0);
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-poster-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}
+
+.movie-poster-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.movie-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0)
+  );
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
+.movie-card:hover .movie-overlay {
+  opacity: 1;
+}
