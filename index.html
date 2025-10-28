@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Theatrum – Now Playing</title>
 
-    <!-- CSS order matters -->
-    <link rel="stylesheet" href="styles/base.css" />
-    <link rel="stylesheet" href="styles/header.css" />
-    <link rel="stylesheet" href="styles/hero.css" />
-    <link rel="stylesheet" href="styles/movies.css" />
+    <!-- Consolidated CSS -->
+    <link rel="stylesheet" href="index_styles.css" />
   </head>
 
   <body>
@@ -141,6 +138,7 @@
         <section class="movie-grid">
           <div class="movie-card">
             <div class="movie-poster-wrapper">
+              <!-- Assets paths preserved for your existing repo structure -->
               <img src="assets/dune2-poster.jpg" alt="Dune: Part Two Poster" />
               <div class="movie-overlay"></div>
             </div>
@@ -209,7 +207,7 @@
       </main>
     </div>
 
-    <!-- Slider JS -->
-    <script src="scripts/hero.js"></script>
+    <!-- Slider JS (now linked to external file) -->
+    <script src="index.js"></script>
   </body>
 </html>

@@ -1,0 +1,505 @@
+/* This file combines the contents of:
+  - base.css
+  - header.css
+  - hero.css
+  - movies.css 
+*/
+
+/* ===== base.css content ===== */
+/* ===== Global reset-ish ===== */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(
+    to bottom,
+    #0a0e1a,
+    #0f1629 40%,
+    #1a2847 80%
+  );
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter",
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #d1d5db; /* gray-300 */
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ===== Shared layout containers ===== */
+.page-shell {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  max-width: 1600px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem; /* 32px */
+  padding-right: 2rem;
+}
+
+/* Sections / spacing */
+.section-block {
+  padding-top: 3rem; /* 48px */
+  padding-bottom: 3rem;
+}
+
+.section-header {
+  margin-bottom: 2rem; /* 32px */
+}
+
+.section-title {
+  font-size: clamp(2rem, 1vw + 1.5rem, 3rem); /* ~text-5xl on desktop */
+  font-weight: 700;
+  color: #d1d5db; /* gray-300 */
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  font-size: 0.75rem;
+  color: #6b7280; /* gray-500 */
+  letter-spacing: 0.2em;
+  font-weight: 500;
+}
+
+/* Icons */
+.icon {
+  display: block;
+}
+
+/* ===== header.css content ===== */
+/* ===== HEADER BAR ===== */
+.site-header {
+  width: 100%;
+  background-color: #0a0e1a;
+  border-bottom: 1px solid #1f2937; /* gray-800 */
+  color: #d1d5db;
+  font-size: 0.95rem;
+}
+
+/*
+  We’ll use 3 columns:
+  [left fixed] [center flex] [right fixed]
+  So the middle column can truly center THEATRUM.
+*/
+.site-header-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  min-height: 64px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  column-gap: 1rem;
+  color: #d1d5db;
+}
+
+/* LEFT: burger + "Menu" */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1rem;
+  color: #d1d5db;
+  white-space: nowrap;
+}
+
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.burger-line {
+  width: 24px;
+  height: 2px;
+  background-color: #d1d5db;
+  border-radius: 1px;
+}
+
+.burger-text {
+  font-weight: 500;
+  color: #d1d5db;
+}
+
+/* CENTER: THEATRUM */
+.logo-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* This keeps it unclickable so right side doesn't jump if someone drags */
+  pointer-events: none;
+  position: relative;
+}
+
+/* Title text */
+.logo-text {
+  font-size: 3rem;            /* keep your big headline size */
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #d1d5db;
+  text-transform: uppercase;
+  line-height: 1.2;
+
+  /* 👇 tweak this value until it *looks* centered on desktop */
+  transform: translateX(100px);
+}
+
+/* RIGHT: Tickets / Theatres / Search / Account */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1rem;
+  white-space: nowrap;
+}
+
+.nav-action {
+  text-decoration: none;
+  color: #d1d5db;
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: color 0.15s linear;
+}
+
+.nav-action:hover {
+  color: #ffffff;
+}
+
+/* ===== hero.css content ===== */
+/* ===== FEATURED / HERO SLIDER ===== */
+.hero-slider {
+  background-color: #0a0e1a;
+  border-bottom: 1px solid #1f2937;
+  position: relative;
+  color: #fff;
+}
+
+.hero-inner {
+  position: relative;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.hero-banner {
+  position: relative;
+  background-color: #000;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  width: 100%;
+  max-height: 400px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.hero-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: opacity 0.3s linear;
+}
+
+/* fade at the bottom for controls & text */
+.hero-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.6) 60%,
+    rgba(0,0,0,0.8) 100%
+  );
+  pointer-events: none;
+}
+
+/* overlay text */
+.hero-overlay-content {
+  position: absolute;
+  left: 2rem;
+  bottom: 4rem;
+  color: #fff;
+  max-width: 90%;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.hero-title {
+  font-size: clamp(1.5rem, 1vw + 1rem, 2.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ff3b30;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+}
+
+.hero-cta {
+  background: linear-gradient(to right, #ef4444, #db2777);
+  border: none;
+  border-radius: 0.15rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.hero-cta:hover {
+  filter: brightness(1.05);
+}
+
+/* slider controls */
+.hero-controls {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1rem;
+  color: #fff;
+}
+
+.hero-arrow {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.hero-arrow-icon {
+  width: 28px;
+  height: 28px;
+  stroke: #ffffff;
+}
+
+.hero-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 60px; /* keeps arrows apart visually even before JS draws dots */
+}
+
+.hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  background-color: transparent;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.hero-dot-active {
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    max-height: 320px;
+  }
+  .hero-image {
+    height: 320px;
+  }
+  .hero-overlay-content {
+    left: 1rem;
+    bottom: 3rem;
+  }
+}
+
+/* ===== movies.css content ===== */
+/* ===== Filter + Sort row ===== */
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  row-gap: 1rem;
+}
+
+.filter-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Active filter (gradient pill) */
+.filter-btn--active {
+  background: linear-gradient(to right, #ef4444, #db2777);
+  border-radius: 9999px;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* Inactive filter (dark pill) */
+.filter-btn {
+  background-color: #1a1f2e;
+  border-radius: 9999px;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9ca3af; /* gray-400 */
+  cursor: pointer;
+  transition: color 0.15s linear;
+}
+
+.filter-btn:hover {
+  color: #d1d5db;
+}
+
+/* Sort pill */
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #1a1f2e;
+  border-radius: 9999px;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.15s linear;
+}
+
+.sort-btn:hover {
+  color: #d1d5db;
+}
+
+.chevron-down-icon {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+}
+
+/* ===== Movie grid ===== */
+.movie-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.movie-card {
+  background-color: #1a1f2e;
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transform: translateZ(0);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-poster-wrapper {
+  position: relative;
+  width: 100%;
+  height: 360px; /* tweak this number to control how tall posters look on the page */
+  background-color: #000;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.movie-poster-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;       /* full poster visible */
+  object-position: center;
+  display: block;
+  background-color: #000;    /* fills the letterbox space */
+}
+
+.movie-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0)
+  );
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
+.movie-card:hover .movie-overlay {
+  opacity: 1;
+}
+
+.movie-meta {
+  padding: 0.75rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.movie-title {
+  color: #f9fafb;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.movie-format {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}

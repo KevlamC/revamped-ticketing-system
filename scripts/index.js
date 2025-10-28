@@ -1,8 +1,11 @@
-// scripts/hero.js
+/**
+ * Hero Carousel Slider Logic
+ * Handles image and content switching for the featured banner.
+ */
 
 document.addEventListener("DOMContentLoaded", () => {
   // slides for the hero carousel
-  // feel free to swap these images/texts
+  // The asset paths here must match your repository structure
   const slides = [
     {
       image:
@@ -46,6 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroNextEl = document.getElementById("hero-next");
   const heroDotsEl = document.getElementById("hero-dots");
 
+  /**
+   * Renders the navigation dots based on the current slide index.
+   */
   function renderDots() {
     heroDotsEl.innerHTML = "";
     slides.forEach((_, idx) => {
@@ -59,12 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /**
+   * Updates the content of the hero banner to display the current slide.
+   */
   function updateSlide() {
     const slide = slides[currentSlide];
 
-    // simple fade: set opacity 0, swap, fade in
+    // Simple fade out effect
     heroImageEl.style.opacity = 0;
 
+    // Wait for the fade out to finish, then swap content and fade back in
     setTimeout(() => {
       heroImageEl.src = slide.image;
       heroImageEl.alt = slide.title + " Banner";
@@ -72,23 +82,27 @@ document.addEventListener("DOMContentLoaded", () => {
       heroSubtitleEl.textContent = slide.subtitle;
       heroCtaEl.textContent = slide.cta;
 
+      // Simple fade in effect
       heroImageEl.style.opacity = 1;
     }, 150);
 
     renderDots();
   }
 
-  // hook up arrows
+  // Hook up 'Previous' arrow click handler
   heroPrevEl.addEventListener("click", () => {
+    // Navigate to the previous slide, wrapping around if needed
     currentSlide = (currentSlide - 1 + slides.length) % slides.length;
     updateSlide();
   });
 
+  // Hook up 'Next' arrow click handler
   heroNextEl.addEventListener("click", () => {
+    // Navigate to the next slide, wrapping around if needed
     currentSlide = (currentSlide + 1) % slides.length;
     updateSlide();
   });
 
-  // first paint
+  // Initialize the slider on page load
   updateSlide();
 });
