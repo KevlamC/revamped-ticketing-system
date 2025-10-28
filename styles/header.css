@@ -3,112 +3,99 @@
   width: 100%;
   background-color: #0a0e1a;
   border-bottom: 1px solid #1f2937; /* gray-800 */
+  color: #d1d5db;
+  font-size: 0.95rem;
 }
 
+/*
+  We’ll use 3 columns:
+  [left fixed] [center flex] [right fixed]
+  So the middle column can truly center THEATRUM.
+*/
 .site-header-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 1.5rem; /* 24px */
-  padding-bottom: 1.5rem;
-}
-
-/* Logo */
-.logo-text {
-  font-size: 1.875rem; /* ~30px */
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  min-height: 64px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  column-gap: 1rem;
   color: #d1d5db;
 }
 
-/* Nav links */
-.nav-links {
+/* LEFT: burger + "Menu" */
+.header-left {
   display: flex;
   align-items: center;
-  gap: 3rem; /* 48px */
+  gap: 0.75rem;
+  padding-left: 1rem;
+  color: #d1d5db;
+  white-space: nowrap;
 }
 
-.nav-link {
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.burger-line {
+  width: 24px;
+  height: 2px;
+  background-color: #d1d5db;
+  border-radius: 1px;
+}
+
+.burger-text {
   font-weight: 500;
-  text-decoration: none;
-  font-size: 0.95rem;
-  color: #9ca3af; /* gray-400 */
-  transition: color 0.15s linear;
+  color: #d1d5db;
 }
 
-.nav-link.is-primary,
-.nav-link:hover {
-  color: #d1d5db; /* gray-300 / white hover */
-}
-
-/* Right side action bar */
-.header-actions {
+/* CENTER: THEATRUM */
+.logo-center {
   display: flex;
   align-items: center;
-  gap: 1rem; /* 16px */
-}
+  justify-content: center;
+  text-align: center;
 
-/* Search */
-.search-wrapper {
+  /* This keeps it unclickable so right side doesn't jump if someone drags */
+  pointer-events: none;
   position: relative;
 }
 
-.search-input {
-  width: 16rem; /* 256px */
-  padding: 0.5rem 0.75rem;
-  padding-left: 2.5rem; /* space for icon */
-  background-color: #1a1f2e;
-  border: 1px solid #374151; /* gray-700 */
-  border-radius: 9999px;
-  font-size: 0.9rem;
-  font-weight: 400;
+/* Title text */
+.logo-text {
+  font-size: 3rem;            /* keep your big headline size */
+  font-weight: 700;
+  letter-spacing: 0.08em;
   color: #d1d5db;
-  outline: none;
+  text-transform: uppercase;
+  line-height: 1.2;
+
+  /* 👇 tweak this value until it *looks* centered on desktop */
+  transform: translateX(100px);
 }
 
-.search-input::placeholder {
-  color: #6b7280; /* gray-500 */
+/* RIGHT: Tickets / Theatres / Search / Account */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1rem;
+  white-space: nowrap;
 }
 
-.search-icon {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: #6b7280; /* gray-500 */
-  opacity: 0.9;
-}
-
-/* Sign In button (text only) */
-.signin-btn {
-  background: none;
-  border: none;
+.nav-action {
+  text-decoration: none;
   color: #d1d5db;
-  font-size: 0.9rem;
   font-weight: 500;
-  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
   transition: color 0.15s linear;
 }
 
-.signin-btn:hover {
+.nav-action:hover {
   color: #ffffff;
-}
-
-/* Tickets CTA */
-.tickets-btn {
-  background: linear-gradient(to right, #ef4444, #db2777);
-  border: none;
-  border-radius: 9999px;
-  padding: 0.5rem 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
-  transition: filter 0.15s linear;
-}
-
-.tickets-btn:hover {
-  filter: brightness(1.05);
 }

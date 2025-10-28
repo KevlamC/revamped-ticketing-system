@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Theatrum – Now Playing</title>
 
-    <!-- Global / layout / typography / shared styles -->
+    <!-- CSS order matters -->
     <link rel="stylesheet" href="styles/base.css" />
-    <!-- Header / nav / search bar -->
     <link rel="stylesheet" href="styles/header.css" />
-    <!-- Now Playing section / filters / cards -->
+    <link rel="stylesheet" href="styles/hero.css" />
     <link rel="stylesheet" href="styles/movies.css" />
   </head>
 
@@ -18,50 +17,90 @@
       <!-- ===== HEADER ===== -->
       <header class="site-header">
         <div class="content-wrapper site-header-inner">
-          <!-- Logo -->
-          <div class="logo">
+          <!-- Left side: burger + Menu text -->
+          <div class="header-left">
+            <div class="burger">
+              <div class="burger-line"></div>
+              <div class="burger-line"></div>
+              <div class="burger-line"></div>
+            </div>
+            <span class="burger-text">Menu</span>
+          </div>
+
+          <!-- Center logo -->
+          <div class="logo-center">
             <div class="logo-text">THEATRUM</div>
           </div>
 
-          <!-- Nav -->
-          <nav class="nav-links">
-            <a class="nav-link is-primary" href="#">Now Playing</a>
-            <a class="nav-link" href="#">Coming Soon</a>
-            <a class="nav-link" href="#">Offers</a>
-            <a class="nav-link" href="#">Locations</a>
+          <!-- Right side nav actions (no FR pill) -->
+          <nav class="header-right">
+            <a class="nav-action" href="#"><span class="nav-action-label">Tickets</span></a>
+            <a class="nav-action" href="#"><span class="nav-action-label">Theatres</span></a>
+            <a class="nav-action" href="#"><span class="nav-action-label">Search</span></a>
+            <a class="nav-action" href="#"><span class="nav-action-label">Account</span></a>
           </nav>
-
-          <!-- Right side actions -->
-          <div class="header-actions">
-            <!-- Search -->
-            <div class="search-wrapper">
-              <input
-                class="search-input"
-                type="text"
-                placeholder="Search movies..."
-              />
-              <!-- Search icon -->
-              <svg
-                class="search-icon icon"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <circle cx="11" cy="11" r="6"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </div>
-
-            <!-- Sign in -->
-            <button class="signin-btn">Sign In</button>
-
-            <!-- Buy tickets -->
-            <button class="tickets-btn">Buy Tickets</button>
-          </div>
         </div>
       </header>
+
+<!-- ===== HERO / FEATURED SLIDER ===== -->
+<section class="hero-slider">
+  <div class="hero-inner content-wrapper">
+    <div class="hero-banner">
+      <!-- Banner image -->
+      <img
+        class="hero-image"
+        id="hero-image"
+        src="https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+        alt="Featured Movie Banner"
+      />
+
+      <!-- gradient fade at bottom -->
+      <div class="hero-fade"></div>
+
+      <!-- text overlay -->
+      <div class="hero-overlay-content">
+        <h2 class="hero-title" id="hero-title">GOOD FORTUNE</h2>
+        <p class="hero-subtitle" id="hero-subtitle">
+          THEATRES ONLY NOW PLAYING
+        </p>
+        <button class="hero-cta" id="hero-cta">GET TICKETS</button>
+      </div>
+
+      <!-- controls -->
+      <div class="hero-controls">
+        <button class="hero-arrow hero-arrow-left" id="hero-prev">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            class="hero-arrow-icon"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+
+        <div class="hero-dots" id="hero-dots">
+          <!-- JS will inject dots here -->
+        </div>
+
+        <button class="hero-arrow hero-arrow-right" id="hero-next">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            class="hero-arrow-icon"
+          >
+            <polyline points="9 6 15 12 9 18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
 
       <!-- ===== MAIN CONTENT ===== -->
       <main class="content-wrapper section-block">
@@ -75,15 +114,14 @@
 
         <!-- Filters + Sort -->
         <section class="filter-row">
-          <!-- Filter buttons -->
           <div class="filter-buttons">
             <button class="filter-btn--active">All Movies</button>
             <button class="filter-btn">Action</button>
             <button class="filter-btn">Drama</button>
             <button class="filter-btn">Sci-Fi</button>
+            <button class="filter-btn">Comedy</button>
           </div>
 
-          <!-- Sort dropdown (static for now) -->
           <button class="sort-btn">
             <span>Sort by Title</span>
             <svg
@@ -101,40 +139,77 @@
 
         <!-- Movie grid -->
         <section class="movie-grid">
-          <!-- Card 1 -->
           <div class="movie-card">
             <div class="movie-poster-wrapper">
-              <img
-                src="https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
-                alt="Dune Part Two"
-              />
+              <img src="assets/dune2-poster.jpg" alt="Dune: Part Two Poster" />
               <div class="movie-overlay"></div>
+            </div>
+            <div class="movie-meta">
+              <div class="movie-title">Dune: Part Two</div>
+              <div class="movie-format">IMAX • PG-13</div>
             </div>
           </div>
 
-          <!-- Card 2 -->
           <div class="movie-card">
             <div class="movie-poster-wrapper">
-              <img
-                src="https://image.tmdb.org/t/p/w500/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg"
-                alt="F1 The Movie"
-              />
+              <img src="assets/sonic2-poster.jpg" alt="Sonic The Hedgehog 2 Poster" />
               <div class="movie-overlay"></div>
+            </div>
+            <div class="movie-meta">
+              <div class="movie-title">Sonic The Hedgehog 2</div>
+              <div class="movie-format">UltraAVX • PG</div>
             </div>
           </div>
 
-          <!-- Card 3 -->
           <div class="movie-card">
             <div class="movie-poster-wrapper">
-              <img
-                src="https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
-                alt="Oppenheimer"
-              />
+              <img src="assets/opp-poster.jpg" alt="Oppenheimer Poster" />
               <div class="movie-overlay"></div>
             </div>
+            <div class="movie-meta">
+              <div class="movie-title">Oppenheimer</div>
+              <div class="movie-format">70mm • R</div>
+            </div>
           </div>
+
+          <div class="movie-card">
+            <div class="movie-poster-wrapper">
+              <img src="assets/insideout2-poster.jpg" alt="Inside Out 2 Poster" />
+              <div class="movie-overlay"></div>
+            </div>
+            <div class="movie-meta">
+              <div class="movie-title">Inside Out 2</div>
+              <div class="movie-format">Dolby Atmos • G</div>
+            </div>
+          </div>
+
+          <div class="movie-card">
+            <div class="movie-poster-wrapper">
+              <img src="assets/blackphone2-poster.jpg" alt="Black Phone 2 Poster" />
+              <div class="movie-overlay"></div>
+            </div>
+            <div class="movie-meta">
+              <div class="movie-title">Black Phone 2</div>
+              <div class="movie-format">IMAX • R</div>
+            </div>
+          </div>
+
+          <div class="movie-card">
+            <div class="movie-poster-wrapper">
+              <img src="assets/deadpool&wolverine-poster.jpg" alt="Deadpool & Wolverine Poster" />
+              <div class="movie-overlay"></div>
+            </div>
+            <div class="movie-meta">
+              <div class="movie-title">Deadpool &amp; Wolverine</div>
+              <div class="movie-format">IMAX • 18A</div>
+            </div>
+          </div>
+
         </section>
       </main>
     </div>
+
+    <!-- Slider JS -->
+    <script src="scripts/hero.js"></script>
   </body>
 </html>

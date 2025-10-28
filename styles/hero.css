@@ -1,0 +1,155 @@
+/* ===== FEATURED / HERO SLIDER ===== */
+.hero-slider {
+  background-color: #0a0e1a;
+  border-bottom: 1px solid #1f2937;
+  position: relative;
+  color: #fff;
+}
+
+.hero-inner {
+  position: relative;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.hero-banner {
+  position: relative;
+  background-color: #000;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  width: 100%;
+  max-height: 400px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.hero-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: opacity 0.3s linear;
+}
+
+/* fade at the bottom for controls & text */
+.hero-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.6) 60%,
+    rgba(0,0,0,0.8) 100%
+  );
+  pointer-events: none;
+}
+
+/* overlay text */
+.hero-overlay-content {
+  position: absolute;
+  left: 2rem;
+  bottom: 4rem;
+  color: #fff;
+  max-width: 90%;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.hero-title {
+  font-size: clamp(1.5rem, 1vw + 1rem, 2.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ff3b30;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+}
+
+.hero-cta {
+  background: linear-gradient(to right, #ef4444, #db2777);
+  border: none;
+  border-radius: 0.15rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.hero-cta:hover {
+  filter: brightness(1.05);
+}
+
+/* slider controls */
+.hero-controls {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1rem;
+  color: #fff;
+}
+
+.hero-arrow {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.hero-arrow-icon {
+  width: 28px;
+  height: 28px;
+  stroke: #ffffff;
+}
+
+.hero-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 60px; /* keeps arrows apart visually even before JS draws dots */
+}
+
+.hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  background-color: transparent;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.hero-dot-active {
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    max-height: 320px;
+  }
+  .hero-image {
+    height: 320px;
+  }
+  .hero-overlay-content {
+    left: 1rem;
+    bottom: 3rem;
+  }
+}
