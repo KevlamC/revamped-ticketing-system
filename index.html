@@ -10,10 +10,17 @@
     <link rel="stylesheet" href="styles/header.css" />
     <link rel="stylesheet" href="styles/hero.css" />
     <link rel="stylesheet" href="styles/movies.css" />
+    <link rel="stylesheet" href="styles/payment.css"/>
+    <link rel="stylesheet" href="styles/tap-to-pay.css" />
   </head>
 
   <body>
-    <div class="page-shell">
+
+    <!-- ========================================================= -->
+    <!-- PAGE 1: HOMEPAGE (Visible by default)                     -->
+    <!-- Toggle this whole block with style="display:none"         -->
+    <!-- ========================================================= -->
+    <div class="page-shell homepage-page" style="display:none">
       <!-- ===== HEADER ===== -->
       <header class="site-header">
         <div class="content-wrapper site-header-inner">
@@ -42,65 +49,65 @@
         </div>
       </header>
 
-<!-- ===== HERO / FEATURED SLIDER ===== -->
-<section class="hero-slider">
-  <div class="hero-inner content-wrapper">
-    <div class="hero-banner">
-      <!-- Banner image -->
-      <img
-        class="hero-image"
-        id="hero-image"
-        src="https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
-        alt="Featured Movie Banner"
-      />
+      <!-- ===== HERO / FEATURED SLIDER ===== -->
+      <section class="hero-slider">
+        <div class="hero-inner content-wrapper">
+          <div class="hero-banner">
+            <!-- Banner image -->
+            <img
+              class="hero-image"
+              id="hero-image"
+              src="https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+              alt="Featured Movie Banner"
+            />
 
-      <!-- gradient fade at bottom -->
-      <div class="hero-fade"></div>
+            <!-- gradient fade at bottom -->
+            <div class="hero-fade"></div>
 
-      <!-- text overlay -->
-      <div class="hero-overlay-content">
-        <h2 class="hero-title" id="hero-title">GOOD FORTUNE</h2>
-        <p class="hero-subtitle" id="hero-subtitle">
-          THEATRES ONLY NOW PLAYING
-        </p>
-        <button class="hero-cta" id="hero-cta">GET TICKETS</button>
-      </div>
+            <!-- text overlay -->
+            <div class="hero-overlay-content">
+              <h2 class="hero-title" id="hero-title">GOOD FORTUNE</h2>
+              <p class="hero-subtitle" id="hero-subtitle">
+                THEATRES ONLY NOW PLAYING
+              </p>
+              <button class="hero-cta" id="hero-cta">GET TICKETS</button>
+            </div>
 
-      <!-- controls -->
-      <div class="hero-controls">
-        <button class="hero-arrow hero-arrow-left" id="hero-prev">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-            class="hero-arrow-icon"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
+            <!-- controls -->
+            <div class="hero-controls">
+              <button class="hero-arrow hero-arrow-left" id="hero-prev">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  class="hero-arrow-icon"
+                >
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
 
-        <div class="hero-dots" id="hero-dots">
-          <!-- JS will inject dots here -->
+              <div class="hero-dots" id="hero-dots">
+                <!-- JS will inject dots here -->
+              </div>
+
+              <button class="hero-arrow hero-arrow-right" id="hero-next">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  class="hero-arrow-icon"
+                >
+                  <polyline points="9 6 15 12 9 18" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-
-        <button class="hero-arrow hero-arrow-right" id="hero-next">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-            class="hero-arrow-icon"
-          >
-            <polyline points="9 6 15 12 9 18" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       <!-- ===== MAIN CONTENT ===== -->
       <main class="content-wrapper section-block">
@@ -204,12 +211,160 @@
               <div class="movie-format">IMAX • 18A</div>
             </div>
           </div>
-
         </section>
       </main>
     </div>
+    <!-- END HOMEPAGE -->
 
-    <!-- Slider JS -->
+
+    <!-- ========================================================= -->
+    <!-- PAGE 2: PAYMENT METHOD SELECTION (Hidden by default)      -->
+    <!-- Remove the display:none when you want THIS screenshot     -->
+    <!-- ========================================================= -->
+    <div class="page-shell payment-page" style="display:none">
+      <!-- Reuse HEADER so it looks like the same site -->
+      <header class="site-header">
+        <div class="content-wrapper site-header-inner">
+          <div class="header-left">
+            <div class="burger">
+              <div class="burger-line"></div>
+              <div class="burger-line"></div>
+              <div class="burger-line"></div>
+            </div>
+            <span class="burger-text">Menu</span>
+          </div>
+
+          <div class="logo-center">
+            <div class="logo-text">THEATRUM</div>
+          </div>
+
+          <nav class="header-right">
+            <a class="nav-action"><span class="nav-action-label">Tickets</span></a>
+            <a class="nav-action"><span class="nav-action-label">Theatres</span></a>
+            <a class="nav-action"><span class="nav-action-label">Search</span></a>
+            <a class="nav-action"><span class="nav-action-label">Account</span></a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="pay-screen">
+        <div class="pay-card">
+          <h1 class="pay-title">Choose your payment method</h1>
+
+          <div class="pay-movie-summary">
+            <div class="pay-thumb-poster"></div>
+            <div class="pay-summary-info">
+              <div class="pay-movie-name">Dune: Part Two</div>
+              <div class="pay-show-details">
+                Oct 28, 2025 • 7:30 PM • Theatre 4<br />
+                2 Seats • Row C
+              </div>
+              <div class="pay-price-total">
+                Total: <span class="pay-amount">$28.50</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pay-method-list">
+            <div class="pay-method-btn">
+              <div class="pay-method-left">
+                <div class="pay-method-icon pay-card-icon"></div>
+                <div>
+                  <div class="pay-method-name">Credit / Debit Card</div>
+                  <div class="pay-method-desc">Visa, Mastercard, Amex</div>
+                </div>
+              </div>
+              <div class="pay-method-right">•••• 3942</div>
+            </div>
+
+            <div class="pay-method-btn">
+              <div class="pay-method-left">
+                <div class="pay-method-icon pay-tap-icon"></div>
+                <div>
+                  <div class="pay-method-name">Tap to Pay</div>
+                  <div class="pay-method-desc">Apple Pay / Google Pay</div>
+                </div>
+              </div>
+              <div class="pay-method-right pay-chevron">›</div>
+            </div>
+
+            <div class="pay-method-btn">
+              <div class="pay-method-left">
+                <div class="pay-method-icon pay-gift-icon"></div>
+                <div>
+                  <div class="pay-method-name">Gift Card</div>
+                  <div class="pay-method-desc">Enter gift code</div>
+                </div>
+              </div>
+              <div class="pay-method-right pay-chevron">›</div>
+            </div>
+          </div>
+
+          <div class="pay-footer-note">
+            By continuing, you agree to Theatrum terms & refund policy.
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- END PAYMENT PAGE -->
+
+
+    <!-- ========================================================= -->
+    <!-- PAGE 3: TAP TO PAY (Hidden by default)                    -->
+    <!-- Remove the display:none when you want THIS screenshot     -->
+    <!-- ========================================================= -->
+    <div class="page-shell tap-page">
+      <header class="site-header">
+        <div class="content-wrapper site-header-inner">
+          <div class="header-left">
+            <div class="burger">
+              <div class="burger-line"></div>
+              <div class="burger-line"></div>
+              <div class="burger-line"></div>
+            </div>
+            <span class="burger-text">Menu</span>
+          </div>
+
+          <div class="logo-center">
+            <div class="logo-text">THEATRUM</div>
+          </div>
+
+          <nav class="header-right">
+            <a class="nav-action"><span class="nav-action-label">Tickets</span></a>
+            <a class="nav-action"><span class="nav-action-label">Theatres</span></a>
+            <a class="nav-action"><span class="nav-action-label">Search</span></a>
+            <a class="nav-action"><span class="nav-action-label">Account</span></a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="tap-screen">
+        <div class="tap-card">
+          <div class="tap-status">Ready for Tap to Pay</div>
+
+          <div class="tap-reader-icon">
+            <div class="tap-wave tap-wave-1"></div>
+            <div class="tap-wave tap-wave-2"></div>
+            <div class="tap-chip">💳</div>
+          </div>
+
+          <div class="tap-instructions">
+            Hold your phone or card near the reader to complete payment.
+          </div>
+
+          <div class="tap-order-block">
+            <div class="tap-row-label">Amount</div>
+            <div class="tap-row-value">$28.50</div>
+          </div>
+
+          <button class="tap-cancel-btn">Cancel</button>
+        </div>
+      </section>
+    </div>
+    <!-- END TAP TO PAY PAGE -->
+
+
+    <!-- Slider JS for homepage hero -->
     <script src="scripts/hero.js"></script>
   </body>
 </html>
