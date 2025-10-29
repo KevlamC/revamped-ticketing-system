@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking History / Upcoming Bookings</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Bookings</a></li>
+        <li><a href="#">Movies</a></li>
+        <li><a href="#">Concessions</a></li>
+        <li><a href="#">Offers</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-secondary">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="hero" style="height: 300px;">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-label">Your Bookings</span>
+      <h1 class="hero-title">Booking History & Upcoming Shows</h1>
+      <p class="hero-description">View your past movie experiences and upcoming theater visits all in one place.</p>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="container">
+    <div class="section-header">
+      <div>
+        <h2>Upcoming Bookings</h2>
+        <p class="section-subtitle">Don’t miss your next show</p>
+      </div>
+      <div class="filter-controls">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">This Week</button>
+        <button class="filter-btn">Next Week</button>
+        <select class="sort-select">
+          <option>Sort by Date</option>
+          <option>Sort by Movie</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Upcoming Bookings Grid -->
+    <div class="movies-grid">
+      <div class="movie-card">
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991313/pexels-photo-7991313.jpeg" alt="Movie Poster">
+          <div class="format-badges">
+            <span class="format-badge imax">IMAX</span>
+            <span class="format-badge dolby">Dolby</span>
+          </div>
+        </div>
+        <div class="movie-info">
+          <h3>Dune: Part Two</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 9.1</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Sci-Fi</span>
+              <span class="genre-tag">Adventure</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Nov 2, 2025 | 7:30 PM</p>
+          <p class="info-item">🎟️ Seat: G12, Theater 5</p>
+          <button class="btn-primary btn-large">View Ticket</button>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991581/pexels-photo-7991581.jpeg" alt="Movie Poster">
+          <div class="format-badges">
+            <span class="format-badge premium">Premium</span>
+          </div>
+        </div>
+        <div class="movie-info">
+          <h3>Inside Out 2</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 8.7</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Animation</span>
+              <span class="genre-tag">Family</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Nov 12, 2025 | 5:00 PM</p>
+          <p class="info-item">🎟️ Seat: D8, Theater 2</p>
+          <button class="btn-primary btn-large">View Ticket</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking History -->
+    <div class="section-header" style="margin-top:80px;">
+      <div>
+        <h2>Booking History</h2>
+        <p class="section-subtitle">Your past movie visits</p>
+      </div>
+    </div>
+
+    <div class="movies-grid">
+      <div class="movie-card">
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991583/pexels-photo-7991583.jpeg" alt="Movie Poster">
+        </div>
+        <div class="movie-info">
+          <h3>Oppenheimer</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 9.0</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Drama</span>
+              <span class="genre-tag">Biography</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Watched: Sep 15, 2025</p>
+          <button class="btn-secondary">View Details</button>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991315/pexels-photo-7991315.jpeg" alt="Movie Poster">
+        </div>
+        <div class="movie-info">
+          <h3>Barbie</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 8.3</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Comedy</span>
+              <span class="genre-tag">Fantasy</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Watched: Aug 28, 2025</p>
+          <button class="btn-secondary">View Details</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="footer-logo">THEATRUM</div>
+        <p>Experience movies like never before with Theatrum. Your favorite films, premium seats, and immersive sound.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Now Showing</a></li>
+          <li><a href="#">Concessions</a></li>
+          <li><a href="#">Offers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Subscribe</h4>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Enter your email">
+          <button class="btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Theatrum Cinemas. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Details | THEATRUM</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Bookings</a></li>
+        <li><a href="#">Concessions</a></li>
+        <li><a href="#">Offers</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-secondary">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" style="height: 280px;">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-label">Booking Details</span>
+      <h1 class="hero-title">Your Movie Ticket</h1>
+      <p class="hero-description">Review your booking information and get ready for your movie experience.</p>
+    </div>
+  </section>
+
+  <!-- Booking Details Section -->
+  <main class="container">
+    <div class="section-header">
+      <div>
+        <h2>Booking Summary</h2>
+        <p class="section-subtitle">Confirmation #THR-2025-10982</p>
+      </div>
+      <button class="btn-primary">Download Ticket</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 32px;">
+      
+      <!-- Left Column: Movie Info -->
+      <div class="movie-card" style="border-color: var(--accent-red);">
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991313/pexels-photo-7991313.jpeg" alt="Movie Poster">
+          <div class="format-badges">
+            <span class="format-badge imax">IMAX</span>
+            <span class="format-badge dolby">Dolby</span>
+          </div>
+        </div>
+        <div class="movie-info">
+          <h3>Dune: Part Two</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 9.1</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Sci-Fi</span>
+              <span class="genre-tag">Adventure</span>
+            </div>
+          </div>
+          <p class="info-item">📍 THEATRUM Downtown – Theater 5</p>
+          <p class="info-item">📅 Nov 2, 2025 | 7:30 PM</p>
+          <p class="info-item">🎟️ Seats: G12, G13</p>
+          <p class="info-item">💳 Payment: VISA •••• 9281</p>
+          <p class="info-item">💰 Total Paid: $32.50 CAD</p>
+        </div>
+      </div>
+
+      <!-- Right Column: Ticket / QR -->
+      <div class="movie-card">
+        <div class="movie-info" style="text-align: center;">
+          <h3>Digital Ticket</h3>
+          <p class="info-item" style="color: var(--text-secondary);">Scan this code at the entrance</p>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=THR-2025-10982" alt="QR Code" style="margin: 20px auto; border-radius: 8px;">
+          <p style="font-size: 14px; color: var(--text-muted);">Booking ID: THR-2025-10982</p>
+          <button class="btn-primary btn-large" style="margin-top: 16px;">Add to Wallet</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Theater Layout Preview -->
+    <div class="section-header" style="margin-top: 80px;">
+      <div>
+        <h2>Theater Layout</h2>
+        <p class="section-subtitle">Your seat positions for this showtime</p>
+      </div>
+    </div>
+
+    <div class="coming-card" style="text-align: center;">
+      <div class="coming-poster">
+        <img src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg" alt="Theater Layout">
+      </div>
+      <div class="coming-info">
+        <p>Seats G12 and G13 are highlighted in the center rows for optimal viewing. Please arrive 15 minutes before showtime for seating assistance.</p>
+      </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="section-header" style="margin-top: 80px;">
+      <div>
+        <h2>Booking Information</h2>
+        <p class="section-subtitle">Need help with your reservation?</p>
+      </div>
+    </div>
+
+    <div class="offers-grid">
+      <div class="offer-card">
+        <h3>Cancellation Policy</h3>
+        <p>Cancellations are available up to 2 hours before showtime. After that, all sales are final.</p>
+      </div>
+      <div class="offer-card">
+        <h3>Customer Support</h3>
+        <p>Need help? Contact THEATRUM support at <a href="#" style="color: var(--accent-red); text-decoration:none;">support@theatrum.com</a></p>
+      </div>
+      <div class="offer-card">
+        <h3>Rewards</h3>
+        <p>You earned <strong>25 points</strong> for this booking. Redeem them in the “Offers” section next time!</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="footer-logo">THEATRUM</div>
+        <p>Your premium cinematic destination. Book, watch, and experience movies like never before.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#">Now Showing</a></li>
+          <li><a href="#">Coming Soon</a></li>
+          <li><a href="#">Rewards</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Stay Updated</h4>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Enter your email">
+          <button class="btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 THEATRUM Cinemas. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

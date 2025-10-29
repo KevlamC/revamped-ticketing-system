@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error | THEATRUM</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Bookings</a></li>
+        <li><a href="#">Concessions</a></li>
+        <li><a href="#">Offers</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-secondary">Help</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Error Section -->
+  <section class="hero" style="height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative;">
+    <div class="hero-overlay"></div>
+    <div class="hero-content" style="z-index: 2; align-items: center;">
+      <div style="background: rgba(26, 26, 36, 0.8); padding: 60px; border-radius: 24px; border: 1px solid var(--border); max-width: 600px;">
+        
+        <h1 class="hero-title" style="font-size: 96px; line-height: 1; margin-bottom: 16px;">404</h1>
+        <p class="hero-description" style="font-size: 20px; color: var(--text-secondary); margin-bottom: 32px;">
+          Oops! It looks like this scene doesn’t exist.  
+          The page you’re looking for might have been removed or never existed.
+        </p>
+
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-primary btn-large" onclick="window.location.href='index.html'">Go Home</button>
+          <button class="btn-secondary btn-large" onclick="window.location.href='contact.html'">Contact Support</button>
+        </div>
+      </div>
+
+      <!-- Decorative Cinematic Glow -->
+      <div style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, rgba(220,38,38,0.15) 0%, transparent 70%);
+        pointer-events: none;">
+      </div>
+    </div>
+  </section>
+
+  <!-- Optional Footer -->
+  <footer class="footer">
+    <div class="footer-bottom" style="text-align:center; justify-content:center;">
+      <p>&copy; 2025 THEATRUM Cinemas. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
