@@ -36,11 +36,25 @@
                 <div class="concession-info">
                     <h3>Classic Popcorn</h3>
                     <p class="section-subtitle">Freshly popped</p>
-                    <div style="display:flex;gap:8px;margin-top:12px;">
+                    <div class="concession-pricing" style="margin-top:8px;">
+                        <span class="price-option">Small $6</span>
+                        <span class="price-option">Medium $8</span>
+                        <span class="price-option">Large $10</span>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label for="size-popcorn" class="section-subtitle">Size</label>
+                        <select id="size-popcorn" class="size-select">
+                            <option data-size="Small" data-price="6">Small — $6</option>
+                            <option data-size="Medium" data-price="8">Medium — $8</option>
+                            <option data-size="Large" data-price="10">Large — $10</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
                         <button class="btn-secondary qty-decrease">-</button>
                         <div class="snack-qty">0</div>
                         <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack">Add</button>
+                        <!-- add uses selected size price -->
+                        <button class="btn-primary add-snack" data-price="6">Add</button>
                     </div>
                 </div>
             </div>
@@ -50,11 +64,14 @@
                 <div class="concession-info">
                     <h3>Ultimate Combo</h3>
                     <p class="section-subtitle">Popcorn + 2 drinks</p>
-                    <div style="display:flex;gap:8px;margin-top:12px;">
+                    <div class="concession-pricing" style="margin-top:8px;">
+                        <span class="price-special">$22</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
                         <button class="btn-secondary qty-decrease">-</button>
                         <div class="snack-qty">0</div>
                         <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack">Add</button>
+                        <button class="btn-primary add-snack" data-price="22">Add $22</button>
                     </div>
                 </div>
             </div>
@@ -64,11 +81,91 @@
                 <div class="concession-info">
                     <h3>Loaded Nachos</h3>
                     <p class="section-subtitle">Cheesy goodness</p>
-                    <div style="display:flex;gap:8px;margin-top:12px;">
+                    <div class="concession-pricing" style="margin-top:8px;">
+                        <span class="price-option">Regular $9</span>
+                        <span class="price-option">Large $12</span>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label class="section-subtitle">Size</label>
+                        <select class="size-select">
+                            <option data-size="Regular" data-price="9">Regular — $9</option>
+                            <option data-size="Large" data-price="12">Large — $12</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
                         <button class="btn-secondary qty-decrease">-</button>
                         <div class="snack-qty">0</div>
                         <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack">Add</button>
+                        <button class="btn-primary add-snack" data-price="9">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional items copied from index.html -->
+            <div class="concession-card">
+                <div class="concession-image"><img src="https://images.pexels.com/photos/2067636/pexels-photo-2067636.jpeg" alt="Drinks"></div>
+                <div class="concession-info">
+                    <h3>Premium Beverages</h3>
+                    <p class="section-subtitle">Soft drinks, smoothies, specialty coffee</p>
+                    <div class="concession-pricing" style="margin-top:8px;">
+                        <span class="price-option">Medium $5</span>
+                        <span class="price-option">Large $7</span>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label class="section-subtitle">Size</label>
+                        <select class="size-select">
+                            <option data-size="Medium" data-price="5">Medium — $5</option>
+                            <option data-size="Large" data-price="7">Large — $7</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
+                        <button class="btn-secondary qty-decrease">-</button>
+                        <div class="snack-qty">0</div>
+                        <button class="btn-secondary qty-increase">+</button>
+                        <button class="btn-primary add-snack" data-price="5">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concession-card">
+                <div class="concession-image"><img src="https://images.pexels.com/photos/1639565/pexels-photo-1639565.jpeg" alt="Hot Dogs"></div>
+                <div class="concession-info">
+                    <h3>Gourmet Hot Dogs</h3>
+                    <p class="section-subtitle">Signature toppings available</p>
+                    <div class="concession-pricing" style="margin-top:8px;">
+                        <span class="price-option">Classic $8</span>
+                        <span class="price-option">Premium $11</span>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label class="section-subtitle">Type</label>
+                        <select class="size-select">
+                            <option data-size="Classic" data-price="8">Classic — $8</option>
+                            <option data-size="Premium" data-price="11">Premium — $11</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
+                        <button class="btn-secondary qty-decrease">-</button>
+                        <div class="snack-qty">0</div>
+                        <button class="btn-secondary qty-increase">+</button>
+                        <button class="btn-primary add-snack" data-price="8">Add $8</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concession-card">
+                <div class="concession-image"><img src="https://images.pexels.com/photos/1633578/pexels-photo-1633578.jpeg" alt="Candy"></div>
+                <div class="concession-info">
+                    <h3>Candy Selection</h3>
+                    <p class="section-subtitle">Classic theater favorites</p>
+                    <div class="concession-pricing" style="margin-top:8px;">
+                        <span class="price-option">$4 each</span>
+                        <span class="price-option">3 for $10</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
+                        <button class="btn-secondary qty-decrease">-</button>
+                        <div class="snack-qty">0</div>
+                        <button class="btn-secondary qty-increase">+</button>
+                        <button class="btn-primary add-snack" data-price="4">Add $4</button>
                     </div>
                 </div>
             </div>

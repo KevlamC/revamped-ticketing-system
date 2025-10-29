@@ -1,15 +1,206 @@
 // booking.js
-// Minimal interactions for the booking flow pages:
-// - ticket_quantity.html: increase/decrease quantity and persist to localStorage
-// - seat_selection.html: render seat map, allow selection up to quantity
-// - food_selection.html: simple add-to-order UI
-// - snack_upsell.html: add upsells and compute order total
+// Booking flow script with size-aware food items
+
+// Shared helpers
+const parseQty = v => Math.max(0, parseInt(v, 10) || 0);
+// Normalize a stored foodOrder entry so older formats don't show 'undefined'
+const normalizeFoodItem = (key, item) => {
+  // If the stored item already has name, use it
+  if (item && item.name) {
+    return {
+      name: item.name,
+      size: item.size || null,
+      qty: parseQty(item.qty),
+      price: parseFloat(item.price) || 0
+    };
+  }
+  // Legacy/other formats: try to recover from the key "Name||Size"
+  const parts = String(key).split('||');
+  const name = parts[0] || key;
+  const size = parts[1] && parts[1] !== 'Default' ? parts[1] : null;
+  let qty = 0;
+  let price = 0;
+  if (item == null) {
+    qty = 0;
+    price = 0;
+  } else if (typeof item === 'number') {
+    qty = parseQty(item);
+  } else if (typeof item === 'string') {
+    qty = parseQty(item);
+  } else if (typeof item === 'object') {
+    qty = parseQty(item.qty);
+    price = parseFloat(item.price) || 0;
+  }
+  return { name, size, qty, price };
+};
+
+// Normalize an entire foodOrder object and return a canonical map keyed by "Name||Size"
+const normalizeFoodOrder = raw => {
+  const normalized = {};
+  try {
+    const keys = Object.keys(raw || {});
+    keys.forEach(k => {
+      const rawItem = raw[k];
+      const it = normalizeFoodItem(k, rawItem);
+      const key = `${it.name}||${it.size || 'Default'}`;
+      if (!normalized[key]) normalized[key] = { name: it.name, size: it.size, qty: 0, price: it.price };
+      // accumulate quantity
+      normalized[key].qty = (normalized[key].qty || 0) + (parseQty(it.qty) || 0);
+      // prefer an explicit price if provided
+      if (it.price) normalized[key].price = it.price;
+    });
+  } catch (e) {
+    // if parsing fails, return empty map
+    return {};
+  }
+  return normalized;
+};
+
+const getNormalizedFoodOrder = () => {
+  const raw = JSON.parse(localStorage.getItem('foodOrder') || '{}');
+  const norm = normalizeFoodOrder(raw);
+  // rewrite storage to canonical form so future reads are consistent
+  localStorage.setItem('foodOrder', JSON.stringify(norm));
+  return norm;
+};
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Shared helpers
-  const parseQty = v => Math.max(0, parseInt(v, 10) || 0);
+  // -----------------------
+  // Checkout page
+  // -----------------------
+  if (document.getElementById('checkout-ticket-qty')) {
+    const qtyEl = document.getElementById('checkout-ticket-qty');
+    const seatsEl = document.getElementById('checkout-seats');
+    const ticketPriceEl = document.getElementById('checkout-ticket-price');
+    const foodListEl = document.getElementById('checkout-food-list');
+    const upsellListEl = document.getElementById('checkout-upsell-list');
+    const totalEl = document.getElementById('checkout-total');
+    const finalizeBtn = document.getElementById('finalize-purchase');
 
-  // Ticket Quantity page
+    const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
+    const ticketUnitPrice = 12.0;
+    const seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]');
+  const foodOrder = getNormalizedFoodOrder();
+    const upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]');
+
+    // Small price map fallback
+    const priceMap = {
+      'Classic Popcorn': 6,
+      'Ultimate Combo': 22,
+      'Loaded Nachos': 9
+    };
+
+    // Tickets
+    qtyEl.textContent = ticketQty;
+    seatsEl.textContent = seats.length ? seats.join(', ') : '-';
+    ticketPriceEl.textContent = `$${(ticketQty * ticketUnitPrice).toFixed(2)}`;
+
+    // Food: iterate stored keys (key = name||size)
+    foodListEl.innerHTML = '';
+    let foodTotal = 0;
+    Object.keys(foodOrder).forEach(k => {
+      const raw = foodOrder[k];
+      const it = normalizeFoodItem(k, raw);
+      const qty = parseQty(it.qty);
+      const unit = parseFloat(it.price) || (priceMap[it.name] || 0);
+      if (qty > 0) {
+        const line = unit * qty;
+        foodTotal += line;
+        const li = document.createElement('li');
+        // label
+        const span = document.createElement('span');
+        span.textContent = `${it.name}${it.size ? ` (${it.size})` : ''} × ${qty} — $${line.toFixed(2)}`;
+        li.appendChild(span);
+        // remove button to let user delete unexpected items
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'btn-secondary';
+        removeBtn.style.marginLeft = '12px';
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => {
+          const current = getNormalizedFoodOrder();
+          if (current[k]) delete current[k];
+          localStorage.setItem('foodOrder', JSON.stringify(current));
+          // simple refresh
+          window.location.reload();
+        });
+        li.appendChild(removeBtn);
+        foodListEl.appendChild(li);
+      }
+    });
+    if (!foodListEl.children.length) {
+      const li = document.createElement('li');
+      li.textContent = 'No snacks selected.';
+      foodListEl.appendChild(li);
+    }
+
+    // Upsells (aggregate duplicates)
+    upsellListEl.innerHTML = '';
+    let upsellTotal = 0;
+    if (Array.isArray(upsellCart) && upsellCart.length) {
+      const map = {};
+      upsellCart.forEach(u => {
+        const key = u.item || String(u);
+        const price = parseFloat(u.price) || 0;
+        upsellTotal += price;
+        if (!map[key]) map[key] = { qty: 0, price };
+        map[key].qty += 1;
+      });
+      Object.keys(map).forEach(k => {
+        const it = map[k];
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.textContent = `${k} × ${it.qty} — $${(it.qty * it.price).toFixed(2)}`;
+        li.appendChild(span);
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'btn-secondary';
+        removeBtn.style.marginLeft = '12px';
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => {
+          const ups = JSON.parse(localStorage.getItem('upsellCart') || '[]');
+          const filtered = ups.filter(u => (u.item || String(u)) !== k);
+          localStorage.setItem('upsellCart', JSON.stringify(filtered));
+          window.location.reload();
+        });
+        li.appendChild(removeBtn);
+        upsellListEl.appendChild(li);
+      });
+    } else {
+      const li = document.createElement('li');
+      li.textContent = 'No upsells.';
+      upsellListEl.appendChild(li);
+    }
+
+    const total = ticketQty * ticketUnitPrice + foodTotal + upsellTotal;
+    totalEl.textContent = `$${total.toFixed(2)}`;
+
+    finalizeBtn && finalizeBtn.addEventListener('click', () => {
+      const foodSummary = Object.keys(foodOrder).length ? Object.keys(foodOrder).map(k => {
+          const raw = foodOrder[k];
+          const it = normalizeFoodItem(k, raw);
+          return `${it.name}${it.size ? ` (${it.size})` : ''}×${it.qty} ($${(parseFloat(it.price || 0) * parseQty(it.qty)).toFixed(2)})`;
+        }).join(', ') : 'None';
+
+      const upsellSummary = upsellCart.length ? upsellCart.map(u => `${u.item} ($${(u.price||0).toFixed(2)})`).join(', ') : 'None';
+
+      alert('Thank you for your purchase!\n\nOrder details:\n' +
+        `Tickets: ${ticketQty} ($${(ticketQty * ticketUnitPrice).toFixed(2)})\n` +
+        `Seats: ${seats.length ? seats.join(', ') : '-'}\n` +
+        `Snacks: ${foodSummary}\n` +
+        `Upsells: ${upsellSummary}\n` +
+        `Total: $${total.toFixed(2)}`);
+
+      // clear demo state
+      localStorage.removeItem('ticketQty');
+      localStorage.removeItem('selectedSeats');
+      localStorage.removeItem('foodOrder');
+      localStorage.removeItem('upsellCart');
+      window.location.href = 'index.html';
+    });
+  }
+
+  // -----------------------
+  // Ticket quantity page
+  // -----------------------
   const ticketCountEl = document.getElementById('ticket-count');
   const incrementBtn = document.getElementById('increment');
   const decrementBtn = document.getElementById('decrement');
@@ -38,40 +229,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     proceedToSeatsBtn && proceedToSeatsBtn.addEventListener('click', () => {
-      // ensure qty persisted
       localStorage.setItem('ticketQty', count);
       window.location.href = 'seat_selection.html';
     });
   }
 
+  // -----------------------
   // Seat selection page
+  // -----------------------
   const seatMapEl = document.getElementById('seat-map');
   const selectedQtyEl = document.getElementById('selected-qty');
   const confirmSeatsBtn = document.getElementById('confirm-seats');
   if (seatMapEl) {
-    const rows = 6; // 6 rows
-    const cols = 8; // 8 seats per row
+    const rows = 6;
+    const cols = 8;
     const totalSeats = rows * cols;
     const desiredQty = parseQty(localStorage.getItem('ticketQty')) || 1;
     selectedQtyEl && (selectedQtyEl.textContent = desiredQty);
 
-    // create seats
     for (let i = 0; i < totalSeats; i++) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'showtime-btn';
       btn.style.padding = '12px';
-      btn.textContent = `${Math.floor(i / cols) + 1}${String.fromCharCode(65 + (i % cols))}`; // e.g. 1A
+      btn.textContent = `${Math.floor(i / cols) + 1}${String.fromCharCode(65 + (i % cols))}`;
       btn.dataset.index = i;
       btn.dataset.selected = 'false';
       btn.addEventListener('click', () => {
-        // toggle selection but respect desiredQty
         const currentlySelected = seatMapEl.querySelectorAll('button[data-selected="true"]').length;
         const isSelected = btn.dataset.selected === 'true';
-        if (!isSelected && currentlySelected >= desiredQty) {
-          // allow deselect only
-          return;
-        }
+        if (!isSelected && currentlySelected >= desiredQty) return;
         if (isSelected) {
           btn.dataset.selected = 'false';
           btn.style.background = '';
@@ -96,16 +283,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // -----------------------
   // Food selection page
+  // -----------------------
   if (document.querySelectorAll('.concession-card').length) {
     const snackCards = Array.from(document.querySelectorAll('.concession-card'));
-    const order = JSON.parse(localStorage.getItem('foodOrder') || '{}');
+  // order keyed by `${name}||${size}` -> { name, size, qty, price }
+  const order = getNormalizedFoodOrder();
 
     snackCards.forEach(card => {
       const qtyEl = card.querySelector('.snack-qty');
       const inc = card.querySelector('.qty-increase');
       const dec = card.querySelector('.qty-decrease');
       const add = card.querySelector('.add-snack');
+      const sizeSelect = card.querySelector('.size-select');
 
       let qty = 0;
       const renderQty = () => qtyEl && (qtyEl.textContent = qty);
@@ -116,50 +307,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
       add && add.addEventListener('click', () => {
         const name = card.querySelector('h3').textContent.trim();
+        let selectedSize = null;
+        let unitPrice = parseFloat(add.dataset.price) || 0;
+        if (sizeSelect && sizeSelect.selectedOptions && sizeSelect.selectedOptions[0]) {
+          const opt = sizeSelect.selectedOptions[0];
+          selectedSize = opt.dataset.size || opt.textContent || null;
+          unitPrice = parseFloat(opt.dataset.price) || unitPrice;
+        }
         if (qty <= 0) return alert('Choose a quantity first');
-        order[name] = (order[name] || 0) + qty;
-        localStorage.setItem('foodOrder', JSON.stringify(order));
+  const key = `${name}||${selectedSize || 'Default'}`;
+  if (!order[key]) order[key] = { name, size: selectedSize, qty: 0, price: unitPrice };
+  order[key].qty = (order[key].qty || 0) + qty;
+  order[key].price = unitPrice;
+  // write normalized order back to storage
+  localStorage.setItem('foodOrder', JSON.stringify(order));
         qty = 0; renderQty();
-        alert(`${name} added to your order`);
+        alert(`${name}${selectedSize ? ' (' + selectedSize + ')' : ''} added to your order`);
       });
     });
 
     const reviewBtn = document.getElementById('review-order');
-    reviewBtn && reviewBtn.addEventListener('click', () => {
-      window.location.href = 'snack_upsell.html';
-    });
+    reviewBtn && reviewBtn.addEventListener('click', () => window.location.href = 'snack_upsell.html');
   }
 
+  // -----------------------
   // Snack upsell page
+  // -----------------------
   if (document.querySelectorAll('.add-upsell').length) {
     const upsells = Array.from(document.querySelectorAll('.add-upsell'));
     const totalEl = document.getElementById('order-total');
-    let baseTotal = 0;
 
-    // compute base total from tickets + food (simple pricing)
+    let baseTotal = 0;
     const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
     baseTotal += ticketQty * 12.0;
 
-    const foodOrder = JSON.parse(localStorage.getItem('foodOrder') || '{}');
-    // simple prices map for demo
-    const priceMap = {
-      'Classic Popcorn': 6,
-      'Ultimate Combo': 22,
-      'Loaded Nachos': 9,
-      'cookie': 4,
-      'drink-upgrade': 2,
-      'poster': 10
-    };
-
-    Object.keys(foodOrder).forEach(name => {
-      const qty = parseQty(foodOrder[name]);
-      baseTotal += (priceMap[name] || 5) * qty;
+  const foodOrder = getNormalizedFoodOrder();
+    Object.keys(foodOrder).forEach(k => {
+      const raw = foodOrder[k];
+      const it = normalizeFoodItem(k, raw);
+      const qty = parseQty(it.qty);
+      const unit = parseFloat(it.price) || 0;
+      baseTotal += unit * qty;
     });
 
     let upsellTotal = 0;
-    const renderTotal = () => {
-      totalEl && (totalEl.textContent = `$${(baseTotal + upsellTotal).toFixed(2)}`);
-    };
+    const renderTotal = () => totalEl && (totalEl.textContent = `$${(baseTotal + upsellTotal).toFixed(2)}`);
     renderTotal();
 
     upsells.forEach(btn => {
@@ -167,7 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = btn.dataset.item;
         const price = parseFloat(btn.dataset.price) || 0;
         upsellTotal += price;
-        // persist simple upsell cart
         const upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]');
         upsellCart.push({ item, price });
         localStorage.setItem('upsellCart', JSON.stringify(upsellCart));
@@ -178,19 +369,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const completeBtn = document.getElementById('complete-purchase');
-    completeBtn && completeBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      // For demo: show a summary
-      const seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]');
-      const food = JSON.parse(localStorage.getItem('foodOrder') || '{}');
-      const upsell = JSON.parse(localStorage.getItem('upsellCart') || '[]');
-      alert('Purchase complete!\nSeats: ' + seats.join(', ') + '\nFood: ' + JSON.stringify(food) + '\nUpsells: ' + JSON.stringify(upsell) + '\nTotal: ' + (totalEl ? totalEl.textContent : '$0.00'));
-      // Clear demo state
-      localStorage.removeItem('ticketQty');
-      localStorage.removeItem('selectedSeats');
-      localStorage.removeItem('foodOrder');
-      localStorage.removeItem('upsellCart');
-      window.location.href = 'index.html';
-    });
+    if (completeBtn) {
+      completeBtn.addEventListener('click', () => { /* navigation link will go to checkout */ });
+    }
   }
 });
