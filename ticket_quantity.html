@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Quantity - THEATRUM</title>
+    <link rel="stylesheet" href="styles/index_styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Now Playing</a></li>
+                <li><a href="#">Concessions</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-secondary">Sign In</button>
+                <a class="btn-primary" href="ticket_quantity.html">Book</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top:120px;">
+        <div class="section-header">
+            <div>
+                <h2>Select Ticket Quantity</h2>
+                <p class="section-subtitle">Choose how many tickets you'd like to purchase</p>
+            </div>
+        </div>
+
+        <section class="movie-card" style="padding:24px;">
+            <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+                <div style="flex:1;min-width:240px;">
+                    <img id="selected-poster" src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg" alt="Selected Movie" style="width:100%;height:320px;object-fit:cover;border-radius:12px;">
+                </div>
+                <div style="flex:2;min-width:280px;">
+                    <h3 id="selected-title">DUNE: PART TWO</h3>
+                    <p id="selected-info" class="section-subtitle">PG-13 • 2h 46m • Sci-Fi</p>
+
+                    <div style="margin-top:24px;display:flex;align-items:center;gap:12px;">
+                        <button id="decrement" class="btn-secondary" aria-label="Decrease quantity">-</button>
+                        <div style="font-size:28px;font-weight:800;min-width:64px;text-align:center;" id="ticket-count">1</div>
+                        <button id="increment" class="btn-secondary" aria-label="Increase quantity">+</button>
+                        <div style="margin-left:24px;color:var(--text-secondary);">Price per ticket: <strong id="ticket-price">$12.00</strong></div>
+                    </div>
+
+                    <div style="margin-top:20px;display:flex;gap:12px;">
+                        <button id="proceed-to-seats" class="btn-primary btn-large">Select Seats</button>
+                        <a href="index.html" class="btn-secondary btn-large">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 THEATRUM</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/booking.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Selection - THEATRUM</title>
+    <link rel="stylesheet" href="styles/index_styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="seat_selection.html">Back</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-secondary">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top:120px;">
+        <div class="section-header">
+            <div>
+                <h2>Pick Snacks & Drinks</h2>
+                <p class="section-subtitle">Add concessions to your order</p>
+            </div>
+        </div>
+
+        <section class="concessions-grid">
+            <div class="concession-card">
+                <div class="concession-image"><img src="https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg" alt="Popcorn"></div>
+                <div class="concession-info">
+                    <h3>Classic Popcorn</h3>
+                    <p class="section-subtitle">Freshly popped</p>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button class="btn-secondary qty-decrease">-</button>
+                        <div class="snack-qty">0</div>
+                        <button class="btn-secondary qty-increase">+</button>
+                        <button class="btn-primary add-snack">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concession-card">
+                <div class="concession-image"><img src="https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg" alt="Combo"></div>
+                <div class="concession-info">
+                    <h3>Ultimate Combo</h3>
+                    <p class="section-subtitle">Popcorn + 2 drinks</p>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button class="btn-secondary qty-decrease">-</button>
+                        <div class="snack-qty">0</div>
+                        <button class="btn-secondary qty-increase">+</button>
+                        <button class="btn-primary add-snack">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concession-card">
+                <div class="concession-image"><img src="https://images.pexels.com/photos/2271107/pexels-photo-2271107.jpeg" alt="Nachos"></div>
+                <div class="concession-info">
+                    <h3>Loaded Nachos</h3>
+                    <p class="section-subtitle">Cheesy goodness</p>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button class="btn-secondary qty-decrease">-</button>
+                        <div class="snack-qty">0</div>
+                        <button class="btn-secondary qty-increase">+</button>
+                        <button class="btn-primary add-snack">Add</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div style="margin-top:20px;display:flex;gap:12px;">
+            <button id="review-order" class="btn-primary btn-large">Review & Upsell</button>
+            <a href="seat_selection.html" class="btn-secondary btn-large">Back</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 THEATRUM</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/booking.js"></script>
+</body>
+</html>

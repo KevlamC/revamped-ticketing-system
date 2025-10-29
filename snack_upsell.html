@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snack Upsell - THEATRUM</title>
+    <link rel="stylesheet" href="styles/index_styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="food_selection.html">Back</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-secondary">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top:120px;">
+        <div class="section-header">
+            <div>
+                <h2>Complete Your Order</h2>
+                <p class="section-subtitle">Recommended add-ons to make your visit even better</p>
+            </div>
+        </div>
+
+        <section class="offers-grid">
+            <div class="offer-card">
+                <div class="offer-icon">🍪</div>
+                <h3>Cookie Pack</h3>
+                <p class="section-subtitle">Fresh-baked cookies (3) — $4</p>
+                <button class="btn-primary add-upsell" data-item="cookie" data-price="4">Add $4</button>
+            </div>
+
+            <div class="offer-card">
+                <div class="offer-icon">🥤</div>
+                <h3>Drink Upgrade</h3>
+                <p class="section-subtitle">Upgrade to large drink — $2</p>
+                <button class="btn-primary add-upsell" data-item="drink-upgrade" data-price="2">Add $2</button>
+            </div>
+
+            <div class="offer-card">
+                <div class="offer-icon">🎟️</div>
+                <h3>Poster Bundle</h3>
+                <p class="section-subtitle">Collectible poster — $10</p>
+                <button class="btn-primary add-upsell" data-item="poster" data-price="10">Add $10</button>
+            </div>
+        </section>
+
+        <div style="margin-top:20px;display:flex;gap:12px;align-items:center;">
+            <div style="flex:1;color:var(--text-secondary);">Order total: <strong id="order-total">$0.00</strong></div>
+            <a id="complete-purchase" class="btn-primary btn-large" href="#">Complete Purchase</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 THEATRUM</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/booking.js"></script>
+</body>
+</html>
