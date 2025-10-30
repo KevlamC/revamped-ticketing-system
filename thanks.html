@@ -20,7 +20,8 @@
     .success-icon svg { width:42px; height:42px; color:#22c55e; }
     .headline { font-size: 32px; font-weight: 800; margin: 4px 0 8px; }
     .ticket { display:grid; grid-template-columns: 1fr auto; gap: 16px; padding: 16px; border:1px dashed var(--border); background: var(--bg-secondary); border-radius: 12px; }
-    .qr { width:120px; height:120px; border-radius: 8px; background: repeating-linear-gradient(45deg, var(--bg-card), var(--bg-card) 8px, var(--border) 8px, var(--border) 16px); border:1px solid var(--border); }
+    .qr { width:120px; height:120px; border-radius: 8px; border:1px solid var(--border); display: grid; place-items: center; } /* Updated: Removed placeholder background */
+    .qr img { display: block; width: 100%; height: 100%; object-fit: contain; } /* Added: Styling for the QR image */
     .meta { display:grid; gap:6px; }
     .meta b { font-weight: 700; }
     .actions { display:flex; gap:12px; margin-top: 16px; flex-wrap:wrap; }
@@ -31,7 +32,6 @@
   </style>
 </head>
 <body>
-  <!-- Top Nav -->
   <nav class="navbar">
     <div class="nav-container">
       <div class="logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
@@ -55,7 +55,6 @@
     </div>
   </nav>
 
-  <!-- Content -->
   <main class="checkout-shell">
     <div class="row" style="margin-bottom:20px">
       <span class="section-badge">CONFIRMATION</span>
@@ -63,7 +62,6 @@
     </div>
 
     <div class="checkout-grid">
-      <!-- Left: Success block -->
       <section class="card">
         <div class="row" style="gap:20px; justify-content:flex-start;">
           <div class="success-icon">
@@ -80,7 +78,6 @@
 
         <div class="divider"></div>
 
-        <!-- Ticket block -->
         <div class="ticket">
           <div class="meta">
             <div><b>Dune: Part Two</b></div>
@@ -90,27 +87,26 @@
             <div>Order #: <b>TH-948215</b></div>
             <div>Receipt sent to <b>Alex@example.com</b></div>
           </div>
-          <div class="qr" aria-label="QR code placeholder"></div>
+          <div class="qr" aria-label="QR code for ticket TH-948215">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://theatrum.com/tickets/TH-948215" alt="QR Code for Order TH-948215" />
+          </div>
         </div>
 
         <div class="actions">
           <button class="btn-primary">View Tickets</button>
           <button class="btn-secondary">Download PDF</button>
-          <!-- <button class="btn-ghost">Return Home</button> -->
-        </div>
+          </div>
 
         <div class="divider"></div>
         <div class="muted">Show the QR at the entrance. Please arrive 10 minutes early.</div>
       </section>
 
-      <!-- Right: Receipt summary -->
       <aside class="card">
         <h2>Receipt</h2>
         <p class="muted">Payment confirmed • Visa •••• 4242</p>
         <div class="divider"></div>
 
         <div class="summary-row"><span>2 × Standard</span><span>$24.00</span></div>
-        <!-- <div class="summary-row"><span>1 × Child</span><span>$11.00</span></div> -->
         <div class="summary-row"><span>2 × Large Popcorn</span><span>$20.00</span></div>
         <div class="summary-row"><span>1 × Large Drink</span><span>$7.00</span></div>
         <div class="divider"></div>

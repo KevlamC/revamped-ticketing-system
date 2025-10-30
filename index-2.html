@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THEATRUM — Premium Cinema Experience</title>
+  <!-- Existing site styles -->
+  <link rel="stylesheet" href="index_styles.css" />
+  <!-- New lightweight styles just for auth + booking modals -->
+  <link rel="stylesheet" href="theatrum_auth_booking.css" />
+</head>
+<body>
+  <!-- ===== Top Nav (from your current design) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#now-playing" class="active">Now Playing</a></li>
+        <li><a href="#coming-soon">Coming Soon</a></li>
+        <li><a href="#concessions">Food & Drinks</a></li>
+        <li><a href="#offers">Offers</a></li>
+        <li><a href="#locations">Locations</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="search-box">
+          <input id="globalSearch" type="text" placeholder="Search movies..." />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <button id="openAuth" class="btn-secondary">Sign In</button>
+        <button class="btn-primary" data-action="open-booking">Buy Tickets</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-label">NOW SHOWING</span>
+      <h1 class="hero-title">DUNE: PART TWO</h1>
+      <p class="hero-description">Experience the epic conclusion on the biggest screen with Dolby Atmos sound</p>
+      <div class="hero-buttons">
+        <button class="btn-primary btn-large" data-action="open-booking">Get Tickets</button>
+        <button class="btn-secondary btn-large">Watch Trailer</button>
+      </div>
+      <div class="hero-info">
+        <span class="info-badge">PG-13</span>
+        <span class="info-item">2h 46m</span>
+        <span class="info-item">Sci-Fi, Adventure</span>
+        <span class="info-item">★ 8.7/10</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Landing / Home + Movie Selection ===== -->
+  <section class="now-playing" id="now-playing">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2>Now Playing</h2>
+          <p class="section-subtitle">TODAY • PREMIUM FORMATS • DOLBY ATMOS</p>
+        </div>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-genre="all">All Movies</button>
+          <button class="filter-btn" data-genre="Action">Action</button>
+          <button class="filter-btn" data-genre="Drama">Drama</button>
+          <button class="filter-btn" data-genre="Sci-Fi">Sci-Fi</button>
+          <button class="filter-btn" data-genre="Horror">Horror</button>
+          <select class="sort-select" id="sortSelect">
+            <option value="title">Sort by Title</option>
+            <option value="rating">Sort by Rating</option>
+            <option value="release">Sort by Release Date</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="moviesGrid" class="movies-grid">
+        <!-- Cards are injected by JS based on the movies array -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Coming Soon / Concessions / Offers / Experience / Locations ===== -->
+  <!-- Keep your existing sections or add them later. This starter keeps the file focused on the requested features. -->
+
+  <!-- ===== AUTH / ACCOUNT FLOW MODAL TEMPLATES ===== -->
+  <div id="authRoot" class="tht-modal hidden" aria-hidden="true">
+    <div class="tht-modal__backdrop" data-close></div>
+    <div class="tht-modal__panel auth-flow" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="tht-modal__close" data-close>&times;</button>
+
+      <!-- Account Choice -->
+      <div class="auth-step" data-step="choice">
+        <h3 id="authTitle" class="auth-title">Continue to THEATRUM</h3>
+        <p class="auth-subtitle">Choose how you want to proceed</p>
+        <div class="auth-actions">
+          <button class="btn-primary" data-next="login">Log In</button>
+          <button class="btn-secondary" data-next="signup">Create Account</button>
+          <button class="btn-secondary" data-next="guest">Continue as Guest</button>
+          <button class="link-skip" data-close>Skip for now</button>
+        </div>
+      </div>
+
+      <!-- Login -->
+      <div class="auth-step hidden" data-step="login">
+        <h3 class="auth-title">Welcome back</h3>
+        <form id="loginForm" class="auth-form">
+          <label>Email <input type="email" name="email" required placeholder="you@example.com" /></label>
+          <label>Password <input type="password" name="password" required placeholder="••••••••" /></label>
+          <button type="submit" class="btn-primary">Log In</button>
+        </form>
+        <div class="auth-foot">
+          <button class="link" data-next="signup">Need an account? Sign up</button>
+          <button class="link" data-next="choice">Back</button>
+        </div>
+      </div>
+
+      <!-- Sign Up -->
+      <div class="auth-step hidden" data-step="signup">
+        <h3 class="auth-title">Create your account</h3>
+        <form id="signupForm" class="auth-form">
+          <label>Full Name <input type="text" name="name" required placeholder="Jane Doe" /></label>
+          <label>Email <input type="email" name="email" required placeholder="you@example.com" /></label>
+          <label>Password <input type="password" name="password" minlength="6" required placeholder="At least 6 characters" /></label>
+          <button type="submit" class="btn-primary">Create Account</button>
+        </form>
+        <div class="auth-foot">
+          <button class="link" data-next="login">Have an account? Log in</button>
+          <button class="link" data-next="choice">Back</button>
+        </div>
+      </div>
+
+      <!-- Email Verification -->
+      <div class="auth-step hidden" data-step="verify">
+        <h3 class="auth-title">Verify your email</h3>
+        <p class="auth-subtitle">We sent a 6‑digit code to <span id="verifyEmailOut"></span></p>
+        <form id="verifyForm" class="auth-form">
+          <label>Enter Code <input type="text" inputmode="numeric" pattern="\d{6}" maxlength="6" required name="code" placeholder="000000" /></label>
+          <button type="submit" class="btn-primary">Verify</button>
+        </form>
+        <div class="auth-foot">
+          <button class="link" id="resendCode">Resend code</button>
+          <button class="link" data-next="choice">Back</button>
+        </div>
+      </div>
+
+      <!-- Welcome -->
+      <div class="auth-step hidden" data-step="welcome">
+        <h3 class="auth-title">You're in 🎉</h3>
+        <p class="auth-subtitle">Welcome to THEATRUM, <span id="welcomeName"></span>.</p>
+        <button class="btn-primary" data-close>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BOOKING: SHOWTIME + CALENDAR MODAL ===== -->
+  <div id="bookingRoot" class="tht-modal hidden" aria-hidden="true">
+    <div class="tht-modal__backdrop" data-close></div>
+    <div class="tht-modal__panel booking-flow" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+      <button class="tht-modal__close" data-close>&times;</button>
+      <h3 id="bookingTitle" class="auth-title">Select your showtime</h3>
+      <div class="booking-grid">
+        <div class="booking-col">
+          <label class="booking-label">Date
+            <input id="bookingDate" type="date" class="booking-input" />
+          </label>
+          <label class="booking-label">Location
+            <select id="bookingLocation" class="booking-input">
+              <option>Downtown Premiere</option>
+              <option>Riverside Cinema</option>
+              <option>Westside Multiplex</option>
+            </select>
+          </label>
+          <label class="booking-label">Format
+            <select id="bookingFormat" class="booking-input">
+              <option>STANDARD</option>
+              <option>IMAX</option>
+              <option>DOLBY</option>
+              <option>3D</option>
+            </select>
+          </label>
+        </div>
+        <div class="booking-col">
+          <div id="timesContainer" class="times-container">
+            <!-- Time buttons are injected here -->
+          </div>
+        </div>
+      </div>
+      <div class="booking-actions">
+        <button class="btn-secondary" data-close>Cancel</button>
+        <button id="proceedPayment" class="btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scripts ===== -->
+  <script src="scripts/theatrum_auth.js"></script>
+  <script src="scripts/theatrum_booking.js"></script>
+</body>
+</html>
