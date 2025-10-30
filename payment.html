@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Theatrum — Payment</title>
+  <link rel="stylesheet" href="styles/index_styles.css" />
+  <style>
+    .checkout-shell { max-width: 1200px; margin: 120px auto 64px; padding: 0 32px; }
+    .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .card h2 { font-size: 28px; margin-bottom: 8px; }
+    .muted { color: var(--text-secondary); font-size: 14px; }
+    .divider { height:1px; background: var(--border); margin: 16px 0 20px; }
+    .pay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;}
+    .pay-option { display:flex; align-items:center; gap:10px; background: var(--bg-secondary); border:1px solid var(--border); padding:12px 14px; border-radius:10px; cursor:pointer; }
+    .pay-option input { accent-color: #dc2626; }
+    .pay-new {grid-column: 1 / -1; display: flex;align-items: center;justify-content: center;background: var(--bg-secondary);border: 1px dashed var(--border);border-radius: 10px; padding: 12px 14px;color: var(--text-secondary);font-weight: 600;}
+    .pay-new:hover { filter: brightness(1.05); }
+    .brand { font-weight: 700; }
+    .summary-row { display:flex; justify-content: space-between; margin: 10px 0; color: var(--text-secondary); }
+    .summary-row.total { color: var(--text-primary); font-weight: 700; font-size: 18px; }
+    .actions { display:flex; gap:12px; margin-top: 20px; }
+    .pill { display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background: var(--bg-secondary); font-size: 12px; color: var(--text-secondary); }
+    .section-badge { display:inline-block; background: rgba(220,38,38,0.2); border:1px solid var(--accent-red); color: var(--accent-red); padding:6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+    .row { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .btn-link { width:100%; text-align:center; border:1px dashed var(--border); background: var(--bg-secondary); padding:12px; border-radius:10px; color: var(--text-secondary); }
+    .user-chip { padding: 8px 12px; border:1px solid var(--border); background: var(--bg-secondary); border-radius: 999px; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- Top Nav -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
+      <ul class="nav-links">
+        <li><a href="#">Now Playing</a></li>
+        <li><a href="#">Coming Soon</a></li>
+        <li><a href="#">Food & Drinks</a></li>
+        <li><a href="#">Offers</a></li>
+        <li><a href="#">Locations</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="search-box">
+          <input type="text" placeholder="Search movies..."/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <!-- Replaced Sign In with user chip -->
+        <button class="btn-primary">Alex</button>
+        <button class="btn-primary">Buy Tickets</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="checkout-shell">
+    <div class="row" style="margin-bottom:20px">
+      <span class="pill">Step 2 of 2 — Payment</span>
+    </div>
+
+    <div class="checkout-grid">
+      <!-- Left: Payment Methods -->
+      <section class="card">
+        <h2>Payment Method</h2>
+        <p class="muted">Choose how you’d like to pay.</p>
+        <div class="divider"></div>
+
+        <div class="pay-grid" role="group" aria-label="Payment Options">
+          <label class="pay-option">
+            <input type="radio" name="pay" checked />
+            <span><span class="brand">Visa</span> •••• 4242</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay" />
+            <span><span class="brand">Mastercard</span> •••• 8219</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay" />
+            <span><span class="brand">AMEX</span> •••• 3005</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay" />
+            <span><span class="brand">Interac</span> (Debit)</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay" />
+            <span><span class="brand">Apple&nbsp;Pay</span></span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay" />
+            <span><span class="brand">Google&nbsp;Pay</span></span>
+          </label>
+           <button type="button" class="pay-new">+ Add new payment method</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Billing name + email (static) -->
+        <div class="row">
+          <div>
+            <div class="muted">Billed to</div>
+            <div>Alex</div>
+          </div>
+          <div style="text-align:right">
+            <div class="muted">Receipt</div>
+            <div>Alex@example.com</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-secondary">Back</button>
+          <button class="btn-primary">Complete Purchase</button>
+        </div>
+        <p class="muted" style="margin-top:10px;">☆ Payments are processed securely.</p>
+      </section>
+
+      <!-- Right: Order Summary -->
+      <aside class="card">
+        <h2>Order Summary</h2>
+        <p class="muted">Dune: Part Two • Westside Multiplex • Thu 7:30 PM</p>
+        <div class="divider"></div>
+
+        <div class="summary-row"><span>2 × Standard</span><span>$24.00</span></div>
+        <!-- <div class="summary-row"><span>1 × Child</span><span>$11.00</span></div> -->
+        <div class="summary-row"><span>2 × Large Popcorn</span><span>$20.00</span></div>
+        <div class="summary-row"><span>1 × Large Drink</span><span>$7.00</span></div>
+        <div class="summary-row"><span>Seats</span><span>F7, F8</span></div>
+        <div class="summary-row"><span>Format</span><span class="pill">IMAX</span></div>
+        <div class="divider"></div>
+        <div class="summary-row"><span>Subtotal</span><span>$51.00</span></div>
+        <div class="summary-row"><span>Fees & Tax</span><span>$2.55</span></div>
+        <div class="summary-row total"><span>Total</span><span>$53.55</span></div>
+
+        <div class="divider"></div>
+        <button class="btn-secondary" style="width:100%; margin-top:4px;">Apply Promo Code</button>
+      </aside>
+    </div>
+  </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+                    </div>
+                    <p>Experience cinema the way it was meant to be seen.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Twitter">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Movies</h4>
+                    <ul>
+                        <li><a href="#now-playing">Now Playing</a></li>
+                        <li><a href="#coming-soon">Coming Soon</a></li>
+                        <li><a href="#">Movie Formats</a></li>
+                        <li><a href="#">Private Events</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Membership</h4>
+                    <ul>
+                        <li><a href="#">Premium Pass</a></li>
+                        <li><a href="#">Rewards Program</a></li>
+                        <li><a href="#">Gift Cards</a></li>
+                        <li><a href="#">Corporate Sales</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Get the latest movies and exclusive offers</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button class="btn-primary">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 THEATRUM. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
