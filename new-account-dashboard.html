@@ -303,6 +303,96 @@
             font-size: 13px;
         }
 
+        /* Food & Drinks Section */
+        .food-order-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .food-order-card:hover {
+            border-color: var(--accent-red);
+            transform: translateX(4px);
+        }
+
+        .food-order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 16px;
+        }
+
+        .food-order-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent-amber);
+        }
+
+        .food-order-date {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .food-order-status {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .food-order-status.completed {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+            color: #22c55e;
+        }
+
+        .food-order-status.upcoming {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .food-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .food-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .food-item-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .food-item-value {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .food-order-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
         /* Payment Methods */
         .payment-methods {
             display: flex;
@@ -544,6 +634,14 @@
                 width: 100%;
                 justify-content: flex-start;
             }
+
+            .food-order-header {
+                flex-direction: column;
+            }
+
+            .food-items {
+                grid-template-columns: 1fr;
+            }
         }
 
         .empty-state {
@@ -593,7 +691,7 @@
     <div class="dashboard-container">
         <!-- Dashboard Header -->
         <div class="dashboard-header">
-            <h1>My Account</h1>
+            <h1>Account Dashboard</h1>
             <button class="btn-primary">Book Tickets</button>
         </div>
 
@@ -616,6 +714,14 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
                             </svg>
                             My Bookings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#food-drinks">
+                            <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
+                            </svg>
+                            Food & Drinks
                         </a>
                     </li>
                     <li>
@@ -658,6 +764,7 @@
                             <div class="profile-badges">
                                 <span class="profile-badge">⭐ Gold Member</span>
                                 <span class="profile-badge">🎬 Movie Buff</span>
+                                <span class="profile-badge">🍿 Foodie</span>
                             </div>
                         </div>
                     </div>
@@ -755,37 +862,114 @@
                                 <button class="btn-secondary btn-small">Cancel Booking</button>
                             </div>
                         </div>
+                    </div>
+                </section>
 
-                        <!-- Completed Booking -->
-                        <div class="booking-card">
-                            <div class="booking-header">
-                                <div class="booking-movie">
-                                    <h3>Oppenheimer</h3>
-                                    <p class="booking-date">Friday, October 25, 2025</p>
+                <!-- Food & Drinks Section -->
+                <section id="food-drinks" class="content-section">
+                    <div class="section-title">
+                        <span>Food & Drinks Orders</span>
+                        <button class="btn-primary btn-small">Order Now</button>
+                    </div>
+                    <div class="booking-list">
+                        <!-- Upcoming Food Order -->
+                        <div class="food-order-card">
+                            <div class="food-order-header">
+                                <div class="food-order-info">
+                                    <h3>Pre-Order for Dune: Part Three</h3>
+                                    <p class="food-order-date">Saturday, November 2, 2025 • 7:30 PM</p>
                                 </div>
-                                <span class="booking-status completed">COMPLETED</span>
+                                <span class="food-order-status upcoming">READY FOR PICKUP</span>
                             </div>
-                            <div class="booking-details">
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Time</span>
-                                    <span class="booking-detail-value">8:00 PM</span>
+                            <div class="food-items">
+                                <div class="food-item">
+                                    <span class="food-item-label">Items</span>
+                                    <span class="food-item-value">Large Popcorn, 2 Coca-Cola, Nachos</span>
                                 </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Screen</span>
-                                    <span class="booking-detail-value">Premium Screen 2</span>
+                                <div class="food-item">
+                                    <span class="food-item-label">Pickup Location</span>
+                                    <span class="food-item-value">Concession Stand #3</span>
                                 </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Seats</span>
-                                    <span class="booking-detail-value">G10, G11</span>
+                                <div class="food-item">
+                                    <span class="food-item-label">Order Total</span>
+                                    <span class="food-item-value">$28.50</span>
                                 </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Booking ID</span>
-                                    <span class="booking-detail-value">#TH2025-4756</span>
+                                <div class="food-item">
+                                    <span class="food-item-label">Order ID</span>
+                                    <span class="food-item-value">#FD2025-7821</span>
                                 </div>
                             </div>
-                            <div class="booking-actions">
+                            <div class="food-order-actions">
+                                <button class="btn-primary btn-small">View Order Details</button>
+                                <button class="btn-secondary btn-small">Modify Order</button>
+                                <button class="btn-secondary btn-small">Cancel Order</button>
+                            </div>
+                        </div>
+
+                        <!-- Completed Food Order -->
+                        <div class="food-order-card">
+                            <div class="food-order-header">
+                                <div class="food-order-info">
+                                    <h3>Concession Order</h3>
+                                    <p class="food-order-date">Friday, October 25, 2025 • 8:00 PM</p>
+                                </div>
+                                <span class="food-order-status completed">COMPLETED</span>
+                            </div>
+                            <div class="food-items">
+                                <div class="food-item">
+                                    <span class="food-item-label">Items</span>
+                                    <span class="food-item-value">Medium Popcorn, Icee, Hot Dog, Candy</span>
+                                </div>
+                                <div class="food-item">
+                                    <span class="food-item-label">Pickup Location</span>
+                                    <span class="food-item-value">Concession Stand #1</span>
+                                </div>
+                                <div class="food-item">
+                                    <span class="food-item-label">Order Total</span>
+                                    <span class="food-item-value">$32.75</span>
+                                </div>
+                                <div class="food-item">
+                                    <span class="food-item-label">Order ID</span>
+                                    <span class="food-item-value">#FD2025-7715</span>
+                                </div>
+                            </div>
+                            <div class="food-order-actions">
                                 <button class="btn-secondary btn-small">View Receipt</button>
-                                <button class="btn-secondary btn-small">Rate Movie</button>
+                                <button class="btn-secondary btn-small">Reorder</button>
+                            </div>
+                        </div>
+
+                        <!-- Another Food Order -->
+                        <div class="food-order-card">
+                            <div class="food-order-header">
+                                <div class="food-order-info">
+                                    <h3>Premium Snack Package</h3>
+                                    <p class="food-order-date">Sunday, November 3, 2025 • 4:15 PM</p>
+                                </div>
+                                <span class="food-order-status upcoming">PRE-ORDERED</span>
+                            </div>
+                            <div class="food-items">
+                                <div class="food-item">
+                                    <span class="food-item-label">Items</span>
+                                    <span class="food-item-value">Gourmet Popcorn, 3 Craft Sodas, Pretzel Bites</span>
+                                </div>
+                                <div class="food-item">
+                                    <span class="food-item-label">Pickup Location</span>
+                                    <span class="food-item-value">Premium Lounge</span>
+                                </div>
+                                <div class="food-item">
+                                    <span class="food-item-label">Order Total</span>
+                                    <span class="food-item-value">$45.00</span>
+                                </div>
+                                <div class="food-item">
+                                    <span class="food-item-label">Order ID</span>
+                                    <span class="food-item-value">#FD2025-7890</span>
+                                </div>
+                            </div>
+                            <div class="food-order-actions">
+                                <button class="btn-primary btn-small">View Order Details</button>
+                                <button class="btn-secondary btn-small">Modify Order</button>
+                                <button class="btn-secondary btn-small">Cancel Order</button>
                             </div>
                         </div>
                     </div>
@@ -982,6 +1166,31 @@
                     });
                 }
             });
+
+            // Food order actions
+            const foodOrderButtons = document.querySelectorAll('.food-order-actions .btn-secondary');
+            foodOrderButtons.forEach(button => {
+                if (button.textContent.includes('Cancel Order')) {
+                    button.addEventListener('click', function() {
+                        if (confirm('Are you sure you want to cancel this food order?')) {
+                            alert('Food order cancelled successfully. Refund will be processed within 3-5 business days.');
+                        }
+                    });
+                }
+                if (button.textContent.includes('Reorder')) {
+                    button.addEventListener('click', function() {
+                        alert('Your previous order has been added to cart!');
+                    });
+                }
+            });
+
+            // Order Now button
+            const orderNowButton = document.querySelector('#food-drinks .btn-primary');
+            if (orderNowButton && orderNowButton.textContent.includes('Order Now')) {
+                orderNowButton.addEventListener('click', function() {
+                    alert('Redirecting to concessions menu...');
+                });
+            }
 
             // View ticket
             const viewTicketButtons = document.querySelectorAll('.booking-actions .btn-primary');
