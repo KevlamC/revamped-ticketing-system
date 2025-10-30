@@ -270,35 +270,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const selectedQtyEl = document.getElementById('selected-qty');
   const confirmSeatsBtn = document.getElementById('confirm-seats');
   if (seatMapEl) {
-    const rows = 6;
-    const cols = 8;
+  const rows = 6;
+  const cols = 9;
     const totalSeats = rows * cols;
     const desiredQty = parseQty(localStorage.getItem('ticketQty')) || 1;
     selectedQtyEl && (selectedQtyEl.textContent = desiredQty);
 
-    for (let i = 0; i < totalSeats; i++) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'showtime-btn';
-      btn.style.padding = '12px';
-      btn.textContent = `${Math.floor(i / cols) + 1}${String.fromCharCode(65 + (i % cols))}`;
-      btn.dataset.index = i;
-      btn.dataset.selected = 'false';
-      btn.addEventListener('click', () => {
-        const currentlySelected = seatMapEl.querySelectorAll('button[data-selected="true"]').length;
-        const isSelected = btn.dataset.selected === 'true';
-        if (!isSelected && currentlySelected >= desiredQty) return;
-        if (isSelected) {
-          btn.dataset.selected = 'false';
-          btn.style.background = '';
-          btn.style.color = '';
-        } else {
-          btn.dataset.selected = 'true';
-          btn.style.background = 'var(--accent-red)';
-          btn.style.color = 'white';
+    // build seat map row-by-row so we can insert a spacer (staircase) between columns
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        // insert narrow visual spacers (staircases) after certain columns
+        // keep them narrower than seat buttons so seat sizes are not changed
+        if (c === 3 || c === 6) {
+          const spacer = document.createElement('div');
+          spacer.className = 'seat-spacer';
+          spacer.style.display = 'inline-block';
+          // make the staircase column noticeably narrower than a seat
+          spacer.style.width = '10px';
+          // match vertical rhythm but don't force button sizing
+          spacer.style.height = '44px';
+          spacer.style.margin = '6px 2px';
+          spacer.style.verticalAlign = 'middle';
+          // optionally add a subtle visual to suggest steps
+          spacer.style.background = 'transparent';
+          seatMapEl.appendChild(spacer);
+          continue;
         }
-      });
-      seatMapEl.appendChild(btn);
+
+        const index = r * cols + c;
+  const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'showtime-btn';
+        btn.textContent = `${r + 1}${String.fromCharCode(65 + c)}`;
+        btn.dataset.index = index;
+        btn.dataset.selected = 'false';
+        btn.addEventListener('click', () => {
+          const currentlySelected = seatMapEl.querySelectorAll('button[data-selected="true"]').length;
+          const isSelected = btn.dataset.selected === 'true';
+          if (!isSelected && currentlySelected >= desiredQty) return;
+          if (isSelected) {
+            btn.dataset.selected = 'false';
+            btn.style.background = '';
+            btn.style.color = '';
+          } else {
+            btn.dataset.selected = 'true';
+            btn.style.background = 'var(--accent-red)';
+            btn.style.color = 'white';
+          }
+        });
+        seatMapEl.appendChild(btn);
+      }
     }
 
     confirmSeatsBtn && confirmSeatsBtn.addEventListener('click', () => {
