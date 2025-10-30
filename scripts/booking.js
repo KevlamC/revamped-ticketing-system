@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalEl = document.getElementById('checkout-total');
     const finalizeBtn = document.getElementById('finalize-purchase');
 
-    const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
-    const ticketUnitPrice = 12.0;
+  const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
+  const ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
     const seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]');
   const foodOrder = getNormalizedFoodOrder();
     const upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]');
@@ -206,15 +206,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const decrementBtn = document.getElementById('decrement');
   const proceedToSeatsBtn = document.getElementById('proceed-to-seats');
   const ticketPriceEl = document.getElementById('ticket-price');
+  const ticketTypeEl = document.getElementById('ticket-type');
 
   if (ticketCountEl && incrementBtn && decrementBtn) {
     let count = parseQty(localStorage.getItem('ticketQty')) || 1;
-    const pricePer = 12.0;
+    // determine initial price per ticket from saved value or selected ticket type
+    let pricePer = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
+    if (ticketTypeEl && ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0]) {
+      pricePer = parseFloat(ticketTypeEl.selectedOptions[0].dataset.price) || pricePer;
+    }
+
     const render = () => {
       ticketCountEl.textContent = count;
       ticketPriceEl && (ticketPriceEl.textContent = `$${pricePer.toFixed(2)}`);
     };
     render();
+
+    // when ticket type changes, update pricePer and persist
+    if (ticketTypeEl) {
+      ticketTypeEl.addEventListener('change', () => {
+        const opt = ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0];
+        const newPrice = opt ? parseFloat(opt.dataset.price) || pricePer : pricePer;
+        pricePer = newPrice;
+        // save selected type and unit price for later pages (upsell/checkout)
+        localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
+        localStorage.setItem('ticketUnitPrice', String(pricePer));
+        render();
+      });
+      // ensure we persist initial selection as well
+      localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
+      localStorage.setItem('ticketUnitPrice', String(pricePer));
+    }
 
     incrementBtn.addEventListener('click', () => {
       count = Math.min(10, count + 1);
@@ -230,6 +252,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     proceedToSeatsBtn && proceedToSeatsBtn.addEventListener('click', () => {
       localStorage.setItem('ticketQty', count);
+      // also persist the latest unit price (in case user didn't change type after load)
+      if (ticketTypeEl) {
+        const opt = ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0];
+        const unit = opt ? parseFloat(opt.dataset.price) || pricePer : pricePer;
+        localStorage.setItem('ticketUnitPrice', String(unit));
+        localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
+      }
       window.location.href = 'seat_selection.html';
     });
   }
@@ -339,7 +368,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let baseTotal = 0;
     const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
-    baseTotal += ticketQty * 12.0;
+    // read persisted unit price (set on the ticket quantity page) so upsell totals match selected ticket type
+    const ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
+    baseTotal += ticketQty * ticketUnitPrice;
 
   const foodOrder = getNormalizedFoodOrder();
     Object.keys(foodOrder).forEach(k => {
