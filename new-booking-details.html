@@ -3,17 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking Details | THEATRUM</title>
+  <title>Booking History | THEATRUM</title>
   <link rel="stylesheet" href="styles/index_styles.css">
   <style>
+    .movie-info h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.2; /* Change from 1.3 to 1.2 or 1.1 */
+  color: #f5f5f5;
+  white-space: nowrap; /* Prevents text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds "..." if text is too long */
+}
+    /* Fix for layout issues */
     body {
-      font-family: "Segoe UI", sans-serif;
       margin: 0;
-      background-color: var(--bg-primary, #0d0d0d);
-      color: var(--text-primary, #fff);
+      padding: 0;
+      overflow-x: hidden;
+      background-color: #0d0d0d;
+      color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
-    /* Header / Navbar */
+    
+    /* Header fixes */
     .navbar {
       background: #111;
       color: white;
@@ -25,372 +38,757 @@
       top: 0;
       z-index: 10;
     }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
     .logo {
       font-size: 24px;
       font-weight: 700;
       letter-spacing: 2px;
     }
-    .logo .logo-thea { color: #e11d48; }
-    .logo .logo-trum { color: #f5f5f5; }
-
-    /* Page container */
-    main {
-      max-width: 1100px;
+    
+    .logo-thea { color: #e11d48; }
+    .logo-trum { color: #f5f5f5; }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 24px;
+    }
+    
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #e11d48;
+    }
+    
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    /* Hero section fixes */
+    .hero {
+      position: relative;
+      height: 250px;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                  url('https://images.pexels.com/photos/7991313/pexels-photo-7991313.jpeg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+    }
+    
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      padding: 0 20px;
+    }
+    
+    .hero-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    
+    .hero-description {
+      font-size: 16px;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Main container fixes */
+    .container {
+      max-width: 1200px;
       margin: 40px auto;
       padding: 0 20px;
     }
-
-    h1 {
-      text-align: center;
-      font-size: 28px;
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 24px;
-      color: #f5f5f5;
-    }
-
-    /* Back button */
-    .back-btn {
-      display: inline-block;
-      margin-bottom: 20px;
-      background: #e11d48;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.25s ease;
-    }
-    .back-btn:hover {
-      background: #b91c1c;
-    }
-
-    /* Booking summary */
-    .booking-summary {
-      display: flex;
       flex-wrap: wrap;
-      gap: 24px;
-      justify-content: center;
-      align-items: center;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 40px;
+      gap: 16px;
     }
-
-    .movie-poster img {
-      width: 150px;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid #333;
+    
+    .section-header h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #e11d48;
     }
-
-    .booking-info {
-      flex: 1;
-      min-width: 240px;
-    }
-
-    .booking-info h2 {
-      margin: 0 0 10px;
-      font-size: 22px;
-      color: #f87171;
-    }
-
-    .booking-info p {
-      margin: 4px 0;
-      color: #ccc;
-      font-size: 15px;
-    }
-
-    .qr-section {
-      text-align: center;
-    }
-
-    .qr-section img {
-      width: 120px;
-      height: 120px;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-
-    .download-btn {
-      display: block;
-      width: 100%;
-      background: #1e40af;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.25s ease;
-    }
-
-    .download-btn:hover {
-      background: #1e3a8a;
-    }
-
-    /* Seat layout */
-    .seat-layout {
-      text-align: center;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 20px;
-    }
-
-    .screen {
-      width: 80%;
-      margin: 0 auto 30px;
-      height: 20px;
-      background: linear-gradient(90deg, #e11d48, #f87171);
-      border-radius: 8px;
-      color: #fff;
+    
+    .section-subtitle {
+      color: #aaa;
       font-size: 14px;
-      letter-spacing: 3px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
     }
-
-    .rows {
+    
+    .filter-controls {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .row {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
+      gap: 12px;
       align-items: center;
     }
-
-    .row-label {
-      margin-right: 12px;
-      color: #999;
-      font-size: 13px;
-      width: 20px;
-      display: inline-block;
-      font-weight: 600;
+    
+    .filter-btn {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+      color: #ccc;
     }
-
-    .seat {
-      width: 26px;
-      height: 26px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      background: #2c2c2c;
-      color: #888;
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-
-    .seat.booked {
+    
+    .filter-btn.active,
+    .filter-btn:hover {
       background: #e11d48;
-      color: #fff;
+      color: white;
       border-color: #e11d48;
     }
-
-    .seat.selected {
-      background: #facc15;
-      color: #000;
-      font-weight: bold;
-      border-color: #facc15;
-      transform: scale(1.1);
-    }
-
-    .seat.aisle {
-      visibility: hidden;
-    }
-
-    .legend {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #333;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
+    
+    .sort-select {
+      padding: 8px 16px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #1a1a1a;
+      font-size: 14px;
       color: #ccc;
     }
-
-    .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 3px;
+    
+    /* Movies grid fixes - more compact */
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
     }
-
-    .legend-available { background: #2c2c2c; border: 1px solid #444; }
-    .legend-booked { background: #e11d48; }
-    .legend-yours { background: #facc15; }
-
-    /* Footer */
-    footer {
+    
+    .movie-card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid #333;
+      position: relative;
+    }
+    
+    /* Status badges for upcoming vs past bookings */
+    .status-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+    
+    .status-upcoming {
+      background: #10b981;
+      color: white;
+    }
+    
+    .status-completed {
+      background: #6b7280;
+      color: white;
+    }
+    
+    .movie-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(225, 29, 72, 0.2);
+      border-color: #e11d48;
+    }
+    
+    .movie-poster {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+    }
+    
+    .movie-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    
+    .movie-card:hover .movie-poster img {
+      transform: scale(1.05);
+    }
+    
+    .format-badges {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 6px;
+    }
+    
+    .format-badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    
+    .format-badge.imax {
+      background: #e11d48;
+      color: white;
+    }
+    
+    .format-badge.dolby {
+      background: #1e40af;
+      color: white;
+    }
+    
+    .format-badge.premium {
+      background: #f59e0b;
+      color: white;
+    }
+    
+    .movie-info {
+      padding: 16px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .movie-info h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.3;
+      color: #f5f5f5;
+    }
+    
+    .movie-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .rating {
+      color: #f59e0b;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .genre-tags {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .genre-tag {
+      background: #333;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #ccc;
+    }
+    
+    .info-item {
+      margin-bottom: 6px;
+      color: #aaa;
+      font-size: 14px;
+    }
+    
+    .booking-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+    
+    .btn-primary, .btn-secondary {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 5px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      font-size: 14px;
+      flex: 1;
+    }
+    
+    .btn-primary {
+      background: #e11d48;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #b91c1c;
+    }
+    
+    .btn-secondary {
+      background: #333;
+      color: #f5f5f5;
+      border: 1px solid #555;
+    }
+    
+    .btn-secondary:hover {
+      background: #444;
+    }
+    
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #999;
+    }
+    
+    .empty-state p {
+      max-width: 400px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+    
+    /* Footer fixes */
+    .footer {
       background: #111;
       color: #bbb;
-      text-align: center;
-      padding: 20px 0;
-      margin-top: 60px;
-      font-size: 14px;
+      padding: 40px 0 20px;
+      margin-top: 40px;
       border-top: 1px solid #222;
     }
-
-    footer a {
-      color: #f87171;
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .footer-logo {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    
+    .footer-logo .logo-thea { color: #e11d48; }
+    .footer-logo .logo-trum { color: #f5f5f5; }
+    
+    .footer-section h4 {
+      color: white;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+    
+    .footer-section a {
+      color: #bbb;
       text-decoration: none;
-      margin: 0 6px;
+      transition: color 0.3s;
+      font-size: 14px;
+    }
+    
+    .footer-section a:hover {
+      color: #e11d48;
+    }
+    
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .newsletter-form input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #222;
+      color: white;
+      font-size: 14px;
+    }
+    
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #333;
+      padding-top: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 14px;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .footer-links a {
+      color: #bbb;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: #e11d48;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 14px 20px;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .hero {
+        height: 200px;
+      }
+      
+      .hero-title {
+        font-size: 28px;
+      }
+      
+      .hero-description {
+        font-size: 14px;
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .filter-controls {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+      
+      .movies-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .booking-actions {
+        flex-direction: column;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .movie-poster {
+        height: 160px;
+      }
+      
+      .movie-info {
+        padding: 12px;
+      }
+      
+      .movie-info h3 {
+        font-size: 16px;
+      }
+      
+      .info-item {
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 <body>
 
-   <!-- Navbar -->
+  <!-- Top Nav -->
   <nav class="navbar">
     <div class="nav-container">
-      <div class="logo">
-        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-      </div>
+      <div class="logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
       <ul class="nav-links">
-        <li><a href="#" class="active">Now Playing</a></li>
+        <li><a href="#">Now Playing</a></li>
         <li><a href="#">Coming Soon</a></li>
+        <li><a href="#">Food & Drinks</a></li>
         <li><a href="#">Offers</a></li>
         <li><a href="#">Locations</a></li>
       </ul>
       <div class="nav-actions">
-        <button class="btn-secondary">Sign Out</button>
+        <div class="search-box">
+          <input type="text" placeholder="Search movies..."/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <button class="btn-primary">Alex</button>
+        <button class="btn-primary">Buy Tickets</button>
       </div>
     </div>
   </nav>
 
-  <main>
-    <!-- Back button -->
-    <a href="account-dashboard.html" class="back-btn">← Back to Account Dashboard</a>
+  <!-- Page Header -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Booking History & Upcoming Shows</h1>
+      <p class="hero-description">View your past movie experiences and upcoming theater visits all in one place.</p>
+    </div>
+  </section>
 
-    <h1>Booking Details</h1>
-
-    <!-- Booking Summary -->
-    <div class="booking-summary">
-      <div class="movie-poster">
-        <img src="https://images.pexels.com/photos/7991313/pexels-photo-7991313.jpeg" alt="Movie Poster">
+  <!-- Main Container -->
+  <main class="container">
+    <div class="section-header">
+      <div>
+        <h2>Upcoming Bookings</h2>
+        <p class="section-subtitle">Don't miss your next show</p>
       </div>
-
-      <div class="booking-info">
-        <h2>Dune: Part Two</h2>
-        <p><strong>Date:</strong> Oct 30, 2025</p>
-        <p><strong>Time:</strong> 7:30 PM</p>
-        <p><strong>Theater:</strong> Theatrum Downtown – Screen 5</p>
-        <p><strong>Seats:</strong> F7, F8, F9</p>
-        <p><strong>Total Paid:</strong> $32.50 CAD</p>
-      </div>
-
-      <div class="qr-section">
-        <p><strong>Scan at Entrance</strong></p>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=THR-2025-10982" alt="QR Code">
-        <p style="font-size:12px;">Booking ID: THR-2025-10982</p>
-        <button class="download-btn" onclick="downloadTicket()">Download Ticket</button>
+      <div class="filter-controls">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="week">This Week</button>
+        <button class="filter-btn" data-filter="month">This Month</button>
+        <select class="sort-select" id="upcoming-sort">
+          <option value="date">Sort by Date</option>
+          <option value="movie">Sort by Movie</option>
+        </select>
       </div>
     </div>
 
-    <!-- Seat Layout -->
-    <div class="seat-layout">
-      <div class="screen">SCREEN</div>
-
-      <div class="rows">
-        <!-- Row A -->
-        <div class="row">
-          <span class="row-label">A</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+    <!-- Upcoming Bookings Grid -->
+    <div class="movies-grid" id="upcoming-bookings">
+      <div class="movie-card">
+        <div class="status-badge status-upcoming">Upcoming</div>
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991313/pexels-photo-7991313.jpeg" alt="Movie Poster">
+          <div class="format-badges">
+            <span class="format-badge imax">IMAX</span>
+            <span class="format-badge dolby">Dolby</span>
+          </div>
         </div>
-
-        <!-- Row B -->
-        <div class="row">
-          <span class="row-label">B</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
-        </div>
-
-        <!-- Row C -->
-        <div class="row">
-          <span class="row-label">C</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
-        </div>
-
-        <!-- Row D -->
-        <div class="row">
-          <span class="row-label">D</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
-        </div>
-
-        <!-- Row E -->
-        <div class="row">
-          <span class="row-label">E</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
-        </div>
-
-        <!-- Row F -->
-        <div class="row">
-          <span class="row-label">F</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat selected">7</div><div class="seat selected">8</div>
-        </div>
-
-        <!-- Row G (Your seats) -->
-        <div class="row">
-          <span class="row-label">G</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
-        </div>
-
-        <!-- Row H -->
-        <div class="row">
-          <span class="row-label">H</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat booked">5</div><div class="seat booked">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+        <div class="movie-info">
+          <h3>Dune: Part Two</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 9.1</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Sci-Fi</span>
+              <span class="genre-tag">Adventure</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Nov 2, 2025 | 7:30 PM</p>
+          <p class="info-item">🎟️ Seat: F7,F8,F9 Theater 5</p>
+          <p class="info-item">📍 THEATRUM Downtown</p>
+          <div class="booking-actions">
+            <button class="btn-primary">View Ticket</button>
+            <button class="btn-secondary">Cancel</button>
+          </div>
         </div>
       </div>
 
-      <!-- Legend -->
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-color legend-available"></div>
-          <span>Available</span>
+      <div class="movie-card">
+        <div class="status-badge status-upcoming">Upcoming</div>
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991581/pexels-photo-7991581.jpeg" alt="Movie Poster">
+          <div class="format-badges">
+            <span class="format-badge premium">Premium</span>
+          </div>
         </div>
-        <div class="legend-item">
-          <div class="legend-color legend-booked"></div>
-          <span>Unavailable</span>
+        <div class="movie-info">
+          <h3>Inside Out 2</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 8.7</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Animation</span>
+              <span class="genre-tag">Family</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Nov 12, 2025 | 5:00 PM</p>
+          <p class="info-item">🎟️ Seat: D8, Theater 2</p>
+          <p class="info-item">📍 THEATRUM Westside</p>
+          <div class="booking-actions">
+            <button class="btn-primary">View Ticket</button>
+            <button class="btn-secondary">Cancel</button>
+          </div>
         </div>
-        <div class="legend-item">
-          <div class="legend-color legend-yours"></div>
-          <span>Your Seats</span>
+      </div>
+      
+      <div class="movie-card">
+        <div class="status-badge status-upcoming">Upcoming</div>
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991379/pexels-photo-7991379.jpeg" alt="Movie Poster">
+          <div class="format-badges">
+            <span class="format-badge imax">IMAX</span>
+          </div>
+        </div>
+        <div class="movie-info">
+          <h3>Interstellar</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 9.3</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Sci-Fi</span>
+              <span class="genre-tag">Drama</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Nov 18, 2025 | 8:15 PM</p>
+          <p class="info-item">🎟️ Seat: E5, Theater 1</p>
+          <p class="info-item">📍 THEATRUM Downtown</p>
+          <div class="booking-actions">
+            <button class="btn-primary">View Ticket</button>
+            <button class="btn-secondary">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Booking History -->
+    <div class="section-header">
+      <div>
+        <h2>Booking History</h2>
+        <p class="section-subtitle">Your past movie visits</p>
+      </div>
+      <div class="filter-controls">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="month">Last Month</button>
+        <button class="filter-btn" data-filter="year">This Year</button>
+        <select class="sort-select" id="history-sort">
+          <option value="recent">Most Recent</option>
+          <option value="oldest">Oldest First</option>
+          <option value="rating">Highest Rated</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="movies-grid" id="history-bookings">
+      <div class="movie-card">
+        <div class="status-badge status-completed">Completed</div>
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991583/pexels-photo-7991583.jpeg" alt="Movie Poster">
+        </div>
+        <div class="movie-info">
+          <h3>Oppenheimer</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 9.0</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Drama</span>
+              <span class="genre-tag">Biography</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Watched: Sep 15, 2025</p>
+          <p class="info-item">🎟️ Seat: H7, Theater 3</p>
+          <p class="info-item">📍 THEATRUM Eastgate</p>
+          <div class="booking-actions">
+            <button class="btn-primary">Rate Movie</button>
+            <button class="btn-secondary">View Details</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="status-badge status-completed">Completed</div>
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991315/pexels-photo-7991315.jpeg" alt="Movie Poster">
+        </div>
+        <div class="movie-info">
+          <h3>Barbie</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 8.3</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Comedy</span>
+              <span class="genre-tag">Fantasy</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Watched: Aug 28, 2025</p>
+          <p class="info-item">🎟️ Seat: F12, Theater 4</p>
+          <p class="info-item">📍 THEATRUM Westside</p>
+          <div class="booking-actions">
+            <button class="btn-primary">Rate Movie</button>
+            <button class="btn-secondary">View Details</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="movie-card">
+        <div class="status-badge status-completed">Completed</div>
+        <div class="movie-poster">
+          <img src="https://images.pexels.com/photos/7991377/pexels-photo-7991377.jpeg" alt="Movie Poster">
+        </div>
+        <div class="movie-info">
+          <h3>Avatar: The Way of Water</h3>
+          <div class="movie-meta">
+            <span class="rating">★ 8.8</span>
+            <div class="genre-tags">
+              <span class="genre-tag">Sci-Fi</span>
+              <span class="genre-tag">Adventure</span>
+            </div>
+          </div>
+          <p class="info-item">📅 Watched: Jul 12, 2025</p>
+          <p class="info-item">🎟️ Seat: C9, Theater 2</p>
+          <p class="info-item">📍 THEATRUM Downtown</p>
+          <div class="booking-actions">
+            <button class="btn-primary">Rate Movie</button>
+            <button class="btn-secondary">View Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- Footer -->
@@ -459,17 +857,49 @@
   </footer>
 
   <script>
-    function downloadTicket() {
-      // In a real application, this would generate a PDF ticket
-      alert('Your ticket is being downloaded...');
-      // Simulate download
-      const link = document.createElement('a');
-      link.href = '#';
-      link.download = 'THEATRUM-Ticket-THR-2025-10982.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    // Add interactivity to filter buttons
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons in the same group
+          const parentSection = this.closest('.section-header');
+          const groupButtons = parentSection.querySelectorAll('.filter-btn');
+          groupButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // In a real app, we would filter the content here
+          // For this demo, we'll just show an alert
+          const filterType = this.getAttribute('data-filter');
+          alert(`Filtering by: ${filterType}`);
+        });
+      });
+      
+      // Add functionality to View Ticket buttons
+      const viewTicketButtons = document.querySelectorAll('.btn-primary');
+      viewTicketButtons.forEach(button => {
+        if (button.textContent === 'View Ticket') {
+          button.addEventListener('click', function() {
+            alert('Opening your ticket...');
+          });
+        }
+      });
+      
+      // Add functionality to Cancel buttons
+      const cancelButtons = document.querySelectorAll('.btn-secondary');
+      cancelButtons.forEach(button => {
+        if (button.textContent === 'Cancel') {
+          button.addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+              alert('Booking cancelled successfully.');
+            }
+          });
+        }
+      });
+    });
   </script>
 
 </body>
