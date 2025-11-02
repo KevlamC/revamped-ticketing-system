@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>THEATRUM - Premium Cinema Experience</title>
+
+  <link rel="stylesheet" href="index_styles.css"/>
+
+  <!-- Critical-path modal styles kept minimal here -->
+  <style>
+    .overlay{position:fixed;inset:0;background:rgba(10,10,15,.6);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:2000}
+    .overlay.show{display:flex}
+    .sheet{width:min(680px,92vw);background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow-2);animation:modal-pop 220ms ease-out;position:relative}
+    @keyframes modal-pop{from{transform:scale(.98);opacity:.5}}
+    .close-x{position:absolute;top:14px;right:14px;cursor:pointer;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary)}
+    .stack{display:grid;gap:12px}
+    .grid-2{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+    .field{display:grid;gap:6px}
+    .field label{font-size:13px;color:var(--text-secondary)}
+    .field input{background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text-primary)}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn-chip{background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:999px;font-weight:700;cursor:pointer}
+    .btn-chip:hover{background:var(--accent-red);color:#fff;border-color:var(--accent-red)}
+    .error{color:#fda4af;font-size:13px;display:none}
+    .error.show{display:block}
+    .success{background:rgba(16,185,129,.12);color:#a7f3d0;border:1px solid rgba(16,185,129,.35);padding:10px 12px;border-radius:10px;font-size:14px;display:none}
+    .success.show{display:block}
+    .bottom-sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg-card);border-top:1px solid var(--border);border-radius:16px 16px 0 0;transform:translateY(100%);transition:transform .24s ease;z-index:1900;padding:20px 18px 28px;max-height:80vh;overflow:auto}
+    .bottom-sheet.show{transform:translateY(0)}
+    .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+    .sheet-head h4{font-size:18px;font-weight:800;margin:0}
+    .kicker{color:var(--text-muted);font-size:12px;letter-spacing:1.2px}
+    .date-row,.showtime-row{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:700}
+    .pill.selected{background:var(--accent-red);color:#fff;border-color:var(--accent-red)}
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo" id="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#now-playing" class="active">Now Playing</a></li>
+        <li><a href="#coming-soon">Coming Soon</a></li>
+        <li><a href="#concessions">Food & Drinks</a></li>
+        <li><a href="#offers">Offers</a></li>
+        <li><a href="#locations">Locations</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="search-box">
+          <input id="globalSearch" type="text" placeholder="Search movies...">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <!-- Will turn into username after login/guest -->
+        <button id="userButton" class="btn-secondary">Sign In</button>
+        <button class="btn-primary" onclick="document.querySelector('#now-playing').scrollIntoView({behavior:'smooth'})">Buy Tickets</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-label">NOW SHOWING</span>
+      <h1 class="hero-title">DUNE: PART TWO</h1>
+      <p class="hero-description">Experience the epic conclusion on the biggest screen with Dolby Atmos sound</p>
+      <div class="hero-buttons">
+        <button class="btn-primary btn-large" onclick="document.querySelector('#now-playing').scrollIntoView({behavior:'smooth'})">Get Tickets</button>
+        <button class="btn-secondary btn-large">Watch Trailer</button>
+      </div>
+      <div class="hero-info">
+        <span class="info-badge">PG-13</span>
+        <span class="info-item">2h 46m</span>
+        <span class="info-item">Sci-Fi, Adventure</span>
+        <span class="info-item">★ 8.7/10</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOW PLAYING -->
+  <section class="now-playing" id="now-playing">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2>Now Playing</h2>
+          <p class="section-subtitle">TODAY • PREMIUM FORMATS • DOLBY ATMOS</p>
+        </div>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter="all">All Movies</button>
+          <button class="filter-btn" data-filter="Action">Action</button>
+          <button class="filter-btn" data-filter="Drama">Drama</button>
+          <button class="filter-btn" data-filter="Sci-Fi">Sci-Fi</button>
+          <button class="filter-btn" data-filter="Horror">Horror</button>
+          <select id="sortSelect" class="sort-select">
+            <option value="title">Sort by Title</option>
+            <option value="rating">Sort by Rating</option>
+            <option value="release">Sort by Release Date</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="movies-grid" id="moviesGrid">
+        <!-- Card 1 -->
+        <div class="movie-card" data-title="Dune: Part Two" data-rating="8.7" data-release="2024-03-01" data-genres="Sci-Fi,Adventure,Drama">
+          <div class="movie-poster">
+            <img src="dune2-poster.jpg" alt="Dune: Part Two">
+            <div class="movie-overlay">
+              <button class="btn-primary book-btn" data-movie="Dune: Part Two">Book Now</button>
+              <button class="btn-icon" aria-label="Favorite">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge imax">IMAX</span>
+              <span class="format-badge">3D</span>
+              <span class="format-badge dolby">DOLBY</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Dune: Part Two</h3>
+            <div class="movie-meta">
+              <span class="rating">★ 8.7</span>
+              <div class="genre-tags">
+                <span class="genre-tag">Sci-Fi</span>
+                <span class="genre-tag">Adventure</span>
+                <span class="genre-tag">Drama</span>
+              </div>
+            </div>
+            <div class="showtimes">
+              <button class="showtime-btn book-btn" data-movie="Dune: Part Two">2:00 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Dune: Part Two">5:30 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Dune: Part Two">9:00 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="movie-card" data-title="Oppenheimer" data-rating="8.5" data-release="2023-07-21" data-genres="Drama,Biography,History">
+          <div class="movie-poster">
+            <img src="opp-poster.jpg" alt="Oppenheimer">
+            <div class="movie-overlay">
+              <button class="btn-primary book-btn" data-movie="Oppenheimer">Book Now</button>
+              <button class="btn-icon" aria-label="Favorite">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge premium">70MM</span>
+              <span class="format-badge imax">IMAX</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Oppenheimer</h3>
+            <div class="movie-meta">
+              <span class="rating">★ 8.5</span>
+              <div class="genre-tags">
+                <span class="genre-tag">Drama</span>
+                <span class="genre-tag">Biography</span>
+                <span class="genre-tag">History</span>
+              </div>
+            </div>
+            <div class="showtimes">
+              <button class="showtime-btn book-btn" data-movie="Oppenheimer">1:00 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Oppenheimer">4:30 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Oppenheimer">8:00 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 (fixed tags) -->
+        <div class="movie-card" data-title="The Batman" data-rating="8.2" data-release="2022-03-04" data-genres="Action,Crime,Thriller">
+          <div class="movie-poster">
+            <img src="3de84cca07fc963b66a01a5465c2638066119711e89c707ce952555783dd4b4f-2.jpg" alt="The Batman">
+            <div class="movie-overlay">
+              <button class="btn-primary book-btn" data-movie="The Batman">Book Now</button>
+              <button class="btn-icon" aria-label="Favorite">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge dolby">DOLBY</span>
+              <span class="format-badge">4DX</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>The Batman</h3>
+            <div class="movie-meta">
+              <span class="rating">★ 8.2</span>
+              <div class="genre-tags">
+                <span class="genre-tag">Action</span>
+                <span class="genre-tag">Crime</span>
+                <span class="genre-tag">Thriller</span>
+              </div>
+            </div>
+            <div class="showtimes">
+              <button class="showtime-btn book-btn" data-movie="The Batman">3:00 PM</button>
+              <button class="showtime-btn book-btn" data-movie="The Batman">6:30 PM</button>
+              <button class="showtime-btn book-btn" data-movie="The Batman">10:00 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="movie-card" data-title="Barbie" data-rating="7.9" data-release="2023-07-21" data-genres="Comedy,Fantasy,Adventure">
+          <div class="movie-poster">
+            <img src="p13472534_p_v8_am.jpg" alt="Barbie">
+            <div class="movie-overlay">
+              <button class="btn-primary book-btn" data-movie="Barbie">Book Now</button>
+              <button class="btn-icon" aria-label="Favorite">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge">STANDARD</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Barbie</h3>
+            <div class="movie-meta">
+              <span class="rating">★ 7.9</span>
+              <div class="genre-tags">
+                <span class="genre-tag">Comedy</span>
+                <span class="genre-tag">Fantasy</span>
+                <span class="genre-tag">Adventure</span>
+              </div>
+            </div>
+            <div class="showtimes">
+              <button class="showtime-btn book-btn" data-movie="Barbie">1:30 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Barbie">4:00 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Barbie">7:30 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="movie-card" data-title="Killers of the Flower Moon" data-rating="8.1" data-release="2023-10-20" data-genres="Drama,Crime,History">
+          <div class="movie-poster">
+            <img src="ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzZhOWE1N2ZkLTY4MzgtNDA3Yi05MDEwLWQzN2QwMTFkZDdmNS5qcGc=.jpeg" alt="Killers of the Flower Moon">
+            <div class="movie-overlay">
+              <button class="btn-primary book-btn" data-movie="Killers of the Flower Moon">Book Now</button>
+              <button class="btn-icon" aria-label="Favorite">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge premium">PREMIUM</span>
+              <span class="format-badge dolby">DOLBY</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Killers of the Flower Moon</h3>
+            <div class="movie-meta">
+              <span class="rating">★ 8.1</span>
+              <div class="genre-tags">
+                <span class="genre-tag">Drama</span>
+                <span class="genre-tag">Crime</span>
+                <span class="genre-tag">History</span>
+              </div>
+            </div>
+            <div class="showtimes">
+              <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">2:30 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">6:00 PM</button>
+              <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">9:30 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="movie-card" data-title="A Quiet Place: Day One" data-rating="7.8" data-release="2024-06-28" data-genres="Horror,Thriller,Sci-Fi">
+          <div class="movie-poster">
+            <img src="ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzIyNDlkYjk2LTUwZmQtNDgzOS04ZGIyLWI3NzZlMWE0OGNkNi5qcGc=.jpeg" alt="A Quiet Place: Day One">
+            <div class="movie-overlay">
+              <button class="btn-primary book-btn" data-movie="A Quiet Place: Day One">Book Now</button>
+              <button class="btn-icon" aria-label="Favorite">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge">3D</span>
+              <span class="format-badge dolby">DOLBY</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>A Quiet Place: Day One</h3>
+            <div class="movie-meta">
+              <span class="rating">★ 7.8</span>
+              <div class="genre-tags">
+                <span class="genre-tag">Horror</span>
+                <span class="genre-tag">Thriller</span>
+                <span class="genre-tag">Sci-Fi</span>
+              </div>
+            </div>
+            <div class="showtimes">
+              <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">3:30 PM</button>
+              <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">7:00 PM</button>
+              <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">10:30 PM</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Concessions -->
+  <section class="concessions" id="concessions">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2>Food & Drinks</h2>
+          <p class="section-subtitle">ORDER AHEAD • SKIP THE LINE • DELIVERED TO YOUR SEAT</p>
+        </div>
+        <button class="btn-primary">View Full Menu</button>
+      </div>
+
+      <div class="concessions-grid">
+        <div class="concession-card">
+          <div class="concession-image">
+            <img src="AR-1733309-classic-caramel-corn-ddmfs-2x1-68e0287ce691483ea6bfdce272b0ec5a.jpg" alt="Popcorn">
+            <div class="concession-badge">BEST SELLER</div>
+          </div>
+          <div class="concession-info">
+            <h3>Classic Popcorn</h3>
+            <p>Freshly popped with real butter</p>
+            <div class="concession-pricing">
+              <span class="price-option">Small $6</span>
+              <span class="price-option">Medium $8</span>
+              <span class="price-option">Large $10</span>
+            </div>
+            <button class="btn-add-cart">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="concession-card">
+          <div class="concession-image">
+            <img src="stock-photo-scattered-popcorn-and-two-buckets-of-nachos-next-to-the-video-camera-and-take-to-stop-and-continue-1198582738.jpg" alt="Combo Deal">
+            <div class="concession-badge featured">VALUE PACK</div>
+          </div>
+          <div class="concession-info">
+            <h3>Ultimate Combo</h3>
+            <p>Large popcorn, 2 drinks, nachos</p>
+            <div class="concession-pricing">
+              <span class="price-original">$28</span>
+              <span class="price-special">$22</span>
+              <span class="price-save">Save $6</span>
+            </div>
+            <button class="btn-add-cart featured">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="concession-card">
+          <div class="concession-image">
+            <img src="20250430-SEA-UltimateSmokedNachos-LorenaMasso-Beauty1-35-a0d81f942b394edf9137f9b2f09269a4.jpg" alt="Nachos">
+          </div>
+          <div class="concession-info">
+            <h3>Loaded Nachos</h3>
+            <p>Cheese, jalapenos, sour cream</p>
+            <div class="concession-pricing">
+              <span class="price-option">Regular $9</span>
+              <span class="price-option">Large $12</span>
+            </div>
+            <button class="btn-add-cart">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="concession-card">
+          <div class="concession-image">
+            <img src="Schweppes (1).png" alt="Drinks">
+          </div>
+          <div class="concession-info">
+            <h3>Premium Beverages</h3>
+            <p>Soft drinks, smoothies, specialty coffee</p>
+            <div class="concession-pricing">
+              <span class="price-option">Medium $5</span>
+              <span class="price-option">Large $7</span>
+            </div>
+            <button class="btn-add-cart">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="concession-card">
+          <div class="concession-image">
+            <img src="83393badc124840730cb91e3cd839b93_220516_gg_q3_recipe_hotdogs_v3.jpg.avif" alt="Hot Dogs">
+            <div class="concession-badge">NEW</div>
+          </div>
+          <div class="concession-info">
+            <h3>Gourmet Hot Dogs</h3>
+            <p>Signature toppings available</p>
+            <div class="concession-pricing">
+              <span class="price-option">Classic $8</span>
+              <span class="price-option">Premium $11</span>
+            </div>
+            <button class="btn-add-cart">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="concession-card">
+          <div class="concession-image">
+            <img src="il_570xN.2836344141_1js6.jpg.webp" alt="Candy">
+          </div>
+          <div class="concession-info">
+            <h3>Candy Selection</h3>
+            <p>Classic theater favorites</p>
+            <div class="concession-pricing">
+              <span class="price-option">$4 each</span>
+              <span class="price-option">3 for $10</span>
+            </div>
+            <button class="btn-add-cart">Add to Order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coming Soon -->
+  <section class="coming-soon" id="coming-soon">
+    <div class="container">
+      <h2>Coming Soon</h2>
+      <p class="section-subtitle">BE THE FIRST TO EXPERIENCE</p>
+
+      <div class="coming-soon-grid">
+        <div class="coming-card">
+          <div class="coming-poster">
+            <img src="deadpool&wolverine-poster.jpg" alt="Deadpool 3">
+            <div class="coming-date"><span class="date-month">JUL</span><span class="date-day">26</span></div>
+          </div>
+          <div class="coming-info">
+            <h3>Deadpool & Wolverine</h3>
+            <p>The Merc with a Mouth returns with an unlikely ally</p>
+            <button class="btn-notify">Notify Me</button>
+          </div>
+        </div>
+
+        <div class="coming-card">
+          <div class="coming-poster">
+            <img src="MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Gladiator 2">
+            <div class="coming-date"><span class="date-month">NOV</span><span class="date-day">22</span></div>
+          </div>
+          <div class="coming-info">
+            <h3>Gladiator II</h3>
+            <p>The epic saga continues with a new generation</p>
+            <button class="btn-notify">Notify Me</button>
+          </div>
+        </div>
+
+        <div class="coming-card">
+          <div class="coming-poster">
+            <img src="896d0b12-9ebf-4064-a121-f4294531c9c6.jpg" alt="Wicked">
+            <div class="coming-date"><span class="date-month">DEC</span><span class="date-day">25</span></div>
+          </div>
+          <div class="coming-info">
+            <h3>Wicked</h3>
+            <p>The untold story of the Witches of Oz</p>
+            <button class="btn-notify">Notify Me</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offers -->
+  <section class="offers" id="offers">
+    <div class="container">
+      <h2>Special Offers</h2>
+      <p class="section-subtitle">SAVE MORE ON YOUR NEXT VISIT</p>
+      <div class="offers-grid">
+        <div class="offer-card">
+          <div class="offer-icon">🎟️</div>
+          <h3>Member Tuesdays</h3>
+          <p>Get 25% off all tickets every Tuesday with THEATRUM Membership</p>
+          <span class="offer-code">Code: MEMBER25</span>
+        </div>
+
+        <div class="offer-card featured">
+          <div class="offer-badge">BEST VALUE</div>
+          <div class="offer-icon">⭐</div>
+          <h3>Premium Pass</h3>
+          <p>Unlimited movies for $24.99/month including IMAX and Dolby screenings</p>
+          <button class="btn-primary">Join Now</button>
+        </div>
+
+        <div class="offer-card">
+          <div class="offer-icon">🍿</div>
+          <h3>Snack Combo Deal</h3>
+          <p>Large popcorn and 2 drinks for only $15 with any ticket purchase</p>
+          <span class="offer-code">Code: SNACK15</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="experience">
+    <div class="container">
+      <h2>The THEATRUM Experience</h2>
+      <p class="section-subtitle">PREMIUM CINEMA TECHNOLOGY</p>
+      <div class="experience-grid">
+        <div class="experience-card">
+          <div class="experience-icon">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+              <polyline points="17 2 12 7 7 2"></polyline>
+            </svg>
+          </div>
+          <h3>IMAX</h3>
+          <p>Crystal-clear images on screens up to 8 stories high with immersive sound</p>
+        </div>
+
+        <div class="experience-card">
+          <div class="experience-icon">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+          </div>
+          <h3>Dolby Atmos</h3>
+          <p>Revolutionary audio technology that moves sound all around you</p>
+        </div>
+
+        <div class="experience-card">
+          <div class="experience-icon">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="8" width="18" height="12" rx="2"></rect>
+              <path d="M10 8V5c0-1.1.9-2 2-2s2 .9 2 2v3"></path>
+            </svg>
+          </div>
+          <h3>Luxury Recliners</h3>
+          <p>Reserved seating in premium electric recliners with extended leg room</p>
+        </div>
+
+        <div class="experience-card">
+          <div class="experience-icon">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+              <line x1="9" y1="9" x2="9.01" y2="9"></line>
+              <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            </svg>
+          </div>
+          <h3>Gourmet Concessions</h3>
+          <p>Artisan snacks, craft beverages, and chef-inspired menu items</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Locations -->
+  <section class="locations" id="locations">
+    <div class="container">
+      <h2>Our Locations</h2>
+      <p class="section-subtitle">FIND A THEATRUM NEAR YOU</p>
+      <div class="locations-grid">
+        <div class="location-card">
+          <h3>Downtown Premiere</h3>
+          <p class="location-address">123 Main Street, Downtown District</p>
+          <div class="location-details">
+            <span>16 Screens</span><span>IMAX</span><span>Dolby Atmos</span>
+          </div>
+          <button class="btn-secondary">Get Directions</button>
+        </div>
+
+        <div class="location-card">
+          <h3>Riverside Cinema</h3>
+          <p class="location-address">456 River Road, Waterfront Plaza</p>
+          <div class="location-details">
+            <span>12 Screens</span><span>70MM</span><span>VIP Lounge</span>
+          </div>
+          <button class="btn-secondary">Get Directions</button>
+        </div>
+
+        <div class="location-card">
+          <h3>Westside Multiplex</h3>
+          <p class="location-address">789 West Avenue, Shopping Center</p>
+          <div class="location-details">
+            <span>20 Screens</span><span>IMAX</span><span>4DX</span>
+          </div>
+          <button class="btn-secondary">Get Directions</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
+          <p>Experience cinema the way it was meant to be seen.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073C0 18.063 4.388 23.027 10.125 23.927v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+            <a href="#" aria-label="Twitter"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.6a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.61-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg></a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h4>Movies</h4>
+          <ul>
+            <li><a href="#now-playing">Now Playing</a></li>
+            <li><a href="#coming-soon">Coming Soon</a></li>
+            <li><a href="#">Movie Formats</a></li>
+            <li><a href="#">Private Events</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Membership</h4>
+          <ul>
+            <li><a href="#">Premium Pass</a></li>
+            <li><a href="#">Rewards Program</a></li>
+            <li><a href="#">Gift Cards</a></li>
+            <li><a href="#">Corporate Sales</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Newsletter</h4>
+          <p>Get the latest movies and exclusive offers</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email">
+            <button class="btn-primary">Subscribe</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 THEATRUM. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Settings</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AUTH: Account Choice (Skip removed) -->
+  <div class="overlay" id="choiceModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#choiceModal" aria-label="Close">✕</button>
+      <h3>Welcome to THEATRUM</h3>
+      <p class="sub">Choose how you want to start</p>
+      <div class="btn-row" style="margin-bottom:12px">
+        <button class="btn-primary" id="goLogin">Log In</button>
+        <button class="btn-secondary" id="goSignup">Create Account</button>
+        <button class="btn-secondary" id="goGuest">Continue as Guest</button>
+      </div>
+      <p class="muted">You can always create an account later for faster checkout and rewards.</p>
+    </div>
+  </div>
+
+  <!-- AUTH: Login -->
+  <div class="overlay" id="loginModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#loginModal" aria-label="Close">✕</button>
+      <h3>Log In</h3>
+      <p class="sub">Welcome back to premium cinema</p>
+      <div class="stack">
+        <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" placeholder="you@example.com"/></div>
+        <div class="field"><label for="loginPass">Password</label><input id="loginPass" type="password" placeholder="••••••••"/></div>
+        <label style="display:flex;gap:8px;align-items:center;color:var(--text-secondary);font-size:14px">
+          <input id="rememberMe" type="checkbox" style="accent-color:#dc2626"> Remember me
+        </label>
+        <span id="loginError" class="error">Invalid email or password.</span>
+        <div class="btn-row">
+          <button id="loginSubmit" class="btn-primary">Sign In</button>
+          <button class="btn-chip" data-swap="#loginModal,#signupModal">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Signup -->
+  <div class="overlay" id="signupModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#signupModal" aria-label="Close">✕</button>
+      <h3>Create Account</h3>
+      <p class="sub">Unlock faster checkout and member perks</p>
+      <div class="stack">
+        <div class="grid-2">
+          <div class="field"><label for="firstName">First name</label><input id="firstName" placeholder="First Name"/></div>
+          <div class="field"><label for="lastName">Last name</label><input id="lastName" placeholder="Last Name"/></div>
+        </div>
+        <div class="field"><label for="signupEmail">Email</label><input id="signupEmail" type="email" placeholder="you@example.com"/></div>
+        <div class="field"><label for="signupPass">Password</label><input id="signupPass" type="password" placeholder="At least 8 characters"/></div>
+        <span id="signupError" class="error">Please fill all fields correctly.</span>
+        <div class="btn-row">
+          <button id="signupSubmit" class="btn-primary">Create Account</button>
+          <button class="btn-chip" data-swap="#signupModal,#loginModal">I already have an account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Verify -->
+  <div class="overlay" id="verifyModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#verifyModal" aria-label="Close">✕</button>
+      <h3>Verify Your Email</h3>
+      <p class="sub">We sent a 6-digit code to <span id="verifyEmailSpan" style="color:#f59e0b"></span></p>
+      <div class="stack">
+        <div class="field"><label for="verifyCode">Enter code</label><input id="verifyCode" inputmode="numeric" maxlength="6" placeholder="123456"/></div>
+        <div class="btn-row">
+          <button id="verifySubmit" class="btn-primary">Verify</button>
+          <button class="btn-chip" id="resendCode">Resend Code</button>
+        </div>
+        <span id="verifyError" class="error">Invalid code. Try 123456 for demo.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Welcome -->
+  <div class="overlay" id="welcomeModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#welcomeModal" aria-label="Close">✕</button>
+      <h3>Welcome, <span id="welcomeName">Guest</span> 🎬</h3>
+      <p class="sub">Your account is ready. Let’s book your next movie.</p>
+      <div class="success show" id="welcomeBadge">Email verified. Membership perks unlocked.</div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn-primary" onclick="document.querySelector('#now-playing').scrollIntoView({behavior:'smooth'}); hide('#welcomeModal')">Start Booking</button>
+        <button class="btn-secondary" data-close="#welcomeModal">Maybe later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKING -->
+  <div class="bottom-sheet" id="bookingSheet" aria-hidden="true">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">BOOK TICKETS</div>
+        <h4 id="sheetTitle">Movie</h4>
+      </div>
+      <button class="close-x" style="position:static" data-close="#bookingSheet" aria-label="Close">✕</button>
+    </div>
+
+    <div class="stack">
+      <div class="field">
+        <label for="dateInput">Pick a date</label>
+        <input id="dateInput" type="date"/>
+        <div class="date-row" id="quickDates"></div>
+      </div>
+
+      <div class="field">
+        <label>Showtimes</label>
+        <div class="showtime-row" id="timesRow"></div>
+      </div>
+
+      <div id="confirmMsg" class="success">Great! Your seats are reserved for <span id="confirmWhen"></span>. (Demo state)</div>
+
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn-primary" id="confirmBtn">Continue</button>
+        <button class="btn-secondary" data-close="#bookingSheet">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const show = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.add('show'); el.setAttribute('aria-hidden','false'); };
+    const hide = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.remove('show'); el.setAttribute('aria-hidden','true'); };
+
+    // Open Account Choice
+    $('#userButton').addEventListener('click', () => show('#choiceModal'));
+    $('#logo').addEventListener('click', () => show('#choiceModal'));
+
+    // Close any modal/sheet
+    $$('.close-x').forEach(btn => btn.addEventListener('click', (e) => {
+      const target = e.currentTarget.getAttribute('data-close');
+      if (target) hide(target);
+      else hide(e.currentTarget.closest('.overlay') || '#bookingSheet');
+    }));
+
+    // Swap login <-> signup
+    $$('[data-swap]').forEach(b => b.addEventListener('click', (e) => {
+      const [from,to] = e.currentTarget.getAttribute('data-swap').split(',');
+      hide(from); show(to);
+    }));
+
+    // Account choice
+    $('#goLogin').addEventListener('click', () => { hide('#choiceModal'); show('#loginModal'); });
+    $('#goSignup').addEventListener('click', () => { hide('#choiceModal'); show('#signupModal'); });
+
+    // Guest updates button -> Guest
+    $('#goGuest').addEventListener('click', () => {
+      hide('#choiceModal');
+      const username = 'Guest';
+      $('#welcomeName').textContent = username;
+      $('#welcomeBadge').classList.remove('show'); // guest doesn't show verified badge
+      show('#welcomeModal');
+
+      const userBtn = $('#userButton');
+      userBtn.textContent = username;
+      userBtn.classList.remove('btn-secondary');
+      userBtn.classList.add('btn-primary');
+    });
+
+    // Login
+    $('#loginSubmit').addEventListener('click', () => {
+      const email = $('#loginEmail').value.trim();
+      const pass = $('#loginPass').value.trim();
+      const ok = email.includes('@') && pass.length >= 4;
+      $('#loginError').classList.toggle('show', !ok);
+      if (ok) {
+        const username = email.split('@')[0];
+        hide('#loginModal');
+        $('#welcomeName').textContent = username;
+        $('#welcomeBadge').classList.remove('show');
+        show('#welcomeModal');
+
+        const userBtn = $('#userButton');
+        userBtn.textContent = username;
+        userBtn.classList.remove('btn-secondary');
+        userBtn.classList.add('btn-primary');
+      }
+    });
+
+    // Signup -> Verify
+    $('#signupSubmit').addEventListener('click', () => {
+      const fn = $('#firstName').value.trim();
+      const ln = $('#lastName').value.trim();
+      const em = $('#signupEmail').value.trim();
+      const pw = $('#signupPass').value.trim();
+      const ok = fn && ln && em.includes('@') && pw.length >= 8;
+      $('#signupError').classList.toggle('show', !ok);
+      if (ok) {
+        hide('#signupModal');
+        $('#verifyEmailSpan').textContent = em;
+        show('#verifyModal');
+      }
+    });
+
+    // Verify (demo code 123456)
+    $('#verifySubmit').addEventListener('click', () => {
+      const code = $('#verifyCode').value.trim();
+      const ok = code === '123456';
+      $('#verifyError').classList.toggle('show', !ok);
+      if (ok) {
+        hide('#verifyModal');
+        const name = $('#firstName').value.trim() || 'Member';
+        $('#welcomeName').textContent = name;
+        $('#welcomeBadge').classList.add('show');
+        show('#welcomeModal');
+
+        const userBtn = $('#userButton');
+        userBtn.textContent = name;
+        userBtn.classList.remove('btn-secondary');
+        userBtn.classList.add('btn-primary');
+      }
+    });
+
+    // Resend (demo)
+    $('#resendCode').addEventListener('click', () => {
+      const btn = $('#resendCode');
+      btn.disabled = true;
+      btn.textContent = 'Code sent';
+      setTimeout(() => { btn.disabled = false; btn.textContent = 'Resend Code'; }, 1500);
+    });
+
+    // Search / Filter / Sort
+    const moviesGrid = $('#moviesGrid');
+    const cards = $$('#moviesGrid .movie-card');
+
+    $('#globalSearch').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      cards.forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        const genres = card.dataset.genres.toLowerCase();
+        card.style.display = (title.includes(q) || genres.includes(q)) ? '' : 'none';
+      });
+    });
+
+    $$('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
+      $$('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const g = btn.dataset.filter;
+      cards.forEach(card => {
+        if (g === 'all') { card.style.display = ''; return; }
+        const genres = card.dataset.genres.split(',').map(s => s.trim());
+        card.style.display = genres.includes(g) ? '' : 'none';
+      });
+    }));
+
+    $('#sortSelect').addEventListener('change', (e) => {
+      const val = e.target.value;
+      const sorted = [...cards].sort((a,b) => {
+        if (val === 'title') return a.dataset.title.localeCompare(b.dataset.title);
+        if (val === 'rating') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+        if (val === 'release') return new Date(b.dataset.release) - new Date(a.dataset.release);
+        return 0;
+      });
+      sorted.forEach(c => moviesGrid.appendChild(c));
+    });
+
+    // Booking bottom sheet
+    const bookingSheet = $('#bookingSheet');
+    let selectedMovie = null, selectedDate = null, selectedTime = null;
+
+    $$('.book-btn').forEach(b => b.addEventListener('click', (e) => {
+      selectedMovie = e.currentTarget.dataset.movie;
+      $('#sheetTitle').textContent = selectedMovie;
+      prepDates(); prepTimes();
+      $('#confirmMsg').classList.remove('show');
+      selectedTime = null;
+      show(bookingSheet);
+    }));
+
+    function prepDates() {
+      const today = new Date();
+      const input = $('#dateInput');
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth()+1).padStart(2,'0');
+      const dd = String(today.getDate()).padStart(2,'0');
+      input.min = `${yyyy}-${mm}-${dd}`;
+      input.value = `${yyyy}-${mm}-${dd}`;
+      selectedDate = input.value;
+      const wrap = $('#quickDates');
+      wrap.innerHTML = '';
+      for (let i=0;i<10;i++){
+        const d = new Date(today); d.setDate(today.getDate()+i);
+        const lab = d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+        const val = d.toISOString().slice(0,10);
+        const chip = document.createElement('button');
+        chip.className = 'btn-chip' + (i===0 ? ' active' : '');
+        chip.textContent = lab;
+        chip.dataset.date = val;
+        chip.addEventListener('click', () => {
+          $$('#quickDates .btn-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          input.value = val;
+          selectedDate = val;
+          $('#confirmMsg').classList.remove('show');
+        });
+        wrap.appendChild(chip);
+      }
+      input.addEventListener('change', () => {
+        selectedDate = input.value;
+        $$('#quickDates .btn-chip').forEach(c => c.classList.remove('active'));
+        $('#confirmMsg').classList.remove('show');
+      }, { once: true });
+    }
+
+    function prepTimes() {
+      const row = $('#timesRow');
+      row.innerHTML = '';
+      const times = ['12:30 PM','2:00 PM','3:45 PM','5:30 PM','7:15 PM','9:00 PM','10:30 PM'];
+      times.forEach(t => {
+        const pill = document.createElement('button');
+        pill.className = 'pill';
+        pill.textContent = t;
+        pill.addEventListener('click', () => {
+          $$('#timesRow .pill').forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected');
+          selectedTime = t;
+          $('#confirmMsg').classList.remove('show');
+        });
+        row.appendChild(pill);
+      });
+    }
+
+    $('#confirmBtn').addEventListener('click', () => {
+      if (!selectedMovie || !selectedDate || !selectedTime) {
+        const msg = $('#confirmMsg');
+        msg.textContent = 'Please pick a date and a showtime.';
+        msg.classList.add('show');
+        return;
+      }
+      $('#confirmWhen').textContent = `${selectedMovie} • ${selectedDate} • ${selectedTime}`;
+      const msg = $('#confirmMsg');
+      msg.textContent = `Great! Your seats are reserved for ${selectedMovie} • ${selectedDate} • ${selectedTime}. (Demo state)`;
+      msg.classList.add('show');
+      setTimeout(() => hide('#bookingSheet'), 1200);
+    });
+  </script>
+</body>
+</html>
