@@ -57,11 +57,11 @@ body {
 }
 
 .logo-thea {
-    color: var(--text-primary);
+    color: var(--accent-red);
 }
 
 .logo-trum {
-    color: var(--accent-red);
+    color: var(--text-primary);
 }
 
 .nav-links {
