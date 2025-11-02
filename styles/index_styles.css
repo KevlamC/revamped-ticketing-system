@@ -353,6 +353,73 @@ body {
     border-color: var(--accent-red);
 }
 
+/* Ticket type dropdown styling to match page look */
+.ticket-type-select {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 220px;
+    transition: all 0.18s ease;
+    /* Custom dropdown arrow */
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.ticket-type-select:focus {
+    outline: none;
+    border-color: var(--accent-red);
+}
+
+/* Style the dropdown list itself */
+.ticket-type-select {
+    /* existing styles remain... */
+    border-radius: 12px;
+}
+
+/* Styling for select dropdown */
+select.ticket-type-select:not(:focus) {
+    border-color: var(--border);
+}
+
+/* Modern browsers - webkit */
+select.ticket-type-select::-webkit-listbox {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 0;
+    margin-top: 4px;
+}
+
+/* Styling for the dropdown options */
+.ticket-type-select option {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    font-weight: 500;
+    border: none;
+}
+
+/* Style for option hover/selected states */
+.ticket-type-select option:hover,
+.ticket-type-select option:focus {
+    background-color: var(--accent-blue);
+    color: var(--text-primary);
+}
+
+.ticket-type-select option:checked {
+    background-color: var(--accent-blue);
+    color: var(--text-primary);
+}
+
 .movies-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
