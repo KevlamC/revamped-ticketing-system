@@ -8,29 +8,29 @@ document.addEventListener("DOMContentLoaded", () => {
   // The asset paths here must match your repository structure
   const slides = [
     {
-      image:
-        "assets/dune2-poster.jpg",
+    image:
+      "Pictures/dune2-poster.jpg",
       title: "DUNE: PART TWO",
       subtitle: "THEATRES ONLY NOW PLAYING",
       cta: "GET TICKETS",
     },
     {
-      image:
-        "assets/opp-poster.jpg",
+    image:
+      "Pictures/opp-poster.jpg",
       title: "OPPENHEIMER",
       subtitle: "EXPERIENCE IN 70MM",
       cta: "BOOK SEATS",
     },
     {
-      image:
-        "assets/sonic2-poster.jpg",
+    image:
+      "Pictures/sonic2-poster.jpg",
       title: "SONIC THE HEDGEHOG 2",
       subtitle: "UltraAVX",
       cta: "VIEW SHOWTIMES",
     },
     {
-      image:
-        "assets/deadpool&wolverine-poster.jpg",
+    image:
+      "Pictures/deadpool&wolverine-poster.jpg",
       title: "DEADPOOL & WOLVERINE",
       subtitle: "EXPERIENCE IN IMAX",
       cta: "GET TICKETS",
@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let currentSlide = 0;
 
-  // DOM refs
-  const heroImageEl = document.getElementById("hero-image");
+  // DOM refs (may be missing on some pages)
+  const heroImageEl = document.getElementById("hero-image"); // now a background div
   const heroTitleEl = document.getElementById("hero-title");
   const heroSubtitleEl = document.getElementById("hero-subtitle");
   const heroCtaEl = document.getElementById("hero-cta");
@@ -53,7 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * Renders the navigation dots based on the current slide index.
    */
   function renderDots() {
-    heroDotsEl.innerHTML = "";
+  if (!heroDotsEl) return;
+  heroDotsEl.innerHTML = "";
     slides.forEach((_, idx) => {
       const dot = document.createElement("span");
       dot.className = "hero-dot" + (idx === currentSlide ? " hero-dot-active" : "");
@@ -70,39 +71,37 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function updateSlide() {
     const slide = slides[currentSlide];
+    // If hero background exists, fade it via opacity and set background-image
+    if (heroImageEl) {
+      heroImageEl.style.opacity = 0;
+      setTimeout(() => {
+        heroImageEl.style.backgroundImage = `url(${slide.image})`;
+        heroImageEl.setAttribute('aria-label', slide.title + ' Banner');
+        heroImageEl.style.opacity = 1;
+      }, 150);
+    }
 
-    // Simple fade out effect
-    heroImageEl.style.opacity = 0;
-
-    // Wait for the fade out to finish, then swap content and fade back in
-    setTimeout(() => {
-      heroImageEl.src = slide.image;
-      heroImageEl.alt = slide.title + " Banner";
-      heroTitleEl.textContent = slide.title;
-      heroSubtitleEl.textContent = slide.subtitle;
-      heroCtaEl.textContent = slide.cta;
-
-      // Simple fade in effect
-      heroImageEl.style.opacity = 1;
-    }, 150);
+    if (heroTitleEl) heroTitleEl.textContent = slide.title;
+    if (heroSubtitleEl) heroSubtitleEl.textContent = slide.subtitle;
+    if (heroCtaEl) heroCtaEl.textContent = slide.cta;
 
     renderDots();
   }
 
   // Hook up 'Previous' arrow click handler
-  heroPrevEl.addEventListener("click", () => {
+  heroPrevEl?.addEventListener("click", () => {
     // Navigate to the previous slide, wrapping around if needed
     currentSlide = (currentSlide - 1 + slides.length) % slides.length;
     updateSlide();
   });
 
   // Hook up 'Next' arrow click handler
-  heroNextEl.addEventListener("click", () => {
+  heroNextEl?.addEventListener("click", () => {
     // Navigate to the next slide, wrapping around if needed
     currentSlide = (currentSlide + 1) % slides.length;
     updateSlide();
   });
 
-  // Initialize the slider on page load
-  updateSlide();
+  // Initialize the slider on page load (only if hero exists)
+  if (heroImageEl || heroTitleEl || heroSubtitleEl) updateSlide();
 });

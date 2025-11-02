@@ -61,23 +61,28 @@ function renderCards(list){
         <img src="${m.poster}" alt="${m.title}" />
         <div class="movie-overlay">
           <button class="btn-primary" data-action="book" data-title="${m.title}">Book Now</button>
+          <button class="btn-secondary btn-secondary-overlay" data-action="view" data-title="${m.title}">View Details</button>
         </div>
         <div class="format-badges">
           ${m.formats.map(f => `<span class="format-badge ${f.toLowerCase()}">${f}</span>`).join('')}
         </div>
       </div>
-      <div class="movie-info">
-        <h3>${m.title}</h3>
-        <div class="movie-meta">
-          <span class="rating">★ ${m.rating}</span>
-          <div class="genre-tags">
-            ${m.genres.map(g => `<span class="genre-tag">${g}</span>`).join('')}
+          <div class="movie-info">
+            <h3>${m.title}</h3>
+            <div class="movie-meta">
+              <div class="top-row">
+                <span class="rating">★ ${m.rating}</span>
+                <div class="genre-tags">
+                  ${m.genres.map(g => `<span class="genre-tag">${g}</span>`).join('')}
+                </div>
+              </div>
+              <div class="times-row">
+                <div class="showtimes">
+                  ${m.times.slice(0,3).map(t => `<button class="showtime-btn" data-action="book" data-title="${m.title}" data-time="${t}">${t}</button>`).join('')}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="showtimes">
-          ${m.times.slice(0,3).map(t => `<button class="showtime-btn" data-action="book" data-title="${m.title}" data-time="${t}">${t}</button>`).join('')}
-        </div>
-      </div>
     </div>
   `).join('');
 }
