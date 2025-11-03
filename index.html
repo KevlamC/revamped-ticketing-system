@@ -39,6 +39,20 @@
     .date-row,.showtime-row{display:flex;gap:8px;flex-wrap:wrap}
     .pill{background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:700}
     .pill.selected{background:var(--accent-red);color:#fff;border-color:var(--accent-red)}
+    .calendar-dropdown{background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:8px}
+    .calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+    .calendar-header button{background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:6px 12px;border-radius:6px;cursor:pointer}
+    .calendar-header button:hover{background:var(--accent-red);border-color:var(--accent-red)}
+    .calendar-header span{font-weight:700;font-size:14px;color:var(--text-primary);flex:1;text-align:center}
+    .calendar-day-headers{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;text-align:center}
+    .calendar-day-headers div{font-weight:700;font-size:12px;color:var(--text-secondary);padding:6px 0}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .dropdown-calendar-day{background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;text-align:center}
+    .dropdown-calendar-day:hover:not(.unavailable){background:var(--bg-quaternary);border-color:var(--text-secondary)}
+    .dropdown-calendar-day.available{color:var(--text-primary)}
+    .dropdown-calendar-day.today{background:var(--accent-red);color:#fff;border-color:var(--accent-red)}
+    .dropdown-calendar-day.selected{background:var(--accent-red);color:#fff;border-color:var(--accent-red);font-weight:800}
+    .dropdown-calendar-day.unavailable{background:var(--bg-secondary);color:var(--text-muted);cursor:not-allowed;opacity:.5}
   </style>
 </head>
 
@@ -827,12 +841,29 @@
 
     <div class="stack">
       <div class="field">
-        <label for="dateInput">Pick a date</label>
-        <input id="dateInput" type="date"/>
-        <div class="date-row" id="quickDates"></div>
+        <label>Pick a date</label>
+        
+        <!-- Dropdown Calendar -->
+        <div id="calendarDropdown" class="calendar-dropdown">
+          <div class="calendar-header">
+            <button id="dropdownPrevBtn">‹</button>
+            <span id="dropdownMonth">Month Year</span>
+            <button id="dropdownNextBtn">›</button>
+          </div>
+          <div class="calendar-day-headers">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+          </div>
+          <div id="dropdownCalendarDays" class="calendar-grid"></div>
+        </div>
       </div>
 
-      <div class="field">
+      <div class="field" id="showtimesField">
         <label>Showtimes</label>
         <div class="showtime-row" id="timesRow"></div>
       </div>
@@ -852,6 +883,123 @@
     const $$ = s => Array.from(document.querySelectorAll(s));
     const show = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.add('show'); el.setAttribute('aria-hidden','false'); };
     const hide = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.remove('show'); el.setAttribute('aria-hidden','true'); };
+
+    // Schedule Data for calendar
+    const scheduleData = {
+      '2025-11-22': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
+      '2025-11-23': ['1:00 PM', '4:30 PM', '8:00 PM'],
+      '2025-11-24': ['6:00 PM', '9:30 PM'],
+      '2025-11-25': ['6:00 PM', '9:30 PM'],
+      '2025-11-26': ['3:45 PM', '7:15 PM'],
+      '2025-11-27': ['3:45 PM', '7:15 PM'],
+      '2025-11-28': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
+      '2025-11-29': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
+      '2025-11-30': ['1:00 PM', '4:30 PM', '8:00 PM'],
+      '2025-12-01': ['6:00 PM', '9:30 PM'],
+      '2025-12-02': ['6:00 PM', '9:30 PM'],
+    };
+
+    // Calendar variables
+    let dropdownCurrentMonth = new Date().getMonth();
+    let dropdownCurrentYear = new Date().getFullYear();
+    const calendarDropdown = $('#calendarDropdown');
+    const dropdownCalendarDays = $('#dropdownCalendarDays');
+    const dropdownMonthElement = $('#dropdownMonth');
+    const dropdownPrevBtn = $('#dropdownPrevBtn');
+    const dropdownNextBtn = $('#dropdownNextBtn');
+
+    // --- Dropdown Calendar Functions ---
+
+    // Generate calendar for the dropdown
+    function generateDropdownCalendar() {
+      dropdownCalendarDays.innerHTML = '';
+      
+      const firstDay = new Date(dropdownCurrentYear, dropdownCurrentMonth, 1);
+      const lastDay = new Date(dropdownCurrentYear, dropdownCurrentMonth + 1, 0);
+      const daysInMonth = lastDay.getDate();
+      const startingDay = firstDay.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      
+      // Update month display
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      dropdownMonthElement.textContent = `${monthNames[dropdownCurrentMonth]} ${dropdownCurrentYear}`;
+      
+      // Add empty cells for days before the first day of the month
+      for (let i = 0; i < startingDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'dropdown-calendar-day unavailable';
+        dropdownCalendarDays.appendChild(emptyCell);
+      }
+      
+      // Add cells for each day of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('button');
+        dayCell.className = 'dropdown-calendar-day';
+        dayCell.textContent = day;
+        
+        const dateStr = `${dropdownCurrentYear}-${String(dropdownCurrentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        dayCell.dataset.date = dateStr;
+        
+        // Check if this date has showtimes
+        if (scheduleData[dateStr]) {
+          dayCell.classList.add('available');
+          
+          // Check if this is today
+          const today = new Date();
+          if (today.getDate() === day && 
+              today.getMonth() === dropdownCurrentMonth && 
+              today.getFullYear() === dropdownCurrentYear) {
+            dayCell.classList.add('today');
+          }
+          
+          // Check if this is the selected date
+          if (selectedDate === dateStr) {
+            dayCell.classList.add('selected');
+          }
+          
+          dayCell.addEventListener('click', () => selectDateFromDropdown(dayCell, dateStr));
+        } else {
+          dayCell.classList.add('unavailable');
+          dayCell.disabled = true;
+        }
+        
+        dropdownCalendarDays.appendChild(dayCell);
+      }
+    }
+
+    // Handle date selection from dropdown
+    function selectDateFromDropdown(dayCell, dateStr) {
+      // Update the main date selection
+      selectedDate = dateStr;
+      selectedTime = null;
+      
+      // Highlight selected date in calendar
+      $$('.dropdown-calendar-day').forEach(d => d.classList.remove('selected'));
+      dayCell.classList.add('selected');
+      
+      // Generate time buttons
+      prepTimes();
+    }
+
+    // Navigate to previous month in dropdown
+    function dropdownPrevMonth() {
+      dropdownCurrentMonth--;
+      if (dropdownCurrentMonth < 0) {
+        dropdownCurrentMonth = 11;
+        dropdownCurrentYear--;
+      }
+      generateDropdownCalendar();
+    }
+
+    // Navigate to next month in dropdown
+    function dropdownNextMonth() {
+      dropdownCurrentMonth++;
+      if (dropdownCurrentMonth > 11) {
+        dropdownCurrentMonth = 0;
+        dropdownCurrentYear++;
+      }
+      generateDropdownCalendar();
+    }
 
     // Open Account Choice
     $('#userButton').addEventListener('click', () => show('#choiceModal'));
@@ -992,8 +1140,9 @@
     $$('.book-btn').forEach(b => b.addEventListener('click', (e) => {
       selectedMovie = e.currentTarget.dataset.movie;
       $('#sheetTitle').textContent = selectedMovie;
-      prepDates(); prepTimes();
+      prepDates();
       $('#confirmMsg').classList.remove('show');
+      $('#timesRow').innerHTML = '';
       selectedTime = null;
       show(bookingSheet);
     }));
@@ -1005,46 +1154,26 @@
         const title = v.getAttribute('data-movie');
         selectedMovie = title;
         $('#sheetTitle').textContent = title;
-        prepDates(); prepTimes();
+        prepDates();
         $('#confirmMsg').classList.remove('show');
+        $('#timesRow').innerHTML = '';
         selectedTime = null;
         show(bookingSheet);
       }
     });
 
+    // Calendar event listeners
+    dropdownPrevBtn.addEventListener('click', dropdownPrevMonth);
+    dropdownNextBtn.addEventListener('click', dropdownNextMonth);
+
     function prepDates() {
       const today = new Date();
-      const input = $('#dateInput');
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth()+1).padStart(2,'0');
-      const dd = String(today.getDate()).padStart(2,'0');
-      input.min = `${yyyy}-${mm}-${dd}`;
-      input.value = `${yyyy}-${mm}-${dd}`;
-      selectedDate = input.value;
-      const wrap = $('#quickDates');
-      wrap.innerHTML = '';
-      for (let i=0;i<10;i++){
-        const d = new Date(today); d.setDate(today.getDate()+i);
-        const lab = d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
-        const val = d.toISOString().slice(0,10);
-        const chip = document.createElement('button');
-        chip.className = 'btn-chip' + (i===0 ? ' active' : '');
-        chip.textContent = lab;
-        chip.dataset.date = val;
-        chip.addEventListener('click', () => {
-          $$('#quickDates .btn-chip').forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
-          input.value = val;
-          selectedDate = val;
-          $('#confirmMsg').classList.remove('show');
-        });
-        wrap.appendChild(chip);
-      }
-      input.addEventListener('change', () => {
-        selectedDate = input.value;
-        $$('#quickDates .btn-chip').forEach(c => c.classList.remove('active'));
-        $('#confirmMsg').classList.remove('show');
-      }, { once: true });
+      selectedDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+      
+      // Initialize dropdown calendar
+      dropdownCurrentMonth = today.getMonth();
+      dropdownCurrentYear = today.getFullYear();
+      generateDropdownCalendar();
     }
 
     function prepTimes() {
