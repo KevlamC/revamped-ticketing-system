@@ -18,13 +18,13 @@
         --selected: #facc15;
 
         /* sizing – slightly smaller than before */
-        --seat: clamp(26px, 2.6vw, 40px);
-        --gap: clamp(6px, 0.9vw, 10px);
-        --rowgap: clamp(8px, 1.1vw, 16px);
+        --seat: clamp(20px, 2vw, 32px);
+        --gap: clamp(4px, 0.7vw, 8px);
+        --rowgap: clamp(6px, 0.8vw, 12px);
 
-        max-width: min(1120px, 92vw);
-        margin: clamp(84px, 8vh, 120px) auto 42px;
-        padding: clamp(20px, 2.6vw, 34px);
+        max-width: min(900px, 90vw);
+        margin: 40px auto 30px;
+        padding: clamp(16px, 2vw, 28px);
         background: var(--panel);
         border: 1px solid var(--panel-border);
         border-radius: 12px;
@@ -108,12 +108,12 @@
 
         /* Outline (Back) */
         .btn-outline{
-        color: #e5e7eb;
-        border: 2px solid #2b2f34;
-        background: transparent;
-        box-shadow: 0 0 0 1px rgba(255,255,255,.04) inset;
+        color:#fff;
+        background: var(--accent-red, #e11d48);
+        border: 2px solid transparent;
+        box-shadow: 0 8px 16px rgba(225,29,72,.25);
         }
-        .btn-outline:hover{ border-color:#3a3f46; transform: translateY(-1px); }
+        .btn-outline:hover{ transform: translateY(-1px); box-shadow: 0 10px 18px rgba(225,29,72,.32); }
         .btn-outline:active{ transform:none; }
         .btn-outline:focus{ outline: 2px solid #7dd3fc; outline-offset: 3px; }
 
@@ -164,16 +164,20 @@
                     </svg>
                 </div>
                 <button class="btn-secondary" style="background-color: var(--accent-red); color: white; border: none;">Alex</button>
-                <button class="btn-secondary" style="background-color: var(--accent-red); color: white; border: none;">Buy Tickets</button>
             </div>
         </div>
     </nav>
 
- 
- <!-- Seat Layout -->
-    <div class="seat-layout">
-  <h2 class="seat-title">Select Your Seats</h2>
-      <div class="screen">SCREEN</div>
+    <main class="container" style="padding-top:60px;padding-bottom:60px;">
+        <!-- Seat Layout -->
+        <div class="seat-layout">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <button onclick="window.history.back()" style="display:flex;align-items:center;gap:6px;background:var(--accent-red);border:none;color:white;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">
+                    ← Back
+                </button>
+            </div>
+            <h2 class="seat-title">Select Your Seats</h2>
+            <div class="screen">SCREEN</div>
 
       <div class="rows">
         <!-- Row A -->
@@ -257,13 +261,12 @@
           <span>Your Seats</span>
         </div>
       </div>
-      <div class="seat-actions">
-        <button class="btn btn-outline">Back</button>
-        <button class="btn btn-primary">Next</button>
-        
+            <div class="seat-actions">
+                <button class="btn btn-outline" onclick="window.location.href='food-selection.html'">Select Snacks</button>
+                <button class="btn btn-primary" onclick="window.location.href='payment-summary.html'">Continue to Payment</button>
+            </div>
         </div>
-    </div>
-  </main>
+    </main>
 
 
     <footer class="footer">
@@ -282,7 +285,7 @@
                         </a>
                         <a href="#" aria-label="Twitter">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417a9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
                             </svg>
                         </a>
                         <a href="#" aria-label="Instagram">
@@ -322,15 +325,6 @@
                         <li><a href="#">Careers</a></li>
                     </ul>
                 </div>
-
-                <div class="footer-section">
-                    <h4>Newsletter</h4>
-                    <p>Get the latest movies and exclusive offers</p>
-                    <div class="newsletter-form">
-                        <input type="email" placeholder="Your email">
-                        <button class="btn-primary">Subscribe</button>
-                    </div>
-                </div>
             </div>
 
             <div class="footer-bottom">
@@ -342,8 +336,6 @@
                 </div>
             </div>
         </div>
-    </footer>
-
-    <script src="scripts/booking.js"></script>
+    </footer>    <script src="scripts/booking.js"></script>
 </body>
 </html>

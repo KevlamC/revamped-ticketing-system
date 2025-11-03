@@ -32,48 +32,75 @@
         </div>
     </nav>
 
-    <main class="container" style="padding-top:120px;">
-        <div class="section-header">
-            <div>
-                <h2>Select Ticket Quantity</h2>
-                <p class="section-subtitle">Choose how many tickets you'd like to purchase</p>
+    <main class="container" style="padding-top:60px;padding-bottom:60px;">
+        <div style="max-width:1000px;margin:0 auto;">
+            <div class="section-header" style="margin-bottom:30px;">
+                <div>
+                    <h2>Select Ticket Quantity</h2>
+                    <p class="section-subtitle" style="margin-bottom:16px;">Choose how many tickets you'd like to purchase</p>
+                    <button onclick="window.history.back()" style="display:flex;align-items:center;gap:6px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">
+                        ← Back
+                    </button>
+                </div>
             </div>
         </div>
 
-        <section class="movie-card" style="padding:24px;">
-            <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
-                <div style="flex:1;min-width:240px;">
-                    <img id="selected-poster" src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg" alt="Selected Movie" style="width:100%;height:320px;object-fit:cover;border-radius:12px;">
-                </div>
-                <div style="flex:2;min-width:280px;">
-                    <h3 id="selected-title">DUNE: PART TWO</h3>
-                    <p id="selected-info" class="section-subtitle">PG-13 • 2h 46m • Sci-Fi</p>
+        <!-- Movie Title -->
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:24px;flex-wrap:wrap;max-width:1000px;margin-left:auto;margin-right:auto;">
+            <h3 id="selected-title" style="font-size:28px;font-weight:800;margin:0;color:var(--text-primary);">DUNE: PART TWO</h3>
+            <p id="selected-info" style="margin:0;font-size:13px;color:var(--text-secondary);">PG-13 • 2h 46m • Sci-Fi</p>
+        </div>
 
-                    <div style="margin-top:24px;">
-                        <div style="margin-bottom:16px;">
-                            <label style="display:block;margin-bottom:8px;color:var(--text-secondary);">Ticket Type</label>
-                            <select class="size-select ticket-type-select" id="ticket-type">
-                                <option value="standard" data-price="12">Standard — $12.00</option>
-                                <option value="3d" data-price="15">3D — $15.00</option>
-                                <option value="imax" data-price="18">IMAX — $18.00</option>
-                                <option value="dolby" data-price="16">Dolby — $16.00</option>
-                            </select>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:12px;">
-                            <button id="decrement" class="btn-secondary" aria-label="Decrease quantity">-</button>
-                            <div style="font-size:28px;font-weight:800;min-width:64px;text-align:center;" id="ticket-count">1</div>
-                            <button id="increment" class="btn-secondary" aria-label="Increase quantity">+</button>
-                            <div style="margin-left:24px;color:var(--text-secondary);">Price per ticket: <strong id="ticket-price">$12.00</strong></div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top:20px;display:flex;gap:12px;">
-                        <button id="proceed-to-seats" class="btn-primary btn-large">Select Seats</button>
-                        <a href="index.html" class="btn-secondary btn-large">Cancel</a>
-                    </div>
+        <div style="display:grid;grid-template-columns:0.8fr 1.2fr;gap:32px;align-items:center;max-width:1000px;margin:0 auto;">
+            <!-- Movie Poster Section -->
+            <div style="position:relative;">
+                <div style="background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.05));border-radius:12px;padding:12px;backdrop-filter:blur(10px);border:1px solid var(--border);">
+                    <img id="selected-poster" src="assets/dune2-poster.jpg" alt="Selected Movie" style="width:100%;height:auto;border-radius:8px;box-shadow:0 16px 32px rgba(0,0,0,0.3);">
                 </div>
             </div>
-        </section>
+
+            <!-- Selection Section -->
+            <div style="padding:0;">
+
+                <!-- Ticket Type Selection -->
+                <div style="margin-bottom:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:14px;">
+                    <label style="display:block;margin-bottom:8px;font-size:12px;color:var(--text-secondary);font-weight:700;">Ticket Type</label>
+                    <select class="size-select ticket-type-select" id="ticket-type" style="width:100%;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;">
+                        <option value="standard" data-price="12">Standard — $12.00</option>
+                        <option value="3d" data-price="15">3D — $15.00</option>
+                        <option value="imax" data-price="18">IMAX — $18.00</option>
+                        <option value="dolby" data-price="16">Dolby — $16.00</option>
+                    </select>
+                </div>
+
+                <!-- Quantity Selection -->
+                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:10px;font-size:12px;color:var(--text-secondary);font-weight:700;">Number of Tickets</label>
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <button id="decrement" class="btn-secondary" aria-label="Decrease quantity" style="width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:16px;font-weight:700;">−</button>
+                        <div style="font-size:36px;font-weight:900;min-width:60px;text-align:center;color:var(--accent-red);" id="ticket-count">1</div>
+                        <button id="increment" class="btn-secondary" aria-label="Increase quantity" style="width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:16px;font-weight:700;">+</button>
+                    </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div style="background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.05));border:1px solid rgba(220,38,38,0.3);border-radius:10px;padding:12px;margin-bottom:20px;text-align:center;">
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px;">Price per ticket</div>
+                    <div style="font-size:22px;font-weight:800;color:var(--accent-red);" id="ticket-price">$12.00</div>
+                </div>
+
+                <!-- Total Price -->
+                <div style="background:linear-gradient(135deg,rgba(220,38,38,0.15),rgba(220,38,38,0.08));border:1px solid rgba(220,38,38,0.4);border-radius:10px;padding:12px;margin-bottom:20px;text-align:center;">
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px;">Total</div>
+                    <div style="font-size:28px;font-weight:900;color:var(--accent-red);" id="total-price">$12.00</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display:flex;gap:10px;flex-direction:column;">
+                    <button id="proceed-to-seats" class="btn-primary btn-large" style="padding:12px 28px;border-radius:6px;font-weight:700;font-size:14px;width:100%;">Select Seats</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="footer">
@@ -153,6 +180,42 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Update price display when ticket type changes
+        const ticketTypeSelect = document.getElementById('ticket-type');
+        const ticketCountEl = document.getElementById('ticket-count');
+        const ticketPriceEl = document.getElementById('ticket-price');
+        const totalPriceEl = document.getElementById('total-price');
+        const decrementBtn = document.getElementById('decrement');
+        const incrementBtn = document.getElementById('increment');
+        
+        let ticketCount = 1;
+        
+        function updatePrices() {
+            const pricePerTicket = parseFloat(ticketTypeSelect.options[ticketTypeSelect.selectedIndex].dataset.price);
+            const total = pricePerTicket * ticketCount;
+            
+            ticketPriceEl.textContent = `$${pricePerTicket.toFixed(2)}`;
+            totalPriceEl.textContent = `$${total.toFixed(2)}`;
+        }
+        
+        ticketTypeSelect.addEventListener('change', updatePrices);
+        
+        decrementBtn.addEventListener('click', () => {
+            if (ticketCount > 1) {
+                ticketCount--;
+                ticketCountEl.textContent = ticketCount;
+                updatePrices();
+            }
+        });
+        
+        incrementBtn.addEventListener('click', () => {
+            ticketCount++;
+            ticketCountEl.textContent = ticketCount;
+            updatePrices();
+        });
+    </script>
 
     <script src="scripts/booking.js"></script>
 </body>
