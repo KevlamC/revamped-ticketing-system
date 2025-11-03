@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dune: Part Two | THEATRUM</title>
+
+  <!-- IMPORTANT: This links to your existing style file -->
+  <link rel="stylesheet" href="styles/index_styles.css"/>
+
+  <!-- Custom styles for the detail page layout -->
+  <style>
+    /* ======================================
+    Movie Detail Specific Styles 
+    (Overrides and additions for this page)
+    ======================================
+    */
+    
+    /* FIX 1: Remove the unnecessary purple underline from the THEATRUM logo link */
+    .logo, .logo:visited {
+        text-decoration: none;
+    }
+
+    /* Large hero section for the movie banner */
+    .movie-hero {
+        position: relative;
+        padding: 100px 0;
+        /* Restored the background image placeholder */
+        background: linear-gradient(to top, var(--bg-primary) 10%, rgba(0, 0, 0, 0.9) 100%), 
+                    
+    }
+
+    .movie-hero-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .movie-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text-primary);
+    }
+
+    .movie-meta {
+        display: flex;
+        gap: 15px;
+        color: var(--text-secondary);
+        font-size: 1rem;
+        align-items: center;
+    }
+
+    .meta-tag {
+        background: var(--bg-card);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        border: 1px solid var(--border);
+    }
+
+    /* Main detail layout */
+    .detail-section {
+        max-width: 1200px;
+        margin: -80px auto 60px; /* Pulls content up over the banner */
+        padding: 0 20px;
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+    }
+
+    .poster-column {
+        flex: 0 0 320px;
+        /* FIX: Make the left column fixed when scrolling */
+        position: sticky;
+        top: 120px; /* Position below the navbar */
+        height: fit-content;
+        z-index: 10;
+    }
+
+    /* New: Container for relative positioning of the poster icon */
+    .poster-container {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden; /* Important for border radius masking */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        cursor: pointer;
+    }
+    
+    .movie-poster-large {
+        width: 100%;
+        height: auto;
+        /* Removed border-radius/shadow, now managed by .poster-container */
+        border-radius: 0; 
+        box-shadow: none; 
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .poster-container:hover .movie-poster-large {
+        transform: scale(1.03);
+    }
+
+    /* New: Play Icon Overlay */
+    .poster-play-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: rgba(220, 38, 38, 0.85); /* Red accent, slightly transparent */
+        backdrop-filter: blur(5px);
+        display: grid;
+        place-items: center;
+        transition: all 0.3s ease;
+        z-index: 20;
+        border: 4px solid white;
+    }
+
+    .poster-play-icon:hover {
+        background-color: var(--accent-red);
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 30px;
+        position: relative;
+    }
+
+    /* Selected date & time display */
+    .selected-display {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .selected-date, .selected-time {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .selected-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 4px;
+    }
+
+    .selected-time .selected-value {
+        color: var(--accent-red);
+    }
+
+    /* New: Style for the icon inside the trailer button */
+    #watchTrailerBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #watchTrailerBtn svg {
+        margin-right: 8px;
+        width: 18px;
+        height: 18px;
+        fill: currentColor; 
+    }
+
+    .synopsis-column {
+        flex-grow: 1;
+        background: var(--bg-secondary);
+        padding: 40px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+
+    .section-heading {
+        font-size: 2rem;
+        color: var(--accent-red);
+        margin-bottom: 20px;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 10px;
+    }
+    
+    .synopsis-content {
+        overflow: hidden; 
+    }
+
+    .synopsis-content p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+        line-height: 1.8;
+    }
+
+    .cast-crew-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .cast-member {
+        background: var(--bg-card);
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .cast-member strong {
+        display: block;
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .cast-member span {
+        color: var(--text-muted);
+    }
+    
+    /* ======================================
+    Horizontal Date Selection Styles
+    ====================================== */
+    .date-selection-container {
+        margin-bottom: 20px;
+        background: var(--bg-card);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid var(--border);
+    }
+
+    .date-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .current-month {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .date-navigation {
+        display: flex;
+        gap: 10px;
+    }
+
+    .nav-btn {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+        background: var(--accent-red);
+        color: white;
+        border-color: var(--accent-red);
+    }
+
+    .dates-container {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 10px 0;
+        scrollbar-width: thin;
+    }
+
+    .date-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 70px;
+        padding: 12px 8px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .date-button:hover {
+        background: #252535;
+        color: var(--text-primary);
+    }
+
+    .date-button.selected {
+        background: var(--accent-red);
+        border-color: var(--accent-red);
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(220, 38, 38, 0.4);
+    }
+
+    .date-button .day {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .date-button .date {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .date-button.today {
+        border: 2px solid var(--accent-red);
+    }
+
+    /* ======================================
+    Dropdown Calendar Styles
+    ====================================== */
+    .calendar-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        z-index: 100;
+        display: none;
+    }
+
+    .calendar-dropdown.active {
+        display: block;
+    }
+
+    .dropdown-calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .dropdown-month {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .dropdown-calendar-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .dropdown-weekday {
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        padding: 8px 0;
+    }
+
+    .dropdown-calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+    }
+
+    .dropdown-calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+    }
+
+    .dropdown-calendar-day:hover {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+    }
+
+    .dropdown-calendar-day.selected {
+        background: var(--accent-red);
+        color: white;
+        font-weight: 600;
+    }
+
+    .dropdown-calendar-day.available {
+        color: var(--text-primary);
+    }
+
+    .dropdown-calendar-day.unavailable {
+        color: var(--text-muted);
+        cursor: not-allowed;
+    }
+
+    .dropdown-calendar-day.today {
+        border: 2px solid var(--accent-red);
+    }
+
+    .time-selection-container {
+        margin-top: 30px;
+    }
+
+    .time-buttons-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .time-button {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .time-button:hover {
+        background: #252535;
+        color: var(--text-primary);
+    }
+
+    .time-button.selected {
+        background: var(--accent-red);
+        border-color: var(--accent-red);
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(220, 38, 38, 0.4);
+    }
+
+    .booking-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 30px;
+        align-items: center;
+    }
+
+    .btn-large {
+        padding: 14px 30px;
+        font-size: 1.1rem;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-secondary);
+    }
+
+    .placeholder-text {
+        color: var(--text-muted);
+        font-style: italic;
+        padding: 8px;
+        text-align: center;
+        grid-column: 1 / -1;
+    }
+
+    /* Custom message box style (to replace alert()) */
+    .message-box {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        animation: fade-in 0.3s ease-out;
+    }
+
+    .message-box.error {
+        background-color: #fca5a5;
+        color: #991b1b;
+        border: 1px solid #dc2626;
+    }
+
+    .message-box.success {
+        background-color: #a7f3d0;
+        color: #065f46;
+        border: 1px solid #10b981;
+    }
+
+    .message-box.info {
+        background-color: #bfdbfe;
+        color: #1d4ed8;
+        border: 1px solid #3b82f6;
+    }
+
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer logo fix - remove underline */
+    .footer-logo, .footer-logo:visited {
+        text-decoration: none;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 900px) {
+        .detail-section {
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .poster-column {
+            width: min(80%, 350px);
+            margin: 0 auto;
+            position: static; /* Remove sticky on mobile */
+        }
+
+        .action-buttons {
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .btn-primary, .btn-secondary {
+            flex: 1;
+        }
+
+        .synopsis-column {
+            padding: 30px 20px;
+            margin-top: 20px;
+        }
+
+        .movie-title {
+            font-size: 2.5rem;
+        }
+        
+        .dates-container {
+            gap: 8px;
+        }
+        
+        .date-button {
+            min-width: 65px;
+            padding: 10px 6px;
+        }
+        
+        .calendar-dropdown {
+            width: 90vw;
+            left: 5vw;
+        }
+        
+        .selected-display {
+            padding: 10px 12px;
+        }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation (Reused from index_styles.css) -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></a>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Now Playing</a></li>
+        <li><a href="#">Coming Soon</a></li>
+        <li><a href="#">Food & Drinks</a></li>
+        <li><a href="#">Locations</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="search-box">
+          <input type="text" placeholder="Search..." aria-label="Search movies"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+        </div>
+        <button class="btn-primary">Alex</button>
+        <button class="btn-primary">Buy Tickets</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Movie Header Banner -->
+  <section class="movie-hero">
+    <div class="movie-hero-content">
+      <h1 class="movie-title">Dune: Part Two</h1>
+      <div class="movie-meta">
+        <span class="meta-tag">Sci-Fi / Adventure</span>
+        <span class="meta-tag">2h 46m</span>
+        <span class="meta-tag">IMAX</span>
+        <span class="meta-tag" style="background: var(--accent-amber);">★ 8.8/10</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Detail Content -->
+  <main class="detail-section">
+    <!-- Left Column: Poster and Action Buttons -->
+    <div class="poster-column">
+      
+      <!-- New Container for Poster and Play Icon -->
+      <div class="poster-container" id="posterTrailerIcon">
+        <img 
+          src="assets\dune2-poster.jpg" 
+          onerror="this.onerror=null;this.src='https://placehold.co/320x480/1a1a24/FFFFFF?text=Poster';"
+          alt="Dune: Part Two Movie Poster" 
+          class="movie-poster-large"
+        >
+        <!-- SVG Play Icon Overlay -->
+        <div class="poster-play-icon">
+          <svg viewBox="0 0 24 24" width="40" height="40" style="fill:white; margin-left: 5px;">
+              <!-- Play Triangle -->
+              <path d="M6 5v14l11-7z"/>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <!-- Selected Date & Time Display -->
+        <div class="selected-display">
+          <div class="selected-date">
+            Selected Date
+            <div class="selected-value" id="selectedDateValue">Not selected</div>
+          </div>
+          <div class="selected-time">
+            Selected Time
+            <div class="selected-value" id="selectedTimeValue">Not selected</div>
+          </div>
+        </div>
+        
+        <button class="btn-primary" id="getTicketsBtn">Get Tickets</button>
+        <button class="btn-secondary" id="openCalendarBtn">Open Calendar</button>
+        
+        <!-- Dropdown Calendar -->
+        <div class="calendar-dropdown" id="calendarDropdown">
+          <div class="dropdown-calendar-header">
+            <div class="dropdown-month" id="dropdownMonth">November 2025</div>
+            <div class="date-navigation">
+              <button class="nav-btn" id="dropdownPrevBtn">←</button>
+              <button class="nav-btn" id="dropdownNextBtn">→</button>
+            </div>
+          </div>
+          
+          <div class="dropdown-calendar-weekdays">
+            <div class="dropdown-weekday">S</div>
+            <div class="dropdown-weekday">M</div>
+            <div class="dropdown-weekday">T</div>
+            <div class="dropdown-weekday">W</div>
+            <div class="dropdown-weekday">T</div>
+            <div class="dropdown-weekday">F</div>
+            <div class="dropdown-weekday">S</div>
+          </div>
+          
+          <div class="dropdown-calendar-days" id="dropdownCalendarDays">
+            <!-- Calendar days will be generated here by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Synopsis and Details -->
+    <div class="synopsis-column">
+      <h2 class="section-heading">Synopsis</h2>
+      <div class="synopsis-content">
+        <p>Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, he endeavors to prevent a terrible future only he can foresee.</p>
+        <p>This film explores the legendary sci-fi universe created by Frank Herbert, delving deeper into the politics, religion, and ecology of the desert planet Arrakis and the power struggles surrounding its most valuable resource, the spice Melange.</p>
+      </div>
+      
+      <h2 class="section-heading">Cast & Crew</h2>
+      <div class="cast-crew-grid">
+        <div class="cast-member">
+          <strong>Director</strong>
+          <span>Denis Villeneuve</span>
+        </div>
+        <div class="cast-member">
+          <strong>Paul Atreides</strong>
+          <span>Timothée Chalamet</span>
+        </div>
+        <div class="cast-member">
+          <strong>Chani</strong>
+          <span>Zendaya</span>
+        </div>
+        <div class="cast-member">
+          <strong>Gurney Halleck</strong>
+          <span>Josh Brolin</span>
+        </div>
+        <div class="cast-member">
+          <strong>Lady Jessica</strong>
+          <span>Rebecca Ferguson</span>
+        </div>
+      </div>
+      
+      <!-- HORIZONTAL DATE SELECTION -->
+      <h2 class="section-heading" style="margin-top: 40px;">Select Date & Time</h2>
+      
+      <div class="date-selection-container" id="dateSelectionContainer">
+        <div class="date-header">
+          <div class="current-month" id="currentMonth">November 2025</div>
+          <div class="date-navigation">
+            <button class="nav-btn" id="prevWeekBtn">←</button>
+            <button class="nav-btn" id="nextWeekBtn">→</button>
+          </div>
+        </div>
+        
+        <div class="dates-container" id="datesContainer">
+          <!-- Date buttons will be generated here by JavaScript -->
+        </div>
+      </div>
+
+      <div class="time-selection-container">
+        <h3 class="schedule-label">Select Time:</h3>
+        <div class="time-buttons-container" id="timeButtons">
+          <p id="timePlaceholder" class="placeholder-text">Please select a date first.</p>
+          <!-- Times will be generated here by JavaScript -->
+        </div>
+      </div>
+      
+      <div class="booking-actions">
+        <button class="btn-primary btn-large" id="bookTicketsBtn">Get Tickets</button>
+      </div>
+      <!-- END DATE SELECTION -->
+
+    </div>
+  </main>
+
+  <!-- Footer (Reused from index_styles.css) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <!-- Fixed: Remove underline from footer logo -->
+          <div class="footer-logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
+          <p>Experience cinema the way it was meant to be seen.</p>
+        </div>
+        <div class="footer-section"><h4>Movies</h4><ul><li><a href="#">Now Playing</a></li><li><a href="#">Coming Soon</a></li><li><a href="#">Movie Formats</a></li></ul></div>
+        <div class="footer-section"><h4>Membership</h4><ul><li><a href="#">Premium Pass</a></li><li><a href="#">Rewards</a></li><li><a href="#">Gift Cards</a></li></ul></div>
+        <div class="footer-section"><h4>Support</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Careers</a></li></ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 THEATRUM. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Schedule Data (Days and associated showtimes)
+    // Keys are formatted as YYYY-MM-DD for date matching
+    const scheduleData = {
+      '2025-11-22': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
+      '2025-11-23': ['1:00 PM', '4:30 PM', '8:00 PM'],
+      '2025-11-24': ['6:00 PM', '9:30 PM'],
+      '2025-11-25': ['6:00 PM', '9:30 PM'],
+      '2025-11-26': ['3:45 PM', '7:15 PM'],
+      '2025-11-27': ['3:45 PM', '7:15 PM'],
+      '2025-11-28': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
+      '2025-11-29': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
+      '2025-11-30': ['1:00 PM', '4:30 PM', '8:00 PM'],
+      '2025-12-01': ['6:00 PM', '9:30 PM'],
+      '2025-12-02': ['6:00 PM', '9:30 PM'],
+    };
+
+    let selectedDate = null;
+    let selectedTime = null;
+    let currentStartDate = new Date('2025-11-22'); // Starting date for the week view
+    let dropdownCurrentMonth = new Date().getMonth();
+    let dropdownCurrentYear = new Date().getFullYear();
+
+    const datesContainer = document.getElementById('datesContainer');
+    const timeButtonsContainer = document.getElementById('timeButtons');
+    const currentMonthElement = document.getElementById('currentMonth');
+    const prevWeekBtn = document.getElementById('prevWeekBtn');
+    const nextWeekBtn = document.getElementById('nextWeekBtn');
+    const bookTicketsBtn = document.getElementById('bookTicketsBtn');
+    const openCalendarBtn = document.getElementById('openCalendarBtn');
+    const dateSelectionContainer = document.getElementById('dateSelectionContainer');
+    const calendarDropdown = document.getElementById('calendarDropdown');
+    const dropdownCalendarDays = document.getElementById('dropdownCalendarDays');
+    const dropdownMonthElement = document.getElementById('dropdownMonth');
+    const dropdownPrevBtn = document.getElementById('dropdownPrevBtn');
+    const dropdownNextBtn = document.getElementById('dropdownNextBtn');
+    const selectedDateValue = document.getElementById('selectedDateValue');
+    const selectedTimeValue = document.getElementById('selectedTimeValue');
+    const synopsisCol = document.querySelector('.synopsis-column');
+
+    // --- Date Functions ---
+
+    // Update the selected date and time display
+    function updateSelectedDisplay() {
+      if (selectedDate) {
+        const dateObj = new Date(selectedDate);
+        const formattedDate = dateObj.toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        selectedDateValue.textContent = formattedDate;
+      } else {
+        selectedDateValue.textContent = 'Not selected';
+      }
+      
+      if (selectedTime) {
+        selectedTimeValue.textContent = selectedTime;
+      } else {
+        selectedTimeValue.textContent = 'Not selected';
+      }
+    }
+
+    // Generate date buttons for the current week
+    function generateDateButtons() {
+      datesContainer.innerHTML = '';
+      
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      
+      // Update month display
+      currentMonthElement.textContent = `${monthNames[currentStartDate.getMonth()]} ${currentStartDate.getFullYear()}`;
+      
+      // Generate buttons for 7 days starting from currentStartDate
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(currentStartDate);
+        date.setDate(currentStartDate.getDate() + i);
+        
+        const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        
+        const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+        const dayName = dayNames[date.getDay()];
+        
+        const dateButton = document.createElement('button');
+        dateButton.className = 'date-button';
+        dateButton.dataset.date = dateStr;
+        
+        // Check if this date has showtimes
+        if (scheduleData[dateStr]) {
+          // Check if this is today
+          const today = new Date();
+          if (today.getDate() === date.getDate() && 
+              today.getMonth() === date.getMonth() && 
+              today.getFullYear() === date.getFullYear()) {
+            dateButton.classList.add('today');
+          }
+          
+          // Check if this is the selected date
+          if (selectedDate === dateStr) {
+            dateButton.classList.add('selected');
+          }
+          
+          dateButton.innerHTML = `
+            <div class="day">${dayName}</div>
+            <div class="date">${date.getDate()}</div>
+          `;
+          
+          dateButton.addEventListener('click', () => selectDate(dateButton, dateStr));
+        } else {
+          dateButton.classList.add('unavailable');
+          dateButton.innerHTML = `
+            <div class="day">${dayName}</div>
+            <div class="date">${date.getDate()}</div>
+          `;
+          dateButton.disabled = true;
+        }
+        
+        datesContainer.appendChild(dateButton);
+      }
+    }
+
+    // Handle date selection
+    function selectDate(dateButton, dateStr) {
+      // Reset all date selections
+      document.querySelectorAll('.date-button').forEach(button => {
+        button.classList.remove('selected');
+      });
+      document.querySelectorAll('.dropdown-calendar-day').forEach(day => {
+        day.classList.remove('selected');
+      });
+      
+      // Select the clicked date
+      dateButton.classList.add('selected');
+      selectedDate = dateStr;
+      selectedTime = null; // Reset time when date changes
+      
+      // Update the display
+      updateSelectedDisplay();
+      
+      // Generate time buttons for the selected date
+      generateTimeButtons(dateStr);
+      
+      // Close dropdown if open
+      calendarDropdown.classList.remove('active');
+    }
+
+    // Generate time buttons for the selected date
+    function generateTimeButtons(dateStr) {
+      timeButtonsContainer.innerHTML = ''; // Clear previous buttons/placeholder
+      const times = scheduleData[dateStr];
+
+      if (!times || times.length === 0) {
+        timeButtonsContainer.innerHTML = `<p class="placeholder-text">No showtimes available for this date.</p>`;
+        return;
+      }
+
+      times.forEach(t => {
+        const button = document.createElement('button');
+        button.className = 'time-button';
+        button.textContent = t;
+        
+        button.addEventListener('click', () => selectTime(button, t));
+        timeButtonsContainer.appendChild(button);
+      });
+    }
+
+    // Handle time selection
+    function selectTime(button, time) {
+      // Reset all time buttons
+      document.querySelectorAll('.time-button').forEach(t => t.classList.remove('selected'));
+      button.classList.add('selected');
+      selectedTime = time;
+      
+      // Update the display
+      updateSelectedDisplay();
+    }
+
+    // Navigate to previous week
+    function prevWeek() {
+      currentStartDate.setDate(currentStartDate.getDate() - 7);
+      generateDateButtons();
+    }
+
+    // Navigate to next week
+    function nextWeek() {
+      currentStartDate.setDate(currentStartDate.getDate() + 7);
+      generateDateButtons();
+    }
+
+    // --- Dropdown Calendar Functions ---
+
+    // Generate calendar for the dropdown
+    function generateDropdownCalendar() {
+      dropdownCalendarDays.innerHTML = '';
+      
+      const firstDay = new Date(dropdownCurrentYear, dropdownCurrentMonth, 1);
+      const lastDay = new Date(dropdownCurrentYear, dropdownCurrentMonth + 1, 0);
+      const daysInMonth = lastDay.getDate();
+      const startingDay = firstDay.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      
+      // Update month display
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      dropdownMonthElement.textContent = `${monthNames[dropdownCurrentMonth]} ${dropdownCurrentYear}`;
+      
+      // Add empty cells for days before the first day of the month
+      for (let i = 0; i < startingDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'dropdown-calendar-day unavailable';
+        dropdownCalendarDays.appendChild(emptyCell);
+      }
+      
+      // Add cells for each day of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('button');
+        dayCell.className = 'dropdown-calendar-day';
+        dayCell.textContent = day;
+        
+        const dateStr = `${dropdownCurrentYear}-${String(dropdownCurrentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        dayCell.dataset.date = dateStr;
+        
+        // Check if this date has showtimes
+        if (scheduleData[dateStr]) {
+          dayCell.classList.add('available');
+          
+          // Check if this is today
+          const today = new Date();
+          if (today.getDate() === day && 
+              today.getMonth() === dropdownCurrentMonth && 
+              today.getFullYear() === dropdownCurrentYear) {
+            dayCell.classList.add('today');
+          }
+          
+          // Check if this is the selected date
+          if (selectedDate === dateStr) {
+            dayCell.classList.add('selected');
+          }
+          
+          dayCell.addEventListener('click', () => selectDateFromDropdown(dayCell, dateStr));
+        } else {
+          dayCell.classList.add('unavailable');
+          dayCell.disabled = true;
+        }
+        
+        dropdownCalendarDays.appendChild(dayCell);
+      }
+    }
+
+    // Handle date selection from dropdown
+    function selectDateFromDropdown(dayCell, dateStr) {
+      // Update the main date selection
+      selectedDate = dateStr;
+      selectedTime = null;
+      
+      // Update the horizontal date buttons to match
+      generateDateButtons();
+      
+      // Update the display
+      updateSelectedDisplay();
+      
+      // Generate time buttons
+      generateTimeButtons(dateStr);
+      
+      // Close the dropdown
+      calendarDropdown.classList.remove('active');
+    }
+
+    // Navigate to previous month in dropdown
+    function dropdownPrevMonth() {
+      dropdownCurrentMonth--;
+      if (dropdownCurrentMonth < 0) {
+        dropdownCurrentMonth = 11;
+        dropdownCurrentYear--;
+      }
+      generateDropdownCalendar();
+    }
+
+    // Navigate to next month in dropdown
+    function dropdownNextMonth() {
+      dropdownCurrentMonth++;
+      if (dropdownCurrentMonth > 11) {
+        dropdownCurrentMonth = 0;
+        dropdownCurrentYear++;
+      }
+      generateDropdownCalendar();
+    }
+
+    // Toggle dropdown calendar
+    function toggleCalendarDropdown() {
+      calendarDropdown.classList.toggle('active');
+    }
+
+    // Function to display a temporary message (replacing alert())
+    function displayMessage(type, text) {
+        // Remove any existing messages
+        document.querySelectorAll('.message-box').forEach(m => m.remove()); 
+        
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message-box ${type}`;
+        msgDiv.textContent = text;
+        
+        // Prepend the message inside the synopsis column
+        synopsisCol.prepend(msgDiv);
+        
+        // Remove message after a few seconds
+        setTimeout(() => msgDiv.remove(), 4000); 
+    }
+
+    // --- Initial Setup and Event Listeners ---
+
+    // Initialize date buttons when the page loads
+    generateDateButtons();
+    generateDropdownCalendar();
+    updateSelectedDisplay();
+
+    // Event listeners for week navigation
+    prevWeekBtn.addEventListener('click', prevWeek);
+    nextWeekBtn.addEventListener('click', nextWeek);
+
+    // Event listeners for dropdown calendar
+    dropdownPrevBtn.addEventListener('click', dropdownPrevMonth);
+    dropdownNextBtn.addEventListener('click', dropdownNextMonth);
+    openCalendarBtn.addEventListener('click', toggleCalendarDropdown);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.action-buttons')) {
+        calendarDropdown.classList.remove('active');
+      }
+    });
+
+    // Event listener for booking tickets
+    bookTicketsBtn.addEventListener('click', () => {
+      if (!selectedDate || !selectedTime) {
+        displayMessage('error', 'Please select a date and a showtime before getting tickets.');
+        return;
+      }
+
+      // Format the date for display
+      const dateObj = new Date(selectedDate);
+      const formattedDate = dateObj.toLocaleDateString('en-US', { 
+        weekday: 'short', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+
+      // Proceed with booking logic
+      const message = `Booking initiated for Dune: Part Two on ${formattedDate} at ${selectedTime}.`;
+      console.log(message);
+      
+      displayMessage('success', message); 
+    });
+
+  </script>
+</body>
+</html>
