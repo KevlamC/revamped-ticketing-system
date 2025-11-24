@@ -1,0 +1,114 @@
+/* === Tap to Pay Screen === */
+
+.tap-screen {
+  min-height: 100vh;
+  background: radial-gradient(circle at 80% 20%, #1a1a25 0%, #000 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem 4rem;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+}
+
+.tap-card {
+  background: rgba(15,15,22,0.9);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 360px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+  color: #fff;
+}
+
+.tap-status {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+/* circular card reader visual */
+.tap-reader-icon {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #2a2a3c 0%, #0a0a12 70%);
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tap-chip {
+  z-index: 3;
+  font-size: 2rem;
+}
+
+.tap-wave {
+  position: absolute;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+}
+.tap-wave-1 {
+  width: 80px;
+  height: 80px;
+}
+.tap-wave-2 {
+  width: 100px;
+  height: 100px;
+}
+
+.tap-instructions {
+  font-size: 0.8rem;
+  color: #bdbdd6;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+  max-width: 14rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.tap-order-block {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.tap-row-label {
+  color: #9d9db5;
+  font-size: 0.8rem;
+}
+
+.tap-row-value {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.tap-cancel-btn {
+  width: 100%;
+  background: transparent;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+}

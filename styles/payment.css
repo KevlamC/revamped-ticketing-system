@@ -1,0 +1,162 @@
+/* === Payment Method Selection Screen === */
+
+.pay-screen {
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 20%, #1f1f2a 0%, #0a0a0f 60%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem 4rem;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+}
+
+.pay-card {
+  background: rgba(20,20,28,0.9);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  padding: 1.5rem 1.5rem 2rem;
+  color: #fff;
+}
+
+.pay-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  color: #fff;
+}
+
+/* movie summary card */
+.pay-movie-summary {
+  display: flex;
+  gap: 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pay-thumb-poster {
+  width: 64px;
+  height: 96px;
+  background-image: url("images/dune-poster.jpg"); /* update to your poster path */
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.pay-summary-info {
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: #cfcfd9;
+}
+
+.pay-movie-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.pay-show-details {
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+  color: #cfcfd9;
+}
+
+.pay-price-total {
+  font-size: 0.85rem;
+  color: #fff;
+}
+.pay-amount {
+  font-weight: 600;
+}
+
+/* payment methods list */
+.pay-method-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pay-method-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pay-method-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pay-method-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* Little placeholder icons using text */
+.pay-card-icon::after {
+  content: "CARD";
+}
+.pay-tap-icon::after {
+  content: "TAP";
+}
+.pay-gift-icon::after {
+  content: "GIFT";
+}
+
+.pay-method-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.pay-method-desc {
+  font-size: 0.7rem;
+  color: #9d9db5;
+}
+
+.pay-method-right {
+  font-size: 0.8rem;
+  color: #fff;
+  font-weight: 500;
+}
+.pay-chevron {
+  font-size: 1.2rem;
+  line-height: 1;
+  color: #9d9db5;
+}
+
+.pay-footer-note {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #6d6d80;
+  line-height: 1.4;
+  margin-top: 1rem;
+}
