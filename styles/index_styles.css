@@ -90,10 +90,6 @@ body {
 @media (max-width:620px){ .movies-grid{grid-template-columns:repeat(8,1fr)} .movie-card{grid-column:span 4} .concessions-grid,.offers-grid,.experience-grid,.locations-grid,.coming-soon-grid{grid-template-columns:repeat(6,1fr)} }
 
 /* End of cleaned stylesheet */
-    align-items: center;
-    justify-content: space-between;
-    gap: 48px;
-}
 
 .logo {
     font-size: 28px;
