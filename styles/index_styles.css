@@ -29,7 +29,10 @@ input, button, textarea, select { font: inherit; color: inherit }
     --shadow-1: 0 8px 30px rgba(0,0,0,.35);
     --shadow-2: 0 24px 80px rgba(0,0,0,.45);
     --overlay: rgba(10,10,15,.85);
+    --bg-tertiary: #0f1629;
+    --bg-quaternary: #11121a;
 }
+.section-header .section-subtitle { margin-bottom: 12px; }
 
 body {
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -40,32 +43,22 @@ body {
     overflow-x: hidden;
 }
 
-.container { width: min(1200px, 92vw); margin: 0 auto }
+/* Section spacing utility */
+.section-block { padding-top: 3rem; padding-bottom: 3rem; }
 
 /* Navbar */
 .navbar { position: sticky; top: 0; z-index: 1000; background: linear-gradient(180deg, rgba(11,14,23,.95), rgba(11,14,23,.7)); backdrop-filter: blur(8px); border-bottom:1px solid var(--border) }
 .nav-container { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:14px 32px; max-width:1400px; margin:0 auto }
-.logo { font-weight:900; font-size:22px }
-.nav-links { display:flex; gap:18px; list-style:none }
+/* logo styling defined further below */
+.nav-links { list-style:none }
 .nav-links a { color:var(--text-secondary); text-decoration:none; padding:8px 10px; border-radius:var(--radius-sm); font-weight:600 }
 
-/* Buttons */
-.btn-primary { background:var(--accent-red); color:#fff; padding:10px 14px; border-radius:10px; font-weight:700 }
-.btn-secondary { background:var(--bg-secondary); color:var(--text-secondary); border:1px solid var(--border); padding:10px 14px; border-radius:10px }
-
-/* Hero */
-.hero { position:relative; min-height:62vh; display:grid; place-items:center; background: linear-gradient(180deg, rgba(10,13,23,.9), rgba(10,13,23,.7) 50%, rgba(10,13,23,.9)), url('../Pictures/dune2-poster.jpg') center/cover no-repeat; border-bottom:1px solid var(--border) }
-.hero-overlay{ position:absolute; inset:0; background: linear-gradient(180deg, rgba(10,13,23,.75), rgba(10,13,23,.6)) }
-.hero-content { position:relative; width:min(1000px,92%); text-align:center; padding:60px 0 70px }
+/* Buttons defined later (kept detailed definitions) */
 
 /* Movies grid */
-.movies-grid{ display:grid; grid-template-columns: repeat(12,1fr); gap:18px }
-.movie-card{ grid-column:span 3; background:var(--bg-card); border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border) }
-.movie-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-2); border-color:var(--border-strong) }
 
-/* Overlays & badges */
-.format-badge { font-size:11px; font-weight:800; padding:6px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.2); background: rgba(16,20,40,.55); color:#fff }
-.format-badge.imax{ background:rgba(61,176,255,.24); border-color:rgba(61,176,255,.6) }
+
+/* Overlays & badges (detailed definitions follow later) */
 
 /* Small UI components */
 .quantity-selector { display:flex; align-items:center; gap:6px }
@@ -326,14 +319,14 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 80px 32px;
+    padding: 48px 32px;
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 48px;
+    margin-bottom: 32px;
     flex-wrap: wrap;
     gap: 24px;
 }
@@ -358,6 +351,7 @@ body {
     align-items: center;
     flex-wrap: wrap;
 }
+.section-header .filter-controls { margin-top: 12px; }
 
 .filter-btn {
     background: var(--bg-card);
@@ -558,10 +552,12 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
 
 .rating {
     color: var(--accent-amber);
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 16px;
     white-space: nowrap;
+    margin-right: 8px;
 }
+.top-row { display:flex; align-items:center; gap:12px; }
 
 .genre-tags {
     display: flex;
@@ -570,14 +566,37 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
 }
 
 .genre-tag {
-    background: var(--bg-secondary);
-    color: var(--text-muted);
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-    border: 1px solid var(--border);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: transparent;
 }
+
+/* Food size row alignment */
+.size-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    width:100%;
+}
+
+.size-label {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.quantity-selector {
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.quantity { min-width: 22px; text-align: center; display: inline-block }
+
+.quantity-btn { min-width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; padding:0; }
 
 .showtimes {
     display: flex;
@@ -611,7 +630,7 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
 .concessions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 32px;
+    gap: 24px;
 }
 
 .concession-card {
@@ -664,8 +683,10 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
 }
 
 .concession-info {
-    padding: 24px;
+    padding: 16px;
 }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
 .concession-info h3 {
     font-size: 20px;
