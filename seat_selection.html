@@ -226,7 +226,7 @@
         <span class="row-label">F</span>
         <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
         <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-        <div class="seat selected">7</div><div class="seat selected">8</div>
+        <div class="seat">7</div><div class="seat">8</div>
         </div>
 
         <!-- Row G -->
@@ -263,8 +263,8 @@
         </div>
       </div>
             <div class="seat-actions">
-                <button class="btn btn-outline" onclick="window.location.href='food_selection.html'">Select Snacks</button>
-                <button class="btn btn-primary" onclick="window.location.href='payment-summary.html'">Continue to Payment</button>
+                <button id="btn-snacks" class="btn btn-outline">Select Snacks</button>
+                <button id="btn-payment" class="btn btn-primary">Continue to Payment</button>
             </div>
         </div>
     </main>
@@ -337,6 +337,81 @@
                 </div>
             </div>
         </div>
-    </footer>    <script src="scripts/booking.js"></script>
-</body>
-</html>
+    </footer>
+
+    <script>
+      (function() {
+        const rows = Array.from(document.querySelectorAll('.rows .row'));
+        const ticketQty = parseInt(localStorage.getItem('ticketQty') || '1', 10);
+        let selected = [];
+    
+        // Clear any hard-coded "selected" seats from HTML
+        document.querySelectorAll('.seat.selected').forEach(seat => {
+          seat.classList.remove('selected');
+        });
+    
+        function getSeatId(seatEl) {
+          const rowEl = seatEl.closest('.row');
+          const rowLabelEl = rowEl ? rowEl.querySelector('.row-label') : null;
+          const rowLetter = rowLabelEl ? rowLabelEl.textContent.trim() : '';
+          const seatNumber = seatEl.textContent.trim();
+          return rowLetter + seatNumber; // e.g., "A7"
+        }
+    
+        // Attach click handlers to each seat
+        rows.forEach(row => {
+          row.querySelectorAll('.seat').forEach(seat => {
+            if (seat.classList.contains('aisle') || seat.classList.contains('booked')) return;
+    
+            seat.addEventListener('click', () => {
+              const id = getSeatId(seat);
+              const idx = selected.indexOf(id);
+    
+              if (idx >= 0) {
+                // Unselect
+                selected.splice(idx, 1);
+                seat.classList.remove('selected');
+              } else {
+                // Enforce max equal to ticketQty
+                if (selected.length >= ticketQty) {
+                  alert(`You can only select ${ticketQty} seat(s).`);
+                  return;
+                }
+                selected.push(id);
+                seat.classList.add('selected');
+              }
+            });
+          });
+        });
+    
+        function goNext(targetPage) {
+          if (selected.length !== ticketQty) {
+            alert(`Please select ${ticketQty} seat(s) before continuing.`);
+            return;
+          }
+          try {
+            localStorage.setItem('selectedSeats', JSON.stringify(selected));
+          } catch (e) {
+            console.warn('Could not save selected seats', e);
+          }
+          window.location.href = targetPage;
+        }
+    
+        const snacksBtn = document.getElementById('btn-snacks');
+        const paymentBtn = document.getElementById('btn-payment');
+    
+        if (snacksBtn) {
+          // Snacks flow → food_selection.html
+          snacksBtn.addEventListener('click', () => goNext('food_selection.html'));
+        }
+        if (paymentBtn) {
+          // Skip snacks → go to the old payment summary
+          paymentBtn.addEventListener('click', () => goNext('payment-summary.html'));
+        }
+      })();
+    </script>
+    
+    <script src="scripts/booking.js"></script>
+    </body>
+    </html>
+    
