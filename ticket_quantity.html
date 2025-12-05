@@ -13,11 +13,12 @@
                 <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
             </div>
             <ul class="nav-links">
-                <li><a href="#now-playing">Now Playing</a></li>
-                <li><a href="#coming-soon">Coming Soon</a></li>
-                <li><a href="#concessions">Food & Drinks</a></li>
-                <li><a href="#offers">Offers</a></li>
-                <li><a href="#locations">Locations</a></li>
+                <li><a href="index.html#now-playing" class="active">Now Playing</a></li>
+                <li><a href="index.html#coming-soon">Coming Soon</a></li>
+                <li><a href="food_selection.html">Food & Drinks</a></li>
+                <li><a href="index.html#offers">Offers</a></li>
+                <li><a href="index.html#locations">Locations</a></li>
+
             </ul>
             <div class="nav-actions">
                 <div class="search-box">
@@ -189,6 +190,31 @@
         const totalPriceEl = document.getElementById('total-price');
         const decrementBtn = document.getElementById('decrement');
         const incrementBtn = document.getElementById('increment');
+        try {
+        const rawShow = localStorage.getItem('currentShow');
+            if (rawShow) {
+                const show = JSON.parse(rawShow);
+                const titleEl = document.getElementById('selected-title');
+                const infoEl = document.getElementById('selected-info');
+
+                // Update title if we have one
+                if (titleEl && show.movie) {
+                    titleEl.textContent = show.movie;
+                }
+
+                // Build a simple "date • time" line if present
+                if (infoEl) {
+                    const parts = [];
+                    if (show.date) parts.push(show.date);
+                    if (show.time) parts.push(show.time);
+                    if (parts.length) {
+                        infoEl.textContent = parts.join(' • ');
+                    }
+                }
+            }
+    } catch (e) {
+        console.warn('Could not load previous show selection', e);
+    }
         
         let ticketCount = 1;
         

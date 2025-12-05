@@ -1192,19 +1192,30 @@
       });
     }
 
-    $('#confirmBtn').addEventListener('click', () => {
-      if (!selectedMovie || !selectedDate || !selectedTime) {
-        const msg = $('#confirmMsg');
-        msg.textContent = 'Please pick a date and a showtime.';
-        msg.classList.add('show');
-        return;
-      }
-      $('#confirmWhen').textContent = `${selectedMovie} • ${selectedDate} • ${selectedTime}`;
+  $('#confirmBtn').addEventListener('click', () => {
+    if (!selectedMovie || !selectedDate || !selectedTime) {
       const msg = $('#confirmMsg');
-      msg.textContent = `Great! Your seats are reserved for ${selectedMovie} • ${selectedDate} • ${selectedTime}. (Demo state)`;
+      msg.textContent = 'Please pick a date and a showtime.';
       msg.classList.add('show');
-      setTimeout(() => hide('#bookingSheet'), 1200);
-    });
+      return;
+    }
+
+    // Persist show information for the next pages
+    const payload = {
+      movie: selectedMovie,
+      date: selectedDate,
+      time: selectedTime
+    };
+
+    try {
+      localStorage.setItem('currentShow', JSON.stringify(payload));
+    } catch (e) {
+      console.warn('Could not persist show selection', e);
+    }
+
+    // Start the multi-page flow at Ticket Quantity
+    window.location.href = 'ticket_quantity.html';
+});
   </script>
   <script>
     // Tab switching logic
