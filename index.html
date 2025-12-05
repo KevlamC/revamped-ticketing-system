@@ -78,7 +78,7 @@
         </div>
   <!-- Will turn into username after login/guest -->
   <!-- Buy Tickets removed; Sign In promoted to primary and moved to the right -->
-  <button id="userButton" class="btn-primary">Alex</button>
+  <button id="userButton" class="btn-primary">Sign In</button>
       </div>
     </div>
   </nav>
@@ -748,6 +748,8 @@
         <button class="btn-primary" id="goLogin">Log In</button>
         <button class="btn-secondary" id="goSignup">Create Account</button>
         <button class="btn-secondary" id="goGuest">Continue as Guest</button>
+        <button class="btn-secondary" id="logoutBtn" style="display:none">Log Out</button>
+        <button class="btn-secondary" id="accountDashboardBtn" style="display:none">Account Dashboard</button>
       </div>
       <p class="muted">You can always create an account later for faster checkout and rewards.</p>
     </div>
@@ -822,7 +824,6 @@
       <div class="success show" id="welcomeBadge">Email verified. Membership perks unlocked.</div>
       <div class="btn-row" style="margin-top:12px">
         <button class="btn-primary" onclick="document.querySelector('#now-playing').scrollIntoView({behavior:'smooth'}); hide('#welcomeModal')">Start Booking</button>
-        <button class="btn-secondary" data-close="#welcomeModal">Maybe later</button>
       </div>
     </div>
   </div>
@@ -881,6 +882,63 @@
     const $$ = s => Array.from(document.querySelectorAll(s));
     const show = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.add('show'); el.setAttribute('aria-hidden','false'); };
     const hide = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.remove('show'); el.setAttribute('aria-hidden','true'); };
+
+    const SESSION_KEY = 'theatrum.session';
+    const USERS_KEY = 'theatrum.users';
+    const defaultUserLabel = 'Sign In';
+    const userButton = $('#userButton');
+    const logoutBtn = $('#logoutBtn');
+    const dashboardBtn = $('#accountDashboardBtn');
+    const choiceButtons = {
+      login: $('#goLogin'),
+      signup: $('#goSignup'),
+      guest: $('#goGuest'),
+      logout: logoutBtn,
+      dashboard: dashboardBtn
+    };
+
+    const loadSession = () => {
+      try { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
+      catch { return null; }
+    };
+    const saveSession = (session) => {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      syncUserButton(session);
+    };
+    const clearSession = () => {
+      localStorage.removeItem(SESSION_KEY);
+      syncUserButton(null);
+      $('#welcomeBadge')?.classList.remove('show');
+    };
+    const loadUsers = () => {
+      try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
+      catch { return []; }
+    };
+    const saveUsersStore = (users) => localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    function syncChoiceButtons(session){
+      const hasSession = !!session;
+      const showAuthChoices = !hasSession;
+      if (choiceButtons.login) choiceButtons.login.style.display = showAuthChoices ? 'inline-flex' : 'none';
+      if (choiceButtons.signup) choiceButtons.signup.style.display = showAuthChoices ? 'inline-flex' : 'none';
+      if (choiceButtons.guest) choiceButtons.guest.style.display = showAuthChoices ? 'inline-flex' : 'none';
+      if (choiceButtons.logout) choiceButtons.logout.style.display = hasSession ? 'inline-flex' : 'none';
+      if (choiceButtons.dashboard) choiceButtons.dashboard.style.display = hasSession ? 'inline-flex' : 'none';
+    }
+    function syncUserButton(session){
+      const name = session?.username || 'Guest';
+      $('#welcomeName').textContent = name;
+      if(session){
+        userButton.textContent = name;
+        userButton.classList.add('btn-primary');
+        userButton.classList.remove('btn-secondary');
+      } else {
+        userButton.textContent = defaultUserLabel;
+        userButton.classList.add('btn-primary');
+        userButton.classList.remove('btn-secondary');
+      }
+      syncChoiceButtons(session);
+    }
+    syncUserButton(loadSession());
 
     // Schedule Data for calendar
     const scheduleData = {
@@ -1000,8 +1058,17 @@
     }
 
     // Open Account Choice
-    $('#userButton').addEventListener('click', () => show('#choiceModal'));
-    $('#logo').addEventListener('click', () => show('#choiceModal'));
+    $('#userButton')?.addEventListener('click', () => show('#choiceModal'));
+    $('#logo')?.addEventListener('click', () => show('#choiceModal'));
+    logoutBtn?.addEventListener('click', () => {
+      clearSession();
+      hide('#choiceModal');
+      hide('#welcomeModal');
+      hide('#loginModal');
+    });
+    dashboardBtn?.addEventListener('click', () => {
+      window.location.href = 'new-account-dashboard.html';
+    });
 
     // Close any modal/sheet
     $$('.close-x').forEach(btn => btn.addEventListener('click', (e) => {
@@ -1027,30 +1094,24 @@
       $('#welcomeName').textContent = username;
       $('#welcomeBadge').classList.remove('show'); // guest doesn't show verified badge
       show('#welcomeModal');
-
-      const userBtn = $('#userButton');
-      userBtn.textContent = username;
-      userBtn.classList.remove('btn-secondary');
-      userBtn.classList.add('btn-primary');
+      saveSession({ username, role: 'guest' });
     });
 
     // Login
     $('#loginSubmit').addEventListener('click', () => {
-      const email = $('#loginEmail').value.trim();
+      const email = $('#loginEmail').value.trim().toLowerCase();
       const pass = $('#loginPass').value.trim();
-      const ok = email.includes('@') && pass.length >= 4;
+      const users = loadUsers();
+      const user = users.find(u => u.email === email);
+      const ok = !!user && user.password === pass;
       $('#loginError').classList.toggle('show', !ok);
       if (ok) {
-        const username = email.split('@')[0];
+        const username = user.name || email.split('@')[0];
         hide('#loginModal');
         $('#welcomeName').textContent = username;
         $('#welcomeBadge').classList.remove('show');
         show('#welcomeModal');
-
-        const userBtn = $('#userButton');
-        userBtn.textContent = username;
-        userBtn.classList.remove('btn-secondary');
-        userBtn.classList.add('btn-primary');
+        saveSession({ username, role: 'member', email });
       }
     });
 
@@ -1058,43 +1119,33 @@
     $('#signupSubmit').addEventListener('click', () => {
       const fn = $('#firstName').value.trim();
       const ln = $('#lastName').value.trim();
-      const em = $('#signupEmail').value.trim();
+      const em = $('#signupEmail').value.trim().toLowerCase();
       const pw = $('#signupPass').value.trim();
-      const ok = fn && ln && em.includes('@') && pw.length >= 8;
-      $('#signupError').classList.toggle('show', !ok);
-      if (ok) {
-        hide('#signupModal');
-        $('#verifyEmailSpan').textContent = em;
-        show('#verifyModal');
+      const errorEl = $('#signupError');
+      let ok = fn && ln && em.includes('@') && pw.length >= 8;
+      errorEl.textContent = 'Please fill all fields correctly.';
+      errorEl.classList.toggle('show', !ok);
+      if (!ok) return;
+
+      const users = loadUsers();
+      if (users.some(u => u.email === em)) {
+        errorEl.textContent = 'Account already exists. Please log in.';
+        errorEl.classList.add('show');
+        return;
       }
+
+      const name = fn || 'Member';
+      users.push({ email: em, password: pw, name });
+      saveUsersStore(users);
+
+      hide('#signupModal');
+      $('#welcomeName').textContent = name;
+      $('#welcomeBadge').classList.remove('show');
+      show('#welcomeModal');
+      saveSession({ username: name, role: 'member', email: em });
     });
 
-    // Verify (demo code 123456)
-    $('#verifySubmit').addEventListener('click', () => {
-      const code = $('#verifyCode').value.trim();
-      const ok = code === '123456';
-      $('#verifyError').classList.toggle('show', !ok);
-      if (ok) {
-        hide('#verifyModal');
-        const name = $('#firstName').value.trim() || 'Member';
-        $('#welcomeName').textContent = name;
-        $('#welcomeBadge').classList.add('show');
-        show('#welcomeModal');
-
-        const userBtn = $('#userButton');
-        userBtn.textContent = name;
-        userBtn.classList.remove('btn-secondary');
-        userBtn.classList.add('btn-primary');
-      }
-    });
-
-    // Resend (demo)
-    $('#resendCode').addEventListener('click', () => {
-      const btn = $('#resendCode');
-      btn.disabled = true;
-      btn.textContent = 'Code sent';
-      setTimeout(() => { btn.disabled = false; btn.textContent = 'Resend Code'; }, 1500);
-    });
+    // Verify flow removed (signup now completes immediately)
 
     // Search / Filter / Sort
     const moviesGrid = $('#moviesGrid');
