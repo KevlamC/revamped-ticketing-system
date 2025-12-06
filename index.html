@@ -51,6 +51,9 @@
     .dropdown-calendar-day.today{background:var(--accent-red);color:#fff;border-color:var(--accent-red)}
     .dropdown-calendar-day.selected{background:var(--accent-red);color:#fff;border-color:var(--accent-red);font-weight:800}
     .dropdown-calendar-day.unavailable{background:var(--bg-secondary);color:var(--text-muted);cursor:not-allowed;opacity:.5}
+    .user-icon-btn{padding:10px 16px}
+    .user-icon-btn.icon-mode{width:42px;height:42px;padding:0;display:grid;place-items:center}
+    .user-icon-btn .user-icon{font-size:18px;line-height:1}
   </style>
 </head>
 
@@ -78,7 +81,7 @@
         </div>
   <!-- Will turn into username after login/guest -->
   <!-- Buy Tickets removed; Sign In promoted to primary and moved to the right -->
-  <button id="userButton" class="btn-primary">Alex</button>
+  <button id="userButton" class="btn-primary user-icon-btn" aria-label="Sign In">Sign In</button>
       </div>
     </div>
   </nav>
@@ -927,15 +930,17 @@
     function syncUserButton(session){
       const name = session?.username || 'Guest';
       $('#welcomeName').textContent = name;
-      if(session){
-        userButton.textContent = name;
-        userButton.classList.add('btn-primary');
-        userButton.classList.remove('btn-secondary');
+      if (session) {
+        userButton.classList.add('icon-mode');
+        userButton.innerHTML = '<span class="user-icon" aria-hidden="true">👤</span>';
+        userButton.setAttribute('aria-label', `${name} account`);
       } else {
+        userButton.classList.remove('icon-mode');
         userButton.textContent = defaultUserLabel;
-        userButton.classList.add('btn-primary');
-        userButton.classList.remove('btn-secondary');
+        userButton.setAttribute('aria-label', 'Sign In');
       }
+      userButton.classList.add('btn-primary');
+      userButton.classList.remove('btn-secondary');
       syncChoiceButtons(session);
     }
     syncUserButton(loadSession());
