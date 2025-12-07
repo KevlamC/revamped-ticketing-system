@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Theaters | THEATRUM</title>
+  <link rel="stylesheet" href="styles/index_styles.css" />
+  <style>
+    :root {
+      --map-grid: rgba(255,255,255,0.04);
+    }
+    body { background: var(--bg-primary); }
+    .page-wrap { padding: 90px 20px 40px; }
+    .hero-banner {
+      max-width: 1100px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+    .hero-banner h1 { margin: 0 0 8px; font-size: 30px; font-weight: 900; }
+    .hero-banner p { margin: 0; color: var(--text-secondary); }
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 18px;
+      align-items: start;
+    }
+    @media(max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .map-card, .list-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: var(--shadow-2, 0 10px 30px rgba(0,0,0,0.5));
+    }
+    .map-surface {
+      position: relative;
+      height: 520px;
+      background-color: #e9eef4;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Crect width='240' height='240' fill='%23e9eef4'/%3E%3Cpath d='M0 40h240 M0 80h240 M0 120h240 M0 160h240 M0 200h240 M40 0v240 M80 0v240 M120 0v240 M160 0v240 M200 0v240' stroke='%23d0d7e2' stroke-width='1'/%3E%3Cpath d='M-10 120 H250 M30 -10 V250 M150 -10 V250' stroke='%23c3cad5' stroke-width='5' stroke-linecap='round' opacity='0.28'/%3E%3C/svg%3E");
+      background-size: 240px 240px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+    .map-surface::before,
+    .map-surface::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--map-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--map-grid) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .map-surface::after {
+      background-size: 160px 160px, 160px 160px;
+      opacity: 0.12;
+    }
+    .pin {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .pin .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-red);
+      box-shadow: 0 0 0 6px rgba(220,38,38,0.18);
+      border: 2px solid #fff;
+    }
+    .pin .label {
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      white-space: nowrap;
+    }
+    .pin .label strong { display: block; font-size: 13px; }
+    .legend {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+    .legend .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-red);
+      box-shadow: 0 0 0 4px rgba(220,38,38,0.18);
+      border: 1px solid #fff;
+    }
+    .list-card h3 { margin: 0 0 12px; }
+    .theater-list { display: grid; gap: 12px; }
+    .theater-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .theater-item h4 { margin: 0 0 4px; font-size: 16px; }
+    .theater-item p { margin: 0; color: var(--text-secondary); font-size: 13px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(220,38,38,0.15);
+      color: var(--accent-red);
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .set-btn {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+    .set-btn:hover { border-color: var(--accent-red); color: #fff; }
+    .set-btn.active { background: var(--accent-red); color: #fff; border-color: var(--accent-red); }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <script src="scripts/load-header.js"></script>
+
+  <div class="page-wrap">
+    <div class="hero-banner">
+      <div style="display:flex;justify-content:flex-start;max-width:1100px;margin:0 auto 12px;">
+        <button onclick="window.location.href='index.html'" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer;">
+          ← Back to Home
+        </button>
+      </div>
+      <h1>Find a THEATRUM Near You</h1>
+      <p>Select a location to see showtimes. Distances are approximate for demo purposes.</p>
+    </div>
+
+    <div class="layout">
+      <div class="map-card">
+        <div class="map-surface" id="map"></div>
+        <div class="legend">
+          <span class="swatch"></span>
+          <span>Our Theaters</span>
+        </div>
+      </div>
+
+      <div class="list-card">
+        <h3>All Locations</h3>
+        <div class="theater-list" id="theater-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const theaters = [
+      { name: 'Downtown Premiere', distance: '3.3 km', address: '120 King St, City Center', coords: { x: 32, y: 58 } },
+      { name: 'Riverside Cinema', distance: '8.7 km', address: '88 River Rd, Riverside District', coords: { x: 65, y: 48 } },
+      { name: 'Westside Multiplex', distance: '14.0 km', address: '410 Westview Ave, Westside', coords: { x: 20, y: 28 } },
+      { name: 'North Hills IMAX', distance: '18.2 km', address: '990 Summit Blvd, North Hills', coords: { x: 58, y: 18 } },
+    ];
+
+    const map = document.getElementById('map');
+    const list = document.getElementById('theater-list');
+    const savedLocation = localStorage.getItem('theatrum_location');
+
+    function renderPins() {
+      theaters.forEach(t => {
+        const pin = document.createElement('div');
+        pin.className = 'pin';
+        pin.style.left = t.coords.x + '%';
+        pin.style.top = t.coords.y + '%';
+
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.innerHTML = `<strong>${t.name}</strong><span>${t.distance} away</span>`;
+
+        pin.append(dot, label);
+        map.appendChild(pin);
+      });
+    }
+
+    function renderList() {
+      list.innerHTML = '';
+      theaters.forEach(t => {
+        const row = document.createElement('div');
+        row.className = 'theater-item';
+        const left = document.createElement('div');
+        left.innerHTML = `
+          <h4>${t.name}</h4>
+          <p>${t.address}</p>
+          <span class="pill">${t.distance} away</span>
+        `;
+        const btn = document.createElement('button');
+        btn.className = 'set-btn';
+        if (localStorage.getItem('theatrum_location') === t.name) btn.classList.add('active');
+        btn.textContent = localStorage.getItem('theatrum_location') === t.name ? 'Selected' : 'Set as Preferred';
+        btn.addEventListener('click', () => {
+          localStorage.setItem('theatrum_location', t.name);
+          document.querySelectorAll('.set-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.set-btn').forEach(b => b.textContent = 'Set as Preferred');
+          btn.classList.add('active');
+          btn.textContent = 'Selected';
+          if (typeof showToast === 'function') {
+            showToast(`${t.name} set as preferred`, 'success');
+          }
+          // Refresh stored selection for header if present
+          document.dispatchEvent(new Event('locationUpdated'));
+          // Try to update header text immediately if loaded
+          const headerLocation = document.getElementById('selectedLocationText');
+          if (headerLocation) headerLocation.textContent = t.name;
+        });
+        row.append(left, btn);
+        list.appendChild(row);
+      });
+    }
+
+    renderPins();
+    renderList();
+  </script>
+</body>
+</html>

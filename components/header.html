@@ -45,6 +45,7 @@
   .location-container {
     position: relative; /* Anchor for dropdown */
     margin-left: 24px;
+    overflow: visible;
   }
 
   .location-picker {
@@ -363,7 +364,7 @@
       <li><a href="index.html#now-playing">Movies</a></li>
       <li><a href="index.html#concessions">Food & Drinks</a></li>
       <li><a href="index.html#offers">Offers</a></li>
-      <li><a href="index.html#locations">Our Theaters</a></li>
+      <li><a href="theaters.html">Our Theaters</a></li>
     </ul>
 
     <!-- Right Actions -->
@@ -405,7 +406,7 @@
       <li><a href="index.html#now-playing">Movies</a></li>
       <li><a href="index.html#concessions">Food & Drinks</a></li>
       <li><a href="index.html#offers">Offers</a></li>
-      <li><a href="index.html#locations">Locations</a></li>
+      <li><a href="theaters.html">Locations</a></li>
     </ul>
   </div>
 </nav>
@@ -452,22 +453,39 @@
           
           // Dispatch Event for Main Page
           window.dispatchEvent(new CustomEvent('location-changed', { detail: { location: val } }));
+          document.dispatchEvent(new Event('locationUpdated'));
       });
   });
 
-  if (locationPicker) {
-      locationPicker.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isOpen = locationDropdown.classList.contains('show');
-          if(isOpen) {
-              locationDropdown.classList.remove('show');
-              locationPicker.classList.remove('active');
-          } else {
-              locationDropdown.classList.add('show');
-              locationPicker.classList.add('active');
-          }
+  // Allow external pages to sync header location when they change it
+  document.addEventListener('locationUpdated', () => {
+      const latest = localStorage.getItem('theatrum_location') || savedLocation;
+      if (selectedLocationText) selectedLocationText.textContent = latest;
+      $$('.location-option').forEach(o => {
+          if (o.dataset.value === latest) o.classList.add('selected');
+          else o.classList.remove('selected');
       });
-  }
+  });
+
+  const toggleLocation = (e) => {
+      if (e) e.stopPropagation();
+      if (!locationDropdown || !locationPicker) return;
+      const isOpen = locationDropdown.classList.contains('show');
+      if (isOpen) {
+        locationDropdown.classList.remove('show');
+        locationPicker.classList.remove('active');
+      } else {
+        locationDropdown.classList.add('show');
+        locationPicker.classList.add('active');
+      }
+  };
+
+  locationPicker && locationPicker.addEventListener('click', toggleLocation);
+  // Allow clicking anywhere in the container to open as well
+  const locationContainer = locationPicker ? locationPicker.parentElement : null;
+  locationContainer && locationContainer.addEventListener('click', (e) => {
+    if (e.target === locationContainer) toggleLocation(e);
+  });
   
   // Close Dropdowns on Click Outside
   document.addEventListener('click', (e) => {
