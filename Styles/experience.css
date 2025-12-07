@@ -1,0 +1,132 @@
+/* THEATRUM EXPERIENCE SECTION */
+
+.experience {
+    background: var(--bg-secondary);
+}
+
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.experience-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.experience-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.04) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.experience-card:hover {
+    transform: translateY(-8px);
+    border-color: currentColor;
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.15);
+}
+
+.experience-card:hover::before {
+    opacity: 1;
+}
+
+/* Experience Category Colors */
+.exp-visual { --accent-color: #ef4444; }
+.exp-visual:hover { border-color: #ef4444; box-shadow: 0 12px 32px rgba(239, 68, 68, 0.15); }
+
+.exp-audio { --accent-color: #3b82f6; }
+.exp-audio:hover { border-color: #3b82f6; box-shadow: 0 12px 32px rgba(59, 130, 246, 0.15); }
+
+.exp-comfort { --accent-color: #f59e0b; }
+.exp-comfort:hover { border-color: #f59e0b; box-shadow: 0 12px 32px rgba(245, 158, 11, 0.15); }
+
+.exp-culinary { --accent-color: #10b981; }
+.exp-culinary:hover { border-color: #10b981; box-shadow: 0 12px 32px rgba(16, 185, 129, 0.15); }
+
+.exp-category {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    margin-bottom: 4px;
+}
+
+.experience-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-color);
+    transition: all 0.3s ease;
+    margin: 0;
+}
+
+.experience-card svg {
+    width: 32px;
+    height: 32px;
+    stroke-width: 2;
+}
+
+.experience-card:hover .experience-icon {
+    transform: scale(1.1);
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.experience-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.exp-spec {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.exp-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.exp-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-color);
+    margin-top: auto;
+    width: fit-content;
+}
+
+/* Responsive */
+@media (max-width: 620px) {
+    .experience-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}

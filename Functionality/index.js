@@ -3,6 +3,20 @@
  * Handles image, content, and background video switching.
  */
 
+// Helper function to open booking modal instead of alert
+function openBookingModal(movieTitle, movieGenre) {
+  const bookingModal = document.getElementById('ticketBookingModal');
+  if (bookingModal) {
+    document.getElementById('bookingMovieTitle').textContent = movieTitle;
+    document.getElementById('bookingMovieGenre').textContent = movieGenre + ' • Coming Soon';
+    if (typeof resetBooking === 'function') resetBooking();
+    bookingModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  } else {
+    alert('Bookings opening soon for ' + movieTitle + '!');
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const slides = [
     {
@@ -14,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       genre: "Sport, Drama",
       score: "Anticipated",
       videoId: "TZGY2CWPXeU",
-      ctaAction: () => alert("Bookings opening soon for F1!")
+      ctaAction: () => openBookingModal("F1", "Sport, Drama")
     },
     {
       image: "Pictures/maxresdefault.jpg", 
@@ -25,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       genre: "Sci-Fi, Adventure",
       score: "Anticipated",
       videoId: "nb_fFj_0rq8",
-      ctaAction: () => alert("Bookings opening soon!")
+      ctaAction: () => openBookingModal("AVATAR: FIRE AND ASH", "Sci-Fi, Adventure")
     },
     {
       image: "Pictures/Apple_TV_The_Family_Plan_2_Key_Art_graphic_header_4_1_show_home.jpg.large_2x.jpg", 
@@ -36,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       genre: "Action, Comedy",
       score: "Anticipated",
       videoId: "dqolYtJGuf4", 
-      ctaAction: () => alert("Bookings opening soon!")
+      ctaAction: () => openBookingModal("THE FAMILY PLAN 2", "Action, Comedy")
     },
     {
       image: "Pictures/dune-part-two-8k-4480x2520-15003.jpg",
@@ -58,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       genre: "Animation, Comedy",
       score: "Anticipated",
       videoId: "BjkIOU5PhyQ",
-      ctaAction: () => alert("Bookings opening soon!")
+      ctaAction: () => openBookingModal("ZOOTOPIA 2", "Animation, Comedy")
     },
     {
       image: "Pictures/MV5BZjczNjMxYTgtZTMxOS00MTg5LWFiMjYtYzIwMDQ5MTQ3ODU0XkEyXkFqcGdeQWFybm8@._V1_.jpg", 
@@ -69,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       genre: "Horror, Mystery",
       score: "Anticipated",
       videoId: "eGV7zwjvxKs",
-      ctaAction: () => alert("Bookings opening soon!")
+      ctaAction: () => openBookingModal("FIVE NIGHTS AT FREDDY'S 2", "Horror, Mystery")
     }
   ];
 
