@@ -121,6 +121,7 @@
     .card-placeholder {
       font-size: 12px;
       opacity: 0.75;
+      margin-top: 6px;
     }
 
     .payment-actions {
@@ -238,9 +239,9 @@
 
   <main class="checkout-shell">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px;">
-      <!-- 🔹 Step label fixed to be sequential -->
+      <!-- Step label -->
       <span class="pill step-pill">Step 4 — Payment</span>
-      <span class="muted">Final step — add a card and confirm your booking.</span>
+      <span class="muted">Final step — choose a payment method and confirm your booking.</span>
     </div>
 
     <div class="payment-layout">
@@ -276,7 +277,7 @@
             </div>
           </div>
           <div class="card-placeholder" id="card-placeholder">
-            Click “Add card” to enter your payment details.
+            Choose a payment option to enter your details.
           </div>
         </div>
 
@@ -284,9 +285,15 @@
           <button class="btn-secondary" id="add-card-btn">
             Add card
           </button>
+          <button class="btn-secondary" id="apple-pay-btn">
+             Apple Pay
+          </button>
+          <button class="btn-secondary" id="google-pay-btn">
+            G Pay
+          </button>
         </div>
 
-        <!-- Hidden card form (shown after clicking Add card) -->
+        <!-- Hidden card form (shown after clicking Add card / Apple / Google) -->
         <form class="card-form" id="card-form" novalidate>
           <div class="card-form-group">
             <label for="card-name">Name on card</label>
@@ -504,6 +511,9 @@
 
       // ---- Card UI + form behaviour ----
       var addCardBtn = document.getElementById('add-card-btn');
+      var applePayBtn = document.getElementById('apple-pay-btn');
+      var googlePayBtn = document.getElementById('google-pay-btn');
+
       var cardForm = document.getElementById('card-form');
       var payNowBtn = document.getElementById('pay-now-btn');
 
@@ -519,6 +529,7 @@
       var cardPlaceholder = document.getElementById('card-placeholder');
 
       var cardFormVisible = false;
+      var paymentMethod = 'card'; // 'card' | 'applePay' | 'googlePay'
 
       function formatCardNumber(value) {
         return value
@@ -534,6 +545,15 @@
         return digits.slice(0, 2) + '/' + digits.slice(2);
       }
 
+      function ensureFormVisible() {
+        if (!cardFormVisible) {
+          cardFormVisible = true;
+          cardForm.style.display = 'block';
+          if (addCardBtn) addCardBtn.textContent = 'Hide card details';
+          cardPlaceholder.textContent = 'Fill in your details below to save this card for this purchase.';
+        }
+      }
+
       if (addCardBtn) {
         addCardBtn.addEventListener('click', function () {
           cardFormVisible = !cardFormVisible;
@@ -543,8 +563,79 @@
           if (cardFormVisible) {
             cardPlaceholder.textContent = 'Fill in your details below to save this card for this purchase.';
           } else {
-            cardPlaceholder.textContent = 'Click “Add card” to enter your payment details.';
+            cardPlaceholder.textContent = 'Choose a payment option to enter your details.';
           }
+          paymentMethod = 'card';
+        });
+      }
+
+      function getUserName() {
+        var btn = document.getElementById('userButton');
+        var name = btn ? (btn.textContent || btn.innerText || '').trim() : '';
+        return name || 'Guest';
+      }
+
+      if (applePayBtn) {
+        applePayBtn.addEventListener('click', function () {
+          paymentMethod = 'applePay';
+          ensureFormVisible();
+
+          var name = getUserName() + ' (Apple Pay)';
+          if (cardNameInput) {
+            cardNameInput.value = name;
+            previewName.textContent = name;
+          }
+
+          if (cardNumberInput) {
+            cardNumberInput.value = '4242 4242 4242 4242';
+            cardNumberInput.dispatchEvent(new Event('input'));
+          }
+
+          if (cardExpInput) {
+            cardExpInput.value = '12/28';
+            cardExpInput.dispatchEvent(new Event('input'));
+          }
+
+          if (cardCvvInput) {
+            cardCvvInput.value = '123';
+          }
+          if (cardPostalInput) {
+            cardPostalInput.value = 'T2A 7V2';
+          }
+
+          notify('Apple Pay details added. Review and tap "Pay now".', 'success');
+        });
+      }
+
+      if (googlePayBtn) {
+        googlePayBtn.addEventListener('click', function () {
+          paymentMethod = 'googlePay';
+          ensureFormVisible();
+
+          var name = getUserName() + ' (Google Pay)';
+          if (cardNameInput) {
+            cardNameInput.value = name;
+            previewName.textContent = name;
+          }
+
+          if (cardNumberInput) {
+            cardNumberInput.value = '5555 5555 5555 4444';
+            cardNumberInput.dispatchEvent(new Event('input'));
+          }
+
+          if (cardExpInput) {
+            cardExpInput.value = '11/27';
+            cardExpInput.dispatchEvent(new Event('input'));
+          }
+
+          if (cardCvvInput) {
+            cardCvvInput.value = '456';
+          }
+          if (cardPostalInput) {
+            cardPostalInput.value = 'T2A 7V2';
+          }
+
+          notify('Google Pay details added. Review and tap "Pay now".', 'success');
         });
       }
 
@@ -569,13 +660,50 @@
         });
       }
 
+      function completePayment() {
+        var userName = getUserName();
+        var emailSlug = userName.toLowerCase().replace(/\s+/g, '.');
+        var email = emailSlug ? emailSlug + '@example.com' : 'guest@example.com';
+        var orderId = 'TH-' + Math.floor(100000 + Math.random() * 900000);
+
+        var confirmation = {
+          method: paymentMethod,
+          customerName: userName,
+          email: email,
+          orderId: orderId,
+          ticketQty: ticketQty,
+          ticketType: ticketLabelType,
+          ticketUnitPrice: ticketUnitPrice,
+          seats: seats,
+          snacksTotal: snacksTotal,
+          upsellTotal: upsellTotal,
+          subtotal: subtotal,
+          fees: estimatedFees,
+          total: totalDue,
+          createdAt: new Date().toISOString()
+        };
+
+        localStorage.setItem('orderConfirmation', JSON.stringify(confirmation));
+
+        // Clear booking-specific state (we keep orderConfirmation)
+        localStorage.removeItem('ticketQty');
+        localStorage.removeItem('ticketType');
+        localStorage.removeItem('ticketUnitPrice');
+        localStorage.removeItem('selectedSeats');
+        localStorage.removeItem('foodOrder');
+        localStorage.removeItem('upsellCart');
+
+        notify('Payment successful! Redirecting to your tickets…', 'success');
+        setTimeout(function () {
+          window.location.href = 'thanks.html';
+        }, 800);
+      }
+
       if (payNowBtn) {
         payNowBtn.addEventListener('click', function () {
           if (!cardFormVisible) {
             notify('Please add a card before paying.', 'error');
-            cardForm.style.display = 'block';
-            cardFormVisible = true;
-            addCardBtn.textContent = 'Hide card details';
+            ensureFormVisible();
             return;
           }
 
@@ -602,19 +730,7 @@
             return;
           }
 
-          // "Process" payment
-          notify('Payment successful! Your booking is confirmed.', 'success');
-
-          // Clear state and redirect home after a short pause
-          setTimeout(function () {
-            localStorage.removeItem('ticketQty');
-            localStorage.removeItem('ticketType');
-            localStorage.removeItem('ticketUnitPrice');
-            localStorage.removeItem('selectedSeats');
-            localStorage.removeItem('foodOrder');
-            localStorage.removeItem('upsellCart');
-            window.location.href = 'index.html';
-          }, 900);
+          completePayment();
         });
       }
     });
