@@ -431,7 +431,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const reviewBtn = document.getElementById('review-order');
     reviewBtn &&
-      reviewBtn.addEventListener('click', () => (window.location.href = 'snack_upsell.html'));
+      reviewBtn.addEventListener(
+        'click',
+        () => (window.location.href = 'payment-summary.html')
+      );
   }
 
   // -----------------------
