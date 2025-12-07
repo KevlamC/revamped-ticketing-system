@@ -2,29 +2,135 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Theatrum — Checkout Summary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theatrum — Payment Summary</title>
   <link rel="stylesheet" href="styles/index_styles.css" />
   <style>
-    .checkout-shell { max-width: 1200px; margin: 120px auto 64px; padding: 0 32px; }
-    .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-    @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
-    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .card h2 { font-size: 28px; margin-bottom: 8px; }
-    .muted { color: var(--text-secondary); font-size: 14px; }
-    .divider { height:1px; background: var(--border); margin: 16px 0 20px; }
-    .summary-row { display:flex; justify-content: space-between; margin: 10px 0; color: var(--text-secondary); }
-    .summary-row.total { color: var(--text-primary); font-weight: 700; font-size: 18px; }
-    .actions { display:flex; gap:12px; margin-top: 20px; }
-    .pill { display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background: var(--bg-secondary); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
-    .ticket-item, .concession-item { display:flex; justify-content: space-between; align-items:center; margin-bottom: 12px; }
-    .ticket-details, .concession-details { max-width: 65%; }
-    .ticket-details h3, .concession-details h3 { margin-bottom: 4px; }
-    .ticket-meta, .concession-meta { font-size: 13px; color: var(--text-secondary); }
-    .quantity { display:flex; align-items:center; gap:8px; }
-    .quantity-num { font-weight:600; }
-    .ticket-price, .concession-price { font-weight:600; }
-    .pill.step-pill { background: rgba(239,68,68,.08); color:#f97373; border-color:rgba(239,68,68,.25); }
+    .checkout-shell {
+      max-width: 1200px;
+      margin: 120px auto 64px;
+      padding: 0 32px;
+    }
+    .summary-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(260px, 1.2fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .summary-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .card h2 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+    .muted {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0 20px;
+    }
+    .line-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 6px 0;
+      font-size: 14px;
+    }
+    .line-label {
+      color: var(--text-secondary);
+    }
+    .line-value {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .line-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .pill.step-pill {
+      background: rgba(74, 222, 128, 0.06);
+      border-color: rgba(74, 222, 128, 0.3);
+      color: #4ade80;
+    }
+    .section-title {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+    }
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .summary-total-row span:last-child {
+      font-size: 18px;
+    }
+    .sidebar-heading {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .sidebar-section {
+      margin-bottom: 16px;
+    }
+    .sidebar-section:last-child {
+      margin-bottom: 0;
+    }
+    .sidebar-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+    .sidebar-value {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .note {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -43,7 +149,7 @@
       </ul>
       <div class="nav-actions">
         <div class="search-box">
-          <input id="globalSearch" type="text" placeholder="Search movies...">
+          <input id="globalSearch" type="text" placeholder="Search movies..." />
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
@@ -54,114 +160,112 @@
     </div>
   </nav>
 
-  <!-- Content -->
   <main class="checkout-shell">
-    <div class="row" style="margin-bottom:20px">
-      <span class="pill step-pill">Step 1 of 2 — Review Order</span>
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px;">
+      <span class="pill step-pill">Step 3 — Review & Confirm</span>
+      <span class="muted" id="summary-helper">Make sure everything looks right before paying.</span>
     </div>
 
-    <div class="checkout-grid">
-      <!-- Left: Order Details -->
+    <div class="summary-layout">
+      <!-- Left: Detailed breakdown -->
       <section class="card">
-        <h2>Order Details</h2>
-        <p class="muted">Review your tickets and concessions before proceeding to payment.</p>
+        <h2>Payment summary</h2>
+        <p class="muted" id="movie-label">
+          Your tickets and snacks for tonight’s show.
+        </p>
         <div class="divider"></div>
 
-        <!-- Movie Tickets -->
-        <h3 style="margin-bottom: 16px;">Movie Tickets</h3>
-        
-        <div class="ticket-item">
-          <div class="ticket-details">
-            <h3 id="details-movie-title">Your Movie</h3>
-            <div class="ticket-meta" id="details-show-meta">Your selected showtime &amp; location</div>
-            <div class="ticket-meta">
-              Seats <span id="details-ticket-seats">-</span> •
-              <span class="pill" id="details-ticket-format">Standard</span>
+        <!-- Tickets -->
+        <div class="section">
+          <div class="section-title">Tickets</div>
+          <div class="line-row">
+            <div>
+              <div class="line-label" id="ticket-summary-label">Tickets</div>
+              <div class="line-sub" id="ticket-summary-sub">Type & quantity</div>
             </div>
-          </div>
-          <div class="quantity">
-            <span class="quantity-num" id="details-ticket-count">0</span>
-            <span class="ticket-price" id="details-ticket-total">$0.00</span>
+            <div class="line-value" id="ticket-summary-amount">$0.00</div>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- Concessions -->
-        <h3 style="margin-bottom: 16px;">Concessions</h3>
-        <div id="details-food-list">
-          <p class="muted">Any snacks you add will appear here.</p>
+        <!-- Snacks -->
+        <div class="section">
+          <div class="section-title">Snacks</div>
+          <ul class="list" id="snack-list"></ul>
+          <div class="line-row" style="margin-top:6px;">
+            <span class="line-label">Snacks subtotal</span>
+            <span class="line-value" id="snack-subtotal">$0.00</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Upsells -->
+        <div class="section">
+          <div class="section-title">Extras</div>
+          <ul class="list" id="upsell-list"></ul>
+          <div class="line-row" style="margin-top:6px;">
+            <span class="line-label">Extras subtotal</span>
+            <span class="line-value" id="upsell-subtotal">$0.00</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Total -->
+        <div class="summary-total-row">
+          <span>Total</span>
+          <span id="summary-total">$0.00</span>
+        </div>
+        <p class="note">Taxes and fees will be calculated on the next step.</p>
+      </section>
+
+      <!-- Right: Compact order info + actions -->
+      <aside class="card">
+        <h3 class="sidebar-heading">Your booking</h3>
+
+        <div class="sidebar-section">
+          <div class="sidebar-label">Tickets</div>
+          <div class="sidebar-value" id="sidebar-ticket-line">0 × Standard</div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-label">Seats</div>
+          <div class="sidebar-value" id="sidebar-seats">None selected</div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-label">Estimated total</div>
+          <div class="sidebar-value" id="sidebar-total">$0.00</div>
+          <div class="note">Final total confirmed on payment page.</div>
         </div>
 
         <div class="actions">
-          <button class="btn-secondary" onclick="window.location.href='index.html'">Continue Shopping</button>
-          <button class="btn-primary" onclick="window.location.href='paymentcard.html'">Proceed to Payment</button>
+          <button class="btn-primary" id="proceed-payment">
+            Proceed to payment
+          </button>
+          <button class="btn-secondary" id="edit-snacks">
+            Edit snacks & extras
+          </button>
+          <button class="btn-secondary" id="edit-seats">
+            Change seats
+          </button>
         </div>
-      </section>
-
-      <!-- Right: Order Summary -->
-      <aside class="card">
-        <h2>Order Summary</h2>
-        <p class="muted" id="summary-subtitle">Your selected showtime</p>
-        <div class="divider"></div>
-
-        <div class="summary-row">
-          <span id="summary-tickets-label">Tickets</span>
-          <span id="summary-tickets-price">$0.00</span>
-        </div>
-
-        <div id="summary-food-rows"></div>
-        <div id="summary-upsell-rows"></div>
-
-        <div class="summary-row">
-          <span>Seats</span>
-          <span id="summary-seats">-</span>
-        </div>
-        <div class="summary-row">
-          <span>Format</span>
-          <span class="pill" id="summary-format">Standard</span>
-        </div>
-        
-        <div class="divider"></div>
-        <div class="summary-row total">
-          <span>Subtotal</span>
-          <span id="summary-subtotal">$0.00</span>
-        </div>
-        <p class="muted" style="margin-top: 8px; font-size: 12px;">* Taxes and fees will be calculated in the next step</p>
-
-        <div class="divider"></div>
-        <button class="btn-link">Apply Promo Code</button>
       </aside>
     </div>
   </main>
 
- <footer class="footer">
+  <!-- Footer (same as other pages) -->
+  <footer class="footer">
     <div class="container">
       <div class="footer-content">
-          <div class="footer-section">
-          <div class="footer-logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
-          <p>Experience cinema the way it was meant to be seen.</p>
-          <div class="social-links">
-            <a href="#" aria-label="Facebook">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.955 10.125 11.854v-8.385H7.078v-3.47h3.047V9.413c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-            </a>
-            <a href="#" aria-label="Twitter">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.932 4.932 0 002.163-2.723c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 00-8.384 4.482C7.691 8.575 4.066 6.864 1.64 3.905a4.822 4.822 0 00-.666 2.475c0 1.708.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.902 4.902 0 01-2.224.084 4.933 4.933 0 004.604 3.417A9.867 9.867 0 010 21.543 13.94 13.94 0 007.548 24c9.142 0 14.307-7.721 13.995-14.646A10.025 10.025 0 0024 4.59z"/>
-              </svg>
-            </a>
-            <a href="#" aria-label="Instagram">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.325.975.975 1.262 2.242 1.324 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.324 3.608-.975.975-2.242 1.262-3.608 1.324-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.324-.975-.975-1.262-2.242-1.324-3.608C2.175 15.747 2.163 15.367 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.324-3.608.975-.975 2.242-1.262 3.608-1.324C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.015 7.052.072 5.775.13 4.638.428 3.678 1.388 2.718 2.347 2.42 3.484 2.362 4.761 2.305 6.041 2.29 6.45 2.29 12s.015 5.959.072 7.239c.058 1.277.356 2.414 1.316 3.373.96.96 2.097 1.258 3.373 1.316C8.332 23.985 8.741 24 12 24s3.668-.015 4.948-.072c1.277-.058 2.414-.356 3.373-1.316.96-.96 1.258-2.097 1.316-3.373.058-1.28.072-1.689.072-7.239s-.015-5.959-.072-7.239c-.058-1.277-.356-2.414-1.316-3.373C19.362.428 18.225.13 16.948.072 15.668.015 15.259 0 12 0z"/>
-                <path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8z"/>
-                <circle cx="18.406" cy="5.594" r="1.44"/>
-              </svg>
-            </a>
+        <div class="footer-section">
+          <div class="footer-logo">
+            <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
           </div>
+          <p>Experience cinema the way it was meant to be seen.</p>
         </div>
-
         <div class="footer-section">
           <h4>Customer Support</h4>
           <ul>
@@ -171,17 +275,15 @@
             <li><a href="#">Careers</a></li>
           </ul>
         </div>
-
         <div class="footer-section">
           <h4>Newsletter</h4>
           <p>Get the latest movies and exclusive offers</p>
           <div class="newsletter-form">
-            <input type="email" placeholder="Your email">
+            <input type="email" placeholder="Your email" />
             <button class="btn-primary">Subscribe</button>
           </div>
         </div>
       </div>
-
       <div class="footer-bottom">
         <p>&copy; 2025 THEATRUM. All rights reserved.</p>
         <div class="footer-links">
@@ -192,201 +294,170 @@
       </div>
     </div>
   </footer>
+
   <script src="scripts/booking.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // If booking.js helpers are available, build a normalized order object
-      function getOrderSnapshot() {
-        var safeParseQty = (typeof parseQty === 'function')
-          ? parseQty
-          : function (v) { v = parseInt(v, 10); return isNaN(v) ? 0 : Math.max(0, v); };
+      function safeParseInt(v) {
+        var n = parseInt(v, 10);
+        return isNaN(n) ? 0 : n;
+      }
+      function safeParseFloat(v, fallback) {
+        var n = parseFloat(v);
+        return isNaN(n) ? (fallback || 0) : n;
+      }
 
-        var ticketQty = safeParseQty(localStorage.getItem('ticketQty')) || 0;
-        var ticketType = localStorage.getItem('ticketType') || 'standard';
-        var ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
-        var seats = [];
+      var ticketQty = safeParseInt(localStorage.getItem('ticketQty'));
+      var ticketType = localStorage.getItem('ticketType') || 'standard';
+      var ticketUnitPrice = safeParseFloat(localStorage.getItem('ticketUnitPrice'), 12.0);
+      var seats = [];
+      try {
+        seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]');
+      } catch (e) {
+        seats = [];
+      }
+
+      // from booking.js helper (already loaded)
+      var foodOrder = {};
+      if (typeof getNormalizedFoodOrder === 'function') {
+        foodOrder = getNormalizedFoodOrder();
+      } else {
         try {
-          seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]') || [];
-        } catch (e) { seats = []; }
-
-        var foodOrder = {};
-        if (typeof getNormalizedFoodOrder === 'function') {
-          foodOrder = getNormalizedFoodOrder();
-        } else {
-          try {
-            foodOrder = JSON.parse(localStorage.getItem('foodOrder') || '{}') || {};
-          } catch (e) { foodOrder = {}; }
+          foodOrder = JSON.parse(localStorage.getItem('foodOrder') || '{}');
+        } catch (e) {
+          foodOrder = {};
         }
+      }
 
-        var upsellCart = [];
-        try {
-          upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]') || [];
-        } catch (e) { upsellCart = []; }
+      var upsellCart = [];
+      try {
+        upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]');
+      } catch (e) {
+        upsellCart = [];
+      }
 
-        var typeLabelMap = { standard: 'Standard', '3d': '3D' };
-        var formatLabel = typeLabelMap[ticketType] || 'Standard';
+      // DOM refs
+      var ticketSummaryLabel = document.getElementById('ticket-summary-label');
+      var ticketSummarySub = document.getElementById('ticket-summary-sub');
+      var ticketSummaryAmount = document.getElementById('ticket-summary-amount');
 
-        // Compute totals
-        var ticketTotal = ticketQty * ticketUnitPrice;
-        var foodItems = [];
-        var foodTotal = 0;
+      var snackListEl = document.getElementById('snack-list');
+      var snackSubtotalEl = document.getElementById('snack-subtotal');
 
-        Object.keys(foodOrder).forEach(function (k) {
-          var raw = foodOrder[k] || {};
-          // normalize shape: support both old and new formats
-          var name = raw.name || k;
-          var size = raw.size || null;
-          var qty = safeParseQty(raw.qty);
-          var price = parseFloat(raw.price);
-          if (isNaN(price)) price = 0;
-          if (!qty) return;
-          var lineTotal = price * qty;
-          foodTotal += lineTotal;
-          foodItems.push({
-            name: name,
-            size: size,
-            qty: qty,
-            unit: price,
-            total: lineTotal
-          });
+      var upsellListEl = document.getElementById('upsell-list');
+      var upsellSubtotalEl = document.getElementById('upsell-subtotal');
+
+      var summaryTotalEl = document.getElementById('summary-total');
+
+      var sidebarTicketLine = document.getElementById('sidebar-ticket-line');
+      var sidebarSeats = document.getElementById('sidebar-seats');
+      var sidebarTotal = document.getElementById('sidebar-total');
+
+      // Tickets
+      var ticketLabelType = ticketType === '3d' ? '3D' : 'Standard';
+      if (ticketSummaryLabel) {
+        ticketSummaryLabel.textContent = ticketQty + ' × ' + ticketLabelType + ' ticket' + (ticketQty === 1 ? '' : 's');
+      }
+      if (ticketSummarySub) {
+        ticketSummarySub.textContent = '$' + ticketUnitPrice.toFixed(2) + ' each';
+      }
+      var ticketSubtotal = ticketQty * ticketUnitPrice;
+      if (ticketSummaryAmount) {
+        ticketSummaryAmount.textContent = '$' + ticketSubtotal.toFixed(2);
+      }
+
+      // Snacks
+      var snacksTotal = 0;
+      snackListEl.innerHTML = '';
+      var foodKeys = Object.keys(foodOrder || {});
+      if (foodKeys.length) {
+        foodKeys.forEach(function (k) {
+          var it = foodOrder[k];
+          if (!it) return;
+          var qty = safeParseInt(it.qty);
+          var unitPrice = safeParseFloat(it.price, 0);
+          if (qty <= 0) return;
+          var line = qty * unitPrice;
+          snacksTotal += line;
+
+          var li = document.createElement('li');
+          var label = it.name || k;
+          if (it.size) label += ' (' + it.size + ')';
+          li.textContent = label + ' × ' + qty + ' — $' + line.toFixed(2);
+          snackListEl.appendChild(li);
         });
+      } else {
+        var liEmpty = document.createElement('li');
+        liEmpty.textContent = 'No snacks selected.';
+        snackListEl.appendChild(liEmpty);
+      }
+      snackSubtotalEl.textContent = '$' + snacksTotal.toFixed(2);
 
-        var upsellItems = [];
-        var upsellTotal = 0;
+      // Upsells
+      var upsellTotal = 0;
+      upsellListEl.innerHTML = '';
+      if (Array.isArray(upsellCart) && upsellCart.length) {
+        var map = {};
         upsellCart.forEach(function (u) {
-          if (!u) return;
-          var label = u.item || 'Addon';
-          var price = parseFloat(u.price);
-          if (isNaN(price)) price = 0;
-          upsellTotal += price;
-          upsellItems.push({
-            name: label,
-            qty: 1,
-            unit: price,
-            total: price
-          });
+          var key = u.item || String(u);
+          var price = safeParseFloat(u.price, 0);
+          if (!map[key]) map[key] = { qty: 0, price: price };
+          map[key].qty += 1;
         });
+        Object.keys(map).forEach(function (k) {
+          var it = map[k];
+          var line = it.qty * it.price;
+          upsellTotal += line;
+          var li = document.createElement('li');
+          li.textContent = k + ' × ' + it.qty + ' — $' + line.toFixed(2);
+          upsellListEl.appendChild(li);
+        });
+      } else {
+        var liNoUps = document.createElement('li');
+        liNoUps.textContent = 'No extras added.';
+        upsellListEl.appendChild(liNoUps);
+      }
+      upsellSubtotalEl.textContent = '$' + upsellTotal.toFixed(2);
 
-        var subtotal = ticketTotal + foodTotal + upsellTotal;
+      // Grand total (before tax/fees)
+      var grandTotal = ticketSubtotal + snacksTotal + upsellTotal;
+      summaryTotalEl.textContent = '$' + grandTotal.toFixed(2);
+      sidebarTotal.textContent = '$' + grandTotal.toFixed(2);
 
-        return {
-          ticketQty: ticketQty,
-          ticketType: ticketType,
-          formatLabel: formatLabel,
-          ticketUnitPrice: ticketUnitPrice,
-          ticketTotal: ticketTotal,
-          seats: seats,
-          foodItems: foodItems,
-          foodTotal: foodTotal,
-          upsellItems: upsellItems,
-          upsellTotal: upsellTotal,
-          subtotal: subtotal
-        };
+      // Sidebar text
+      if (sidebarTicketLine) {
+        sidebarTicketLine.textContent =
+          ticketQty +
+          ' × ' +
+          ticketLabelType +
+          ' ticket' +
+          (ticketQty === 1 ? '' : 's');
+      }
+      if (sidebarSeats) {
+        sidebarSeats.textContent = seats && seats.length ? seats.join(', ') : 'None selected';
       }
 
-      var order = getOrderSnapshot();
+      // Actions
+      var proceedPaymentBtn = document.getElementById('proceed-payment');
+      var editSnacksBtn = document.getElementById('edit-snacks');
+      var editSeatsBtn = document.getElementById('edit-seats');
 
-      // ----- Left card: Order Details -----
-      var countEl = document.getElementById('details-ticket-count');
-      var totalEl = document.getElementById('details-ticket-total');
-      var formatEl = document.getElementById('details-ticket-format');
-      var seatsEl = document.getElementById('details-ticket-seats');
-      var showMetaEl = document.getElementById('details-show-meta');
-
-      if (countEl) countEl.textContent = order.ticketQty;
-      if (totalEl) totalEl.textContent = '$' + order.ticketTotal.toFixed(2);
-      if (formatEl) formatEl.textContent = order.formatLabel;
-      if (seatsEl) seatsEl.textContent = order.seats.length ? order.seats.join(', ') : '-';
-      if (showMetaEl && !showMetaEl.dataset.locked) {
-        showMetaEl.textContent = 'Your selected showtime';
-      }
-
-      var foodListDetails = document.getElementById('details-food-list');
-      if (foodListDetails) {
-        foodListDetails.innerHTML = '';
-        if (!order.foodItems.length && !order.upsellItems.length) {
-          var p = document.createElement('p');
-          p.className = 'muted';
-          p.textContent = 'Any snacks you add will appear here.';
-          foodListDetails.appendChild(p);
-        } else {
-          var allItems = order.foodItems.concat(order.upsellItems);
-          allItems.forEach(function (item) {
-            var row = document.createElement('div');
-            row.className = 'concession-item';
-            row.innerHTML =
-              '<div class="concession-details">' +
-                '<h3>' + item.name + '</h3>' +
-                (item.size ? '<div class="concession-meta">' + item.size + '</div>' : '') +
-              '</div>' +
-              '<div class="quantity">' +
-                '<span class="quantity-num">' + item.qty + '</span>' +
-                '<span class="concession-price">$' + item.total.toFixed(2) + '</span>' +
-              '</div>';
-            foodListDetails.appendChild(row);
-          });
-        }
-      }
-
-      // ----- Right card: Compact summary -----
-      var subtitleEl = document.getElementById('summary-subtitle');
-      if (subtitleEl && !subtitleEl.dataset.locked) {
-        subtitleEl.textContent = 'Your selected showtime';
-      }
-
-      var ticketsLabelEl = document.getElementById('summary-tickets-label');
-      var ticketsPriceEl = document.getElementById('summary-tickets-price');
-      if (ticketsLabelEl) {
-        var plural = order.ticketQty === 1 ? 'Ticket' : 'Tickets';
-        ticketsLabelEl.textContent = (order.ticketQty || 0) + ' × ' + order.formatLabel + ' ' + plural;
-      }
-      if (ticketsPriceEl) {
-        ticketsPriceEl.textContent = '$' + order.ticketTotal.toFixed(2);
-      }
-
-      var foodRowsEl = document.getElementById('summary-food-rows');
-      if (foodRowsEl) {
-        foodRowsEl.innerHTML = '';
-        order.foodItems.forEach(function (item) {
-          var row = document.createElement('div');
-          row.className = 'summary-row';
-          var label = item.qty + ' × ' + item.name;
-          if (item.size) label += ' (' + item.size + ')';
-          row.innerHTML =
-            '<span>' + label + '</span>' +
-            '<span>$' + item.total.toFixed(2) + '</span>';
-          foodRowsEl.appendChild(row);
+      if (proceedPaymentBtn) {
+        proceedPaymentBtn.addEventListener('click', function () {
+          window.location.href = 'paymentcard.html';
         });
       }
-
-      var upsellRowsEl = document.getElementById('summary-upsell-rows');
-      if (upsellRowsEl) {
-        upsellRowsEl.innerHTML = '';
-        order.upsellItems.forEach(function (item) {
-          var row = document.createElement('div');
-          row.className = 'summary-row';
-          row.innerHTML =
-            '<span>' + item.name + '</span>' +
-            '<span>$' + item.total.toFixed(2) + '</span>';
-          upsellRowsEl.appendChild(row);
+      if (editSnacksBtn) {
+        editSnacksBtn.addEventListener('click', function () {
+          window.location.href = 'food_selection.html';
         });
       }
-
-      var summarySeatsEl = document.getElementById('summary-seats');
-      if (summarySeatsEl) {
-        summarySeatsEl.textContent = order.seats.length ? order.seats.join(', ') : '-';
-      }
-      var summaryFormatEl = document.getElementById('summary-format');
-      if (summaryFormatEl) {
-        summaryFormatEl.textContent = order.formatLabel;
-      }
-
-      var subtotalEl = document.getElementById('summary-subtotal');
-      if (subtotalEl) {
-        subtotalEl.textContent = '$' + order.subtotal.toFixed(2);
+      if (editSeatsBtn) {
+        editSeatsBtn.addEventListener('click', function () {
+          window.location.href = 'seat_selection.html';
+        });
       }
     });
   </script>
-
 </body>
 </html>
