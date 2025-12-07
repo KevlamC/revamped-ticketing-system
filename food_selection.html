@@ -5,273 +5,599 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Selection - THEATRUM</title>
     <link rel="stylesheet" href="styles/index_styles.css">
+    <style>
+        .food-page {
+            display: grid;
+            grid-template-columns: minmax(0, 2.5fr) minmax(320px, 1fr);
+            gap: 2.5rem;
+            align-items: flex-start;
+            padding-bottom: 4rem;
+        }
+        .menu-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .section-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1.25rem;
+            padding: 2rem 0 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .filter-controls {
+            min-width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .filter-controls label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .filter-select {
+            position: relative;
+        }
+        .filter-select::after {
+            content: '\25BC';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+        }
+        .filter-select select {
+            width: 100%;
+            padding: 0.85rem 2.5rem 0.85rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 18, 32, 0.85);
+            color: #fff;
+            font-size: 1rem;
+            appearance: none;
+        }
+        .category-heading {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
+        }
+        .category-heading h3 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.75rem;
+        }
+        .category-note {
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .concessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 1.5rem;
+        }
+        .food-cta {
+            display: flex;
+            gap: 1rem;
+        }
+        .food-cta.align-right {
+            justify-content: flex-end;
+        }
+        .order-panel {
+            background: rgba(9, 11, 22, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 20px 45px rgba(7, 10, 25, 0.55);
+            position: sticky;
+            top: 6rem;
+            justify-self: end;
+            margin-left: auto;
+        }
+        .order-panel-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-bottom: 1.5rem;
+        }
+        .order-panel-subtext {
+            margin: 0;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.65);
+        }
+        .food-selection-page .order-panel-header {
+            padding-left: 1rem;
+        }
+        .order-summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .summary-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .summary-name {
+            font-weight: 600;
+        }
+        .summary-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .summary-remove {
+            border: none;
+            background: none;
+            color: var(--accent-red, #ff4d5a);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .summary-price {
+            font-weight: 600;
+        }
+        .order-summary-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .order-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .btn-full {
+            width: 100%;
+            text-align: center;
+        }
+        .order-hint {
+            margin: 0;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .summary-empty {
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+        .food-selection-page main.food-page {
+            margin-top: 6rem;
+        }
+        .food-selection-page .category-section {
+            background: rgba(15, 18, 32, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+        }
+        .food-selection-page .concessions-grid {
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+        .food-selection-page .concession-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            box-shadow: 0 12px 28px rgba(5, 7, 18, 0.55);
+            width: 100%;
+        }
+        .food-selection-page .concession-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
+        .food-selection-page .concession-info {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            flex-grow: 1;
+        }
+        .food-selection-page .card-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        .food-selection-page .item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+        .food-selection-page .qty-group {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            padding: 0.25rem 0.7rem;
+            background: rgba(9, 11, 22, 0.7);
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.65rem;
+            min-width: 130px;
+        }
+        .food-selection-page .qty-group button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            line-height: 1;
+        }
+        .food-selection-page .snack-qty {
+            font-weight: 700;
+            text-align: center;
+            min-width: 1.5rem;
+        }
+        .food-selection-page .add-snack {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            background: linear-gradient(120deg, #f43f5e, #f97316);
+            border: none;
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3);
+            border-radius: 999px;
+        }
+        .food-selection-page .size-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+            gap: 0.4rem;
+            margin-top: auto;
+        }
+        .food-selection-page .size-btn {
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            font-size: 0.9rem;
+            padding: 0.4rem 0.75rem;
+        }
+        .food-selection-page .concession-pricing {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .food-selection-page .price-option {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.6);
+            color: #fff;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 900px) {
+            .food-selection-page .concession-card {
+                grid-template-columns: minmax(0, 1fr);
+            }
+            .food-selection-page .concession-image {
+                height: 220px;
+            }
+            .food-selection-page .item-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 1024px) {
+            .food-page {
+                grid-template-columns: 1fr;
+            }
+            .order-panel {
+                position: static;
+                width: 100%;
+            }
+            .food-cta.align-right {
+                justify-content: flex-start;
+            }
+        }
+    </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html#now-playing">Now Playing</a></li>
-                <li><a href="index.html#coming-soon">Coming Soon</a></li>
-                <li><a href="food_selection.html">Food & Drinks</a></li>
-                <li><a href="index.html#offers">Offers</a></li>
-                <li><a href="index.html#locations">Locations</a></li>
+<body class="food-selection-page">
+    <div id="header-placeholder"></div>
+    <script src="scripts/load-header.js"></script>
 
-            </ul>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <input type="text" placeholder="Search movies...">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </div>
-                <button class="btn-secondary" style="background-color: var(--accent-red); color: white; border: none;">Alex</button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="container" style="padding-top:80px;">
+    <main class="container food-page">
+        <section class="menu-column" aria-label="Snack selection">
         <div class="section-header">
             <div>
                 <h2>Pick Snacks & Drinks</h2>
-                <p class="section-subtitle">Add concessions to your order</p>
+                <p class="section-subtitle">Curated concessions to pair with your show</p>
             </div>
             <div class="filter-controls">
-                <button class="filter-btn active" data-category="all">All Items</button>
-                <button class="filter-btn" data-category="food">Food</button>
-                <button class="filter-btn" data-category="drinks">Drinks</button>
-                <button class="filter-btn" data-category="combos">Combos</button>
-                <button class="filter-btn" data-category="snacks">Snacks</button>
+                <label for="category-filter">Categories</label>
+                <div class="filter-select">
+                    <select id="category-filter" aria-label="Filter snacks by category">
+                        <option value="all">All selections</option>
+                        <option value="popcorn">Food</option>
+                        <option value="combos">Combos</option>
+                        <option value="drinks">Drinks</option>
+                        <option value="snacks">Snacks</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <section class="concessions-grid">
-            <div class="concession-card">
-                <div class="concession-image"><img src="assets\pop.jpg" alt="Popcorn"></div>
-                <div class="concession-info">
-                    <h3>Classic Popcorn</h3>
-                    <p class="section-subtitle">Freshly popped</p>
-                    <div class="concession-pricing" style="margin-top:8px;">
-                        <span class="price-option">Small $6</span>
-                        <span class="price-option">Medium $8</span>
-                        <span class="price-option">Large $10</span>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <label for="size-popcorn" class="section-subtitle">Size</label>
-                        <select id="size-popcorn" class="size-select">
-                            <option data-size="Small" data-price="6">Small — $6</option>
-                            <option data-size="Medium" data-price="8">Medium — $8</option>
-                            <option data-size="Large" data-price="10">Large — $10</option>
-                        </select>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
-                        <button class="btn-secondary qty-decrease">-</button>
-                        <div class="snack-qty">0</div>
-                        <button class="btn-secondary qty-increase">+</button>
-                        <!-- add uses selected size price -->
-                        <button class="btn-primary add-snack" data-price="6">Add</button>
+        <section class="category-section" id="popcorn">
+            <div class="category-heading">
+                <p class="kicker">CLASSIC FAVORITE</p>
+                <h3>Popcorn <span class="category-note">Freshly popped with butter + seasoning</span></h3>
+            </div>
+            <div class="concessions-grid">
+                <div class="concession-card" data-category="popcorn">
+                    <div class="concession-image"><img src="assets/pop.jpg" alt="Classic Popcorn"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Classic Popcorn</h3>
+                            <span class="pill">Bestseller</span>
+                        </div>
+                        <div class="size-options" role="group" aria-label="Popcorn sizes">
+                            <button class="size-btn active" data-size="Small" data-price="6">Small $6</button>
+                            <button class="size-btn" data-size="Regular" data-price="8">Regular $8</button>
+                            <button class="size-btn" data-size="Large" data-price="10">Large $10</button>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="6">Add</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="concession-card">
-                <div class="concession-image"><img src="https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg" alt="Combo"></div>
-                <div class="concession-info">
-                    <h3>Ultimate Combo</h3>
-                    <p class="section-subtitle">Popcorn + 2 drinks</p>
-                    <div class="concession-pricing" style="margin-top:8px;">
-                        <span class="price-special">$22</span>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
-                        <button class="btn-secondary qty-decrease">-</button>
-                        <div class="snack-qty">0</div>
-                        <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack" data-price="22">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="concession-card">
-                <div class="concession-image"><img src="assets\nachos.jpg" alt="Nachos"></div>
-                <div class="concession-info">
-                    <h3>Loaded Nachos</h3>
-                    <p class="section-subtitle">Cheesy goodness</p>
-                    <div class="concession-pricing" style="margin-top:8px;">
-                        <span class="price-option">Regular $9</span>
-                        <span class="price-option">Large $12</span>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <label class="section-subtitle">Size</label>
-                        <select class="size-select">
-                            <option data-size="Regular" data-price="9">Regular — $9</option>
-                            <option data-size="Large" data-price="12">Large — $12</option>
-                        </select>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
-                        <button class="btn-secondary qty-decrease">-</button>
-                        <div class="snack-qty">0</div>
-                        <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack" data-price="9">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional items copied from index.html -->
-            <div class="concession-card">
-                <div class="concession-image"><img src="assets/bev.png" alt="Drinks"></div>
-                <div class="concession-info">
-                    <h3>Premium Beverages</h3>
-                    <p class="section-subtitle">Soft drinks, smoothies, specialty coffee</p>
-                    <div class="concession-pricing" style="margin-top:8px;">
-                        <span class="price-option">Medium $5</span>
-                        <span class="price-option">Large $7</span>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <label class="section-subtitle">Size</label>
-                        <select class="size-select">
-                            <option data-size="Medium" data-price="5">Medium — $5</option>
-                            <option data-size="Large" data-price="7">Large — $7</option>
-                        </select>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
-                        <button class="btn-secondary qty-decrease">-</button>
-                        <div class="snack-qty">0</div>
-                        <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack" data-price="5">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="concession-card">
-                <div class="concession-image"><img src="assets\hotdog.jpg" alt="Hot Dogs"></div>
-                <div class="concession-info">
-                    <h3>Gourmet Hot Dogs</h3>
-                    <p class="section-subtitle">Signature toppings available</p>
-                    <div class="concession-pricing" style="margin-top:8px;">
-                        <span class="price-option">Classic $8</span>
-                        <span class="price-option">Premium $11</span>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <label class="section-subtitle">Type</label>
-                        <select class="size-select">
-                            <option data-size="Classic" data-price="8">Classic — $8</option>
-                            <option data-size="Premium" data-price="11">Premium — $11</option>
-                        </select>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
-                        <button class="btn-secondary qty-decrease">-</button>
-                        <div class="snack-qty">0</div>
-                        <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack" data-price="8">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="concession-card">
-                <div class="concession-image"><img src="assets\candy.jpg" alt="Candy"></div>
-                <div class="concession-info">
-                    <h3>Candy Selection</h3>
-                    <p class="section-subtitle">Classic theater favorites</p>
-                    <div class="concession-pricing" style="margin-top:8px;">
-                        <span class="price-option">$4 each</span>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
-                        <button class="btn-secondary qty-decrease">-</button>
-                        <div class="snack-qty">0</div>
-                        <button class="btn-secondary qty-increase">+</button>
-                        <button class="btn-primary add-snack" data-price="4">Add</button>
+                <div class="concession-card" data-category="popcorn">
+                    <div class="concession-image"><img src="assets/nachos.jpg" alt="Loaded Nachos"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Loaded Nachos</h3>
+                            <span class="pill">Shareable</span>
+                        </div>
+                        <div class="size-options" role="group" aria-label="Nachos sizes">
+                            <button class="size-btn active" data-size="Small" data-price="8">Small $8</button>
+                            <button class="size-btn" data-size="Regular" data-price="10">Regular $10</button>
+                            <button class="size-btn" data-size="Large" data-price="12">Large $12</button>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="9">Add</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div style="margin-top:20px;display:flex;gap:12px;">
-            <button id="review-order" class="btn-primary btn-large">Continue to Payment</button>
+        <section class="category-section" id="combos">
+            <div class="category-heading">
+                <p class="kicker">FAST PICKS</p>
+                <h3>Combos <span class="category-note">Bundled for value</span></h3>
+            </div>
+            <div class="concessions-grid">
+                <div class="concession-card" data-category="combos">
+                    <div class="concession-image"><img src="https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg" alt="Ultimate Combo"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Ultimate Combo</h3>
+                            <span class="pill">2 Drinks + Popcorn</span>
+                        </div>
+                        <div class="size-options" role="group" aria-label="Combo size">
+                            <button class="size-btn active" data-size="Combo" data-price="14">Combo $14</button>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="14">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concession-card" data-category="combos">
+                    <div class="concession-image"><img src="assets/hotdog.jpg" alt="Gourmet Dog Combo"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Gourmet Dog Combo</h3>
+                            <span class="pill">Includes drink</span>
+                        </div>
+                        <div class="size-options" role="group" aria-label="Combo size">
+                            <button class="size-btn active" data-size="Combo" data-price="14">Combo $14</button>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="12">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section" id="drinks">
+            <div class="category-heading">
+                <p class="kicker">REFRESH</p>
+                <h3>Drinks <span class="category-note">Chilled and ready</span></h3>
+            </div>
+            <div class="concessions-grid">
+                <div class="concession-card" data-category="drinks">
+                    <div class="concession-image"><img src="assets/bev.png" alt="Premium Beverages"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Premium Beverages</h3>
+                            <span class="pill">Fountain & cold brew</span>
+                        </div>
+                        <div class="size-options" role="group" aria-label="Drink sizes">
+                            <button class="size-btn active" data-size="Small" data-price="4">Small $4</button>
+                            <button class="size-btn" data-size="Regular" data-price="5">Regular $5</button>
+                            <button class="size-btn" data-size="Large" data-price="7">Large $7</button>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="5">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concession-card" data-category="drinks">
+                    <div class="concession-image"><img src="assets/candy.jpg" alt="Sparkling Water"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Sparkling Water</h3>
+                            <span class="pill">Zero sugar</span>
+                        </div>
+                        <div class="size-options" role="group" aria-label="Water sizes">
+                            <button class="size-btn active" data-size="Small" data-price="3">Small $3</button>
+                            <button class="size-btn" data-size="Regular" data-price="4">Regular $4</button>
+                            <button class="size-btn" data-size="Large" data-price="5.5">Large $5.50</button>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="4">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-section" id="snacks">
+            <div class="category-heading">
+                <p class="kicker">SWEET TREATS</p>
+                <h3>Snacks <span class="category-note">Chocolates, ice cream, candies</span></h3>
+            </div>
+            <div class="concessions-grid">
+                <div class="concession-card" data-category="snacks">
+                    <div class="concession-image"><img src="assets/candy.jpg" alt="Chocolate Bites"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Chocolate Bites</h3>
+                            <span class="pill">Assorted mix</span>
+                        </div>
+                        <div class="concession-pricing">
+                            <span class="price-option">$4 each</span>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="4">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concession-card" data-category="snacks">
+                    <div class="concession-image"><img src="assets/bev.png" alt="Ice Cream Cups"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Ice Cream Cups</h3>
+                            <span class="pill">Cold</span>
+                        </div>
+                        <div class="concession-pricing">
+                            <span class="price-option">$5 each</span>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="5">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concession-card" data-category="snacks">
+                    <div class="concession-image"><img src="assets/pop.jpg" alt="Candy Mix"></div>
+                    <div class="concession-info">
+                        <div class="card-heading">
+                            <h3>Candy Mix</h3>
+                            <span class="pill">Pick & mix</span>
+                        </div>
+                        <div class="concession-pricing">
+                            <span class="price-option">$3 each</span>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-group">
+                                <button class="btn-secondary qty-decrease">-</button>
+                                <div class="snack-qty">0</div>
+                                <button class="btn-secondary qty-increase">+</button>
+                            </div>
+                            <button class="btn-primary add-snack" data-price="3">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="food-cta align-right">
             <a href="seat_selection.html" class="btn-secondary btn-large">Back</a>
+            <button id="review-order" class="btn-primary btn-large">Continue to Payment</button>
         </div>
+        </section>
+
+        <aside class="order-panel" aria-label="Order summary">
+            <div class="order-panel-header">
+                <p class="kicker">Your Order</p>
+                <h3>Snacks Snapshot</h3>
+                <p class="order-panel-subtext">Selections update in real time as you add items.</p>
+            </div>
+            <ul class="order-summary-list" id="food-summary-list">
+                <li class="summary-empty">No snacks selected yet.</li>
+            </ul>
+            <div class="order-summary-footer">
+                <div class="order-total-row">
+                    <span>Subtotal</span>
+                    <strong id="food-subtotal">$0.00</strong>
+                </div>
+                <button type="button" id="clear-food-order" class="btn-secondary btn-full">Clear snacks</button>
+                <p class="order-hint">You'll confirm everything on the payment summary.</p>
+            </div>
+        </aside>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-                    </div>
-                    <p>Experience cinema the way it was meant to be seen.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Twitter">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Instagram">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Movies</h4>
-                    <ul>
-                        <li><a href="#now-playing">Now Playing</a></li>
-                        <li><a href="#coming-soon">Coming Soon</a></li>
-                        <li><a href="#">Movie Formats</a></li>
-                        <li><a href="#">Private Events</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Membership</h4>
-                    <ul>
-                        <li><a href="#">Premium Pass</a></li>
-                        <li><a href="#">Rewards Program</a></li>
-                        <li><a href="#">Gift Cards</a></li>
-                        <li><a href="#">Corporate Sales</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Accessibility</a></li>
-                        <li><a href="#">Careers</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Newsletter</h4>
-                    <p>Get the latest movies and exclusive offers</p>
-                    <div class="newsletter-form">
-                        <input type="email" placeholder="Your email">
-                        <button class="btn-primary">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2025 THEATRUM. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Cookie Settings</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
+    <script src="scripts/load-footer.js"></script>
 
     <script src="scripts/booking.js"></script>
 </body>
 </html>
+
