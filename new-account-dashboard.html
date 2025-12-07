@@ -676,7 +676,7 @@
         <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
       </div>
       <ul class="nav-links">
-        <li><a href="#now-playing" class="active">Now Playing</a></li>
+        <li><a href="#now-playing">Now Playing</a></li>
         <li><a href="#coming-soon">Coming Soon</a></li>
         <li><a href="#concessions">Food & Drinks</a></li>
         <li><a href="#offers">Offers</a></li>
@@ -832,9 +832,9 @@
                                 </div>
                             </div>
                             <div class="booking-actions">
-                                <button class="btn-primary btn-small">Booking Details</button>
+                                <a class="btn-primary btn-small" href="new-booking-history.html">Booking Details</a>
                                 <button class="btn-secondary btn-small">Add to Calendar</button>
-                                <button class="btn-secondary btn-small">Cancel Booking</button>
+                                <a class="btn-secondary btn-small" href="cancel-refund.html">Cancel Booking</a>
                             </div>
                         </div>
 
@@ -866,9 +866,9 @@
                                 </div>
                             </div>
                             <div class="booking-actions">
-                                <button class="btn-primary btn-small">Booking Details</button>
+                                <a class="btn-primary btn-small" href="new-booking-history.html">Booking Details</a>
                                 <button class="btn-secondary btn-small">Add to Calendar</button>
-                                <button class="btn-secondary btn-small">Cancel Booking</button>
+                                <a class="btn-secondary btn-small" href="cancel-refund.html">Cancel Booking</a>
                             </div>
                         </div>
                     </div>
@@ -1205,26 +1205,30 @@
             const navLinks = document.querySelectorAll('.sidebar-nav a');
             const sections = document.querySelectorAll('.content-section, .profile-card');
 
+            function activateSection(hash) {
+                if (!hash) return;
+                const targetLink = Array.from(navLinks).find(l => l.getAttribute('href') === hash);
+                const targetSection = document.getElementById(hash.replace('#',''));
+                if (targetLink) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    targetLink.classList.add('active');
+                }
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
-                    // Remove active class from all links
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                    
-                    // Get target section
-                    const targetId = this.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
-                    
-                    // Scroll to section
-                    if (targetSection) {
-                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+                    const hash = this.getAttribute('href');
+                    activateSection(hash);
+                    history.replaceState(null, '', hash);
                 });
             });
+
+            activateSection(window.location.hash || '#profile');
+            window.addEventListener('hashchange', () => activateSection(window.location.hash));
 
             // Settings form submission
             const settingsForm = document.querySelector('.settings-form');
@@ -1234,18 +1238,6 @@
                     alert('Settings saved successfully!');
                 });
             }
-
-            // Cancel booking
-            const cancelButtons = document.querySelectorAll('.booking-actions .btn-secondary');
-            cancelButtons.forEach(button => {
-                if (button.textContent.includes('Cancel Booking')) {
-                    button.addEventListener('click', function() {
-                        if (confirm('Are you sure you want to cancel this booking?')) {
-                            alert('Booking cancelled successfully. Refund will be processed within 5-7 business days.');
-                        }
-                    });
-                }
-            });
 
             // Food order actions
             const foodOrderButtons = document.querySelectorAll('.food-order-actions .btn-secondary');

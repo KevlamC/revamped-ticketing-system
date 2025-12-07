@@ -52,7 +52,6 @@
           </svg>
         </div>
         <button class="btn-primary">Alex</button>
-        <button class="btn-primary">Buy Tickets</button>
       </div>
     </div>
   </nav>
@@ -117,9 +116,8 @@
         </div>
 
         <div class="actions">
-          <button class="btn-secondary">Keep Tickets</button>
-          <button class="btn-primary">Confirm Cancellation</button>
-          <button class="btn-ghost">Contact Support</button>
+          <a class="btn-secondary" href="new-account-dashboard.html">Keep Tickets</a>
+          <button class="btn-primary" id="confirm-cancel">Confirm Cancellation</button>
         </div>
       </section>
 
@@ -220,5 +218,22 @@
             </div>
         </div>
     </footer>
+
+    <script>
+      (function() {
+        const agreeBox = document.getElementById('agree');
+        const confirmBtn = document.getElementById('confirm-cancel');
+        if (confirmBtn) {
+          confirmBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!agreeBox || !agreeBox.checked) {
+              alert('You have not agreed to the conditions.');
+              return;
+            }
+            window.location.href = 'cancel-sucess.html';
+          });
+        }
+      })();
+    </script>
 </body>
 </html>
