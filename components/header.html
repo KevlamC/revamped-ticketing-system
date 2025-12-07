@@ -1673,6 +1673,24 @@
 
         // Mock validation - in real app would check against backend
         if (emailVal.includes('@') && passVal.length >= 6) {
+          // Check against user database
+          const users = loadUsers();
+          const user = users.find(u => u.email === emailVal && u.password === passVal);
+
+          if (!user) {
+            // For demo purposes, allow login with any @email and 6+ char password
+            // But still save it to the users database for future reference
+            const existingUserIdx = users.findIndex(u => u.email === emailVal);
+            if (existingUserIdx === -1) {
+              users.push({
+                email: emailVal,
+                name: emailVal.split('@')[0],
+                password: passVal
+              });
+              saveUsers(users);
+            }
+          }
+
           // Create session
           const session = {
             email: emailVal,
@@ -1752,6 +1770,18 @@
           ts: Date.now()
         };
         localStorage.setItem('theatrum.session', JSON.stringify(session));
+
+        // Also save user to users database for future login/forgot password
+        const users = loadUsers();
+        const existingUserIdx = users.findIndex(u => u.email === emailVal);
+        if (existingUserIdx === -1) {
+          users.push({
+            email: emailVal,
+            name: firstVal + ' ' + lastVal,
+            password: passVal
+          });
+          saveUsers(users);
+        }
 
         // Close all modals - logged-in users now use dropdown
         if (typeof window.closeAllModals === 'function') window.closeAllModals();
