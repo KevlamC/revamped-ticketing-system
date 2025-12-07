@@ -669,35 +669,12 @@
     </style>
 </head>
 <body>
- <!-- NAV -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="logo" id="logo">
-        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-      </div>
-      <ul class="nav-links">
-        <li><a href="#now-playing">Now Playing</a></li>
-        <li><a href="#coming-soon">Coming Soon</a></li>
-        <li><a href="#concessions">Food & Drinks</a></li>
-        <li><a href="#offers">Offers</a></li>
-        <li><a href="#locations">Locations</a></li>
-      </ul>
-            <div class="nav-actions">
-        <div class="search-box">
-          <input id="globalSearch" type="text" placeholder="Search movies...">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-        </div>
-                <button id="userButton" class="btn-primary">Sign In</button>
-      </div>
-    </div>
-  </nav>
+    <!-- NAV (loaded from components/header.html) -->
+    <div id="header-placeholder"></div>
+    <script src="scripts/load-header.js"></script>
 
-
-    <!-- Dashboard Container -->
-    <div class="dashboard-container">
+        <!-- Dashboard Container -->
+        <div class="dashboard-container">
         <!-- Dashboard Header -->
         <div class="dashboard-header">
             <h1>Account Dashboard</h1>
@@ -1069,11 +1046,6 @@
                             <input type="email" id="email" placeholder="you@example.com">
                         </div>
 
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" placeholder="(+ country code)">
-                        </div>
-
                         <h3 style="font-size: 18px; font-weight: 700; margin-top: 24px; margin-bottom: 16px;">Notification Preferences</h3>
 
                         <div class="toggle-group">
@@ -1198,10 +1170,14 @@
           <a href="#">Cookie Settings</a>
         </div>
       </div>
-    </div>
-  </footer>
+        </div>
+    </footer>
 
-    <script>
+    <!-- FOOTER (loaded from components/footer.html) -->
+    <div id="footer-placeholder"></div>
+    <script src="scripts/load-footer.js"></script>
+
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Sidebar navigation
             const navLinks = document.querySelectorAll('.sidebar-nav a');
