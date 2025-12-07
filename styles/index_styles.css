@@ -3895,3 +3895,82 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
     }
 }
 
+/* ========== FORGOT PASSWORD PAGE STYLES ========== */
+#resetEmail,
+#resetPass,
+#resetPass2 {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--text-primary);
+}
+
+#resetEmail::placeholder,
+#resetPass::placeholder,
+#resetPass2::placeholder {
+    color: var(--text-muted);
+}
+
+#resetSubmit,
+#resetSubmit:hover {
+    background: var(--accent-red);
+    color: #fff;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#resetSubmit:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+#backToSignIn {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#backToSignIn:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+#resetError {
+    color: #fda4af;
+    font-size: 13px;
+    display: none;
+}
+
+#resetError.show {
+    display: block;
+}
+
+#resetSuccess {
+    background: rgba(16, 185, 129, 0.12);
+    color: #a7f3d0;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    display: none;
+}
+
+#resetSuccess.show {
+    display: block;
+}
+
+

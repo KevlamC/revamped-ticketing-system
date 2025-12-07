@@ -325,8 +325,150 @@ document.addEventListener('DOMContentLoaded', () => {
   // -----------------------
   if (document.querySelectorAll('.concession-card').length) {
     const snackCards = Array.from(document.querySelectorAll('.concession-card'));
-    // order keyed by `${name}||${size}` -> { name, size, qty, price }
     const order = getNormalizedFoodOrder();
+
+    const summaryList = document.getElementById('food-summary-list');
+    const subtotalEl = document.getElementById('food-subtotal');
+    const grandTotalEl = document.getElementById('food-grand-total');
+    const ticketInfoEl = document.getElementById('summary-ticket-info');
+    const ticketTotalEl = document.getElementById('summary-ticket-total');
+    const seatInfoEl = document.getElementById('summary-seat-info');
+    const clearBtn = document.getElementById('clear-food-order');
+
+    const formatCurrency = val => `$${(val || 0).toFixed(2)}`;
+    const syncOrderCache = latest => {
+      Object.keys(order).forEach(key => delete order[key]);
+      Object.assign(order, latest);
+    };
+
+    const renderSummary = () => {
+      const latest = getNormalizedFoodOrder();
+      syncOrderCache(latest);
+
+      const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
+      const ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 0;
+      const ticketTotal = ticketQty * ticketUnitPrice;
+      const seatSelection = JSON.parse(localStorage.getItem('selectedSeats') || '[]');
+
+      if (ticketInfoEl) {
+        ticketInfoEl.textContent = ticketQty
+          ? `${ticketQty} ticket${ticketQty === 1 ? '' : 's'} selected`
+          : 'No tickets selected';
+      }
+      if (ticketTotalEl) ticketTotalEl.textContent = formatCurrency(ticketTotal);
+      if (seatInfoEl) {
+        seatInfoEl.textContent = seatSelection.length
+          ? seatSelection.join(', ')
+          : 'No seats selected';
+      }
+
+      if (summaryList) {
+        summaryList.innerHTML = '';
+        const keys = Object.keys(latest);
+        let snackSubtotal = 0;
+
+        if (!keys.length) {
+          const empty = document.createElement('li');
+          empty.className = 'summary-empty';
+          empty.textContent = 'No snacks selected yet.';
+          summaryList.appendChild(empty);
+        } else {
+          keys.forEach(key => {
+            const data = normalizeFoodItem(key, latest[key]);
+            const qty = parseQty(data.qty);
+            if (!qty) return;
+            const unit = parseFloat(data.price) || 0;
+            const line = unit * qty;
+            snackSubtotal += line;
+
+            const li = document.createElement('li');
+            li.className = 'summary-line';
+
+            const stack = document.createElement('div');
+            stack.className = 'summary-stack';
+
+            const nameEl = document.createElement('span');
+            nameEl.className = 'summary-name';
+            nameEl.textContent = data.name;
+            stack.appendChild(nameEl);
+
+            const meta = document.createElement('div');
+            meta.className = 'summary-meta';
+            if (data.size) {
+              const sizeEl = document.createElement('span');
+              sizeEl.textContent = data.size;
+              meta.appendChild(sizeEl);
+            }
+            const qtyEl = document.createElement('span');
+            qtyEl.textContent = `${qty}x`;
+            meta.appendChild(qtyEl);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'summary-remove';
+            removeBtn.textContent = 'Remove';
+            removeBtn.addEventListener('click', () => {
+              const refreshed = getNormalizedFoodOrder();
+              if (refreshed[key]) delete refreshed[key];
+              localStorage.setItem('foodOrder', JSON.stringify(refreshed));
+              syncOrderCache(refreshed);
+              renderSummary();
+              notify(`${data.name} removed from your order`, 'info');
+            });
+            meta.appendChild(removeBtn);
+
+            stack.appendChild(meta);
+
+            const priceEl = document.createElement('span');
+            priceEl.className = 'summary-price';
+            priceEl.textContent = formatCurrency(line);
+
+            li.appendChild(stack);
+            li.appendChild(priceEl);
+            summaryList.appendChild(li);
+          });
+
+          if (subtotalEl) subtotalEl.textContent = formatCurrency(snackSubtotal);
+          if (grandTotalEl) grandTotalEl.textContent = formatCurrency(snackSubtotal + ticketTotal);
+        }
+
+        if (!Object.keys(latest).length) {
+          if (subtotalEl) subtotalEl.textContent = '$0.00';
+          if (grandTotalEl) grandTotalEl.textContent = formatCurrency(ticketTotal);
+        }
+      }
+    };
+
+    renderSummary();
+
+    clearBtn &&
+      clearBtn.addEventListener('click', () => {
+        localStorage.removeItem('foodOrder');
+        syncOrderCache({});
+        renderSummary();
+        notify('Snacks cleared from your order', 'info');
+      });
+
+    const categoryFilter = document.getElementById('category-filter');
+    const categorySections = Array.from(document.querySelectorAll('.category-section'));
+    const applyCategoryFilter = value => {
+      const selected = value || 'all';
+      snackCards.forEach(card => {
+        const cat = card.dataset.category || 'all';
+        card.style.display = selected === 'all' || cat === selected ? '' : 'none';
+      });
+      categorySections.forEach(section => {
+        const sectionId = section.id || '';
+        const matches = selected === 'all' || sectionId === selected;
+        section.style.display = matches ? '' : 'none';
+      });
+    };
+    if (categoryFilter) {
+      applyCategoryFilter(categoryFilter.value || 'all');
+      categoryFilter.addEventListener('change', e => applyCategoryFilter(e.target.value));
+    } else {
+      applyCategoryFilter('all');
+    }
 
     snackCards.forEach(card => {
       const qtyEl = card.querySelector('.snack-qty');
@@ -334,6 +476,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const dec = card.querySelector('.qty-decrease');
       const add = card.querySelector('.add-snack');
       const sizeSelect = card.querySelector('.size-select');
+      const sizeButtons = Array.from(card.querySelectorAll('.size-btn'));
+
+      const activateSize = btn => {
+        sizeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      };
+      if (sizeButtons.length) {
+        const preset = card.querySelector('.size-btn.active') || sizeButtons[0];
+        preset && activateSize(preset);
+        sizeButtons.forEach(btn => btn.addEventListener('click', () => activateSize(btn)));
+      }
 
       let qty = 0;
       const renderQty = () => qtyEl && (qtyEl.textContent = qty);
@@ -355,7 +508,13 @@ document.addEventListener('DOMContentLoaded', () => {
           const name = card.querySelector('h3').textContent.trim();
           let selectedSize = null;
           let unitPrice = parseFloat(add.dataset.price) || 0;
-          if (sizeSelect && sizeSelect.selectedOptions && sizeSelect.selectedOptions[0]) {
+          if (sizeButtons.length) {
+            const active = card.querySelector('.size-btn.active') || sizeButtons[0];
+            if (active) {
+              selectedSize = active.dataset.size || active.textContent.trim();
+              unitPrice = parseFloat(active.dataset.price) || unitPrice;
+            }
+          } else if (sizeSelect && sizeSelect.selectedOptions && sizeSelect.selectedOptions[0]) {
             const opt = sizeSelect.selectedOptions[0];
             selectedSize = opt.dataset.size || opt.textContent || null;
             unitPrice = parseFloat(opt.dataset.price) || unitPrice;
@@ -372,12 +531,13 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           order[key].qty = (order[key].qty || 0) + qty;
           order[key].price = unitPrice;
-          // write normalized order back to storage
+
           localStorage.setItem('foodOrder', JSON.stringify(order));
           qty = 0;
           renderQty();
+          renderSummary();
           notify(
-            `${name}${selectedSize ? ' (' + selectedSize + ')' : ''} added to your order`,
+            `${name}${selectedSize ? ` (${selectedSize})` : ''} added to your order`,
             'success'
           );
         });
@@ -385,10 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const reviewBtn = document.getElementById('review-order');
     reviewBtn &&
-      reviewBtn.addEventListener(
-        'click',
-        () => (window.location.href = 'payment-summary.html')
-      );
+      reviewBtn.addEventListener('click', () => (window.location.href = 'payment-summary.html'));
   }
 
   // -----------------------

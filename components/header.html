@@ -330,6 +330,612 @@
     .nav-container { padding: 0 16px; }
     .btn-primary { padding: 8px 12px; font-size: 12px; } /* Compact user button */
   }
+
+  /* ========== AUTH MODAL STYLES ========== */
+  .overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(10, 10, 15, 0.6);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+  }
+
+  .overlay.show {
+    display: flex !important;
+  }
+
+  .sheet {
+    width: min(680px, 92vw);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow-2);
+    animation: modal-pop 220ms ease-out;
+    position: relative;
+    pointer-events: auto !important;
+  }
+
+  @keyframes modal-pop {
+    from {
+      transform: scale(0.98);
+      opacity: 0.5;
+    }
+  }
+
+  .close-x {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 18px;
+    transition: all 0.2s ease;
+    pointer-events: auto !important;
+    z-index: 100000 !important;
+  }
+
+  .close-x:hover {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    color: #fff;
+  }
+
+  .sheet h3 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .sheet .sub {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0 0 16px;
+  }
+
+  .sheet .muted {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .stack {
+    display: grid;
+    gap: 12px;
+  }
+
+  .grid-2 {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .field label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .field input {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent-red);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-chip {
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .btn-primary {
+    background: var(--accent-red);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  }
+
+  .btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent-red);
+  }
+
+  .btn-chip {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+  }
+
+  .btn-chip:hover {
+    background: var(--accent-red);
+    color: #fff;
+    border-color: var(--accent-red);
+  }
+
+  .error {
+    color: #fda4af;
+    font-size: 13px;
+    display: none;
+  }
+
+  .error.show {
+    display: block;
+  }
+
+  .success {
+    background: rgba(16, 185, 129, 0.12);
+    color: #a7f3d0;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    display: none;
+  }
+
+  .success.show {
+    display: block;
+  }
+
+  /* Forgot password steps animation */
+  .forgot-step {
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ========== ENHANCED AUTH MODAL STYLES ========== */
+  
+  /* Full-width buttons */
+  .btn-full {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 20px;
+  }
+
+  /* Ghost button style */
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  /* Divider with optional text */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .divider:empty::before {
+    flex: 1;
+  }
+
+  .divider:empty::after {
+    display: none;
+  }
+
+  /* User header in modal */
+  .user-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .user-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-red), #ef4444);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .user-avatar.guest {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .user-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-email,
+  .user-type {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-type {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* Auth state containers */
+  #authState-notLoggedIn,
+  #authState-guest,
+  #authState-loggedIn {
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .sheet {
+      padding: 20px;
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
+
+    .btn-row {
+      flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-chip {
+      width: 100%;
+    }
+    
+    .user-header {
+      padding: 12px;
+    }
+    
+    .user-avatar {
+      width: 44px;
+      height: 44px;
+    }
+    
+    .user-name {
+      font-size: 16px;
+    }
+  }
+
+  /* ========== USER DROPDOWN MENU ========== */
+  .nav-actions {
+    position: relative; /* Anchor for dropdown */
+  }
+
+  .user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 280px;
+    background: var(--bg-card, #1a1a24);
+    border: 1px solid var(--border, #27272a);
+    border-radius: 14px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.03);
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    z-index: 1100;
+    animation: dropdownSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .user-dropdown.show {
+    display: flex;
+  }
+
+  /* Arrow pointer at top */
+  .user-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    background: var(--bg-card, #1a1a24);
+    border-left: 1px solid var(--border, #27272a);
+    border-top: 1px solid var(--border, #27272a);
+    transform: rotate(45deg);
+  }
+
+  @keyframes dropdownSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 12px;
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(220, 38, 38, 0.02));
+    border-radius: 10px;
+    margin-bottom: 6px;
+    border: 1px solid rgba(220, 38, 38, 0.1);
+  }
+
+  .dropdown-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-red, #dc2626), #ef4444);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
+
+  .dropdown-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .dropdown-user-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary, #fff);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.01em;
+  }
+
+  .dropdown-user-email {
+    font-size: 12px;
+    color: var(--text-secondary, #a1a1aa);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: var(--border, #27272a);
+    margin: 6px 8px;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    color: var(--text-secondary, #a1a1aa);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary, #fff);
+    transform: translateX(2px);
+  }
+
+  .dropdown-item svg {
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+  }
+
+  .dropdown-item:hover svg {
+    opacity: 1;
+  }
+
+  .dropdown-logout {
+    color: var(--accent-red, #dc2626);
+    margin-top: 2px;
+  }
+
+  .dropdown-logout:hover {
+    background: rgba(220, 38, 38, 0.12);
+    color: #ef4444;
+  }
+
+  .dropdown-logout svg {
+    opacity: 0.8;
+  }
+
+  /* User button states */
+  .btn-primary.user-logged-in {
+    background: var(--bg-secondary, #13131a);
+    border: 1px solid var(--border, #27272a);
+    padding: 6px 14px 6px 8px;
+  }
+
+  .btn-primary.user-logged-in:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent-red, #dc2626);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .btn-primary.user-guest {
+    background: var(--bg-secondary, #13131a);
+    border: 1px solid var(--border, #27272a);
+    padding: 8px 16px 8px 10px;
+  }
+
+  .btn-primary.user-guest:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-secondary, #a1a1aa);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .user-btn-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-red, #dc2626), #ef4444);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+  }
+
+  .user-btn-avatar.guest {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    box-shadow: 0 2px 8px rgba(107, 114, 128, 0.25);
+  }
+
+  .user-btn-avatar svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .user-btn-chevron {
+    margin-left: 4px;
+    opacity: 0.5;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .btn-primary.user-logged-in:hover .user-btn-chevron {
+    opacity: 0.8;
+  }
+
+  .btn-primary.dropdown-open .user-btn-chevron {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+
+  @media (max-width: 600px) {
+    .user-dropdown {
+      width: calc(100vw - 32px);
+      right: -16px;
+    }
+    
+    .user-dropdown::before {
+      right: 28px;
+    }
+  }
 </style>
 
 <nav class="navbar">
@@ -380,6 +986,33 @@
       
       <button id="userButton" class="btn-primary">Sign In / Up</button>
       
+      <!-- User Dropdown (shown when logged in) -->
+      <div class="user-dropdown" id="userDropdown">
+        <div class="dropdown-header">
+          <div class="dropdown-avatar">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="dropdown-user-info">
+            <span class="dropdown-user-name" id="dropdownUserName">User</span>
+            <span class="dropdown-user-email" id="dropdownUserEmail">user@example.com</span>
+          </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <a href="new-account-dashboard.html" class="dropdown-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          My Profile
+        </a>
+        <a href="new-booking-history.html" class="dropdown-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          My Bookings
+        </a>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item dropdown-logout" id="dropdownLogout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </div>
+      
       <!-- Hamburger -->
       <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Menu">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -408,6 +1041,190 @@
       <li><a href="index.html#offers">Offers</a></li>
       <li><a href="theaters.html">Locations</a></li>
     </ul>
+  </div>
+
+  <!-- ========== AUTH MODALS (Consolidated in Header) ========== -->
+  
+  <!-- AUTH: Choice / Account Modal -->
+  <div class="overlay" id="choiceModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#choiceModal" aria-label="Close">✕</button>
+      
+      <!-- State: Not Logged In -->
+      <div id="authState-notLoggedIn">
+        <h3>Welcome to THEATRUM</h3>
+        <p class="sub">Choose how you'd like to continue</p>
+        <div class="stack" style="gap:10px">
+          <button class="btn-primary btn-full" id="goLogin" data-modal="#loginModal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </button>
+          <button class="btn-secondary btn-full" id="goSignup" data-modal="#signupModal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Create Account
+          </button>
+          <div class="divider"><span>or</span></div>
+          <button class="btn-ghost btn-full" id="goGuest">
+            Continue as Guest
+          </button>
+        </div>
+        <p class="muted" style="margin-top:14px;text-align:center">Create an account for faster checkout & member rewards</p>
+      </div>
+      
+      <!-- State: Guest User -->
+      <div id="authState-guest" style="display:none">
+        <div class="user-header">
+          <div class="user-avatar guest">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="user-info">
+            <span class="user-name">Guest</span>
+            <span class="user-type">Browsing as guest</span>
+          </div>
+        </div>
+        <p class="sub" style="margin:16px 0">Create an account to save your preferences and earn rewards!</p>
+        <div class="stack" style="gap:10px">
+          <button class="btn-primary btn-full" id="guestGoSignup" data-modal="#signupModal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Create Account
+          </button>
+          <button class="btn-secondary btn-full" id="guestGoLogin" data-modal="#loginModal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Already have an account? Sign In
+          </button>
+          <div class="divider"><span>or</span></div>
+          <button class="btn-ghost btn-full" id="guestLogout">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Exit Guest Mode
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Login -->
+  <div class="overlay" id="loginModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#loginModal" aria-label="Close">✕</button>
+      <h3>Log In</h3>
+      <p class="sub">Welcome back to premium cinema</p>
+      <div class="stack">
+        <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" placeholder="you@example.com"/></div>
+        <div class="field"><label for="loginPass">Password</label><input id="loginPass" type="password" placeholder="••••••••"/></div>
+        <label style="display:flex;gap:8px;align-items:center;color:var(--text-secondary);font-size:14px">
+          <input id="rememberMe" type="checkbox" style="accent-color:#dc2626"> Remember me
+        </label>
+        <div style="text-align:right">
+          <button class="btn-link" data-modal="#forgotPasswordModal" style="background:none;border:none;color:var(--accent-red,#dc2626);cursor:pointer;font-size:13px;font-weight:500;padding:4px 0;text-decoration:none;transition:opacity 0.15s ease">Forgot Password?</button>
+        </div>
+        <span id="loginError" class="error">Invalid email or password.</span>
+        <div class="btn-row">
+          <button id="loginSubmit" class="btn-primary">Sign In</button>
+          <button class="btn-chip" data-swap="#loginModal,#signupModal">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Signup -->
+  <div class="overlay" id="signupModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#signupModal" aria-label="Close">✕</button>
+      <h3>Create Account</h3>
+      <p class="sub">Unlock faster checkout and member perks</p>
+      <div class="stack">
+        <div class="grid-2">
+          <div class="field"><label for="firstName">First name</label><input id="firstName" placeholder="First Name"/></div>
+          <div class="field"><label for="lastName">Last name</label><input id="lastName" placeholder="Last Name"/></div>
+        </div>
+        <div class="field"><label for="signupEmail">Email</label><input id="signupEmail" type="email" placeholder="you@example.com"/></div>
+        <div class="field"><label for="signupPass">Password</label><input id="signupPass" type="password" placeholder="At least 8 characters"/></div>
+        <span id="signupError" class="error">Please fill all fields correctly.</span>
+        <div class="btn-row">
+          <button id="signupSubmit" class="btn-primary">Create Account</button>
+          <button class="btn-chip" data-swap="#signupModal,#loginModal">I already have an account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Verify -->
+  <div class="overlay" id="verifyModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#verifyModal" aria-label="Close">✕</button>
+      <h3>Verify Your Email</h3>
+      <p class="sub">We sent a 6-digit code to <span id="verifyEmailSpan" style="color:#f59e0b"></span></p>
+      <div class="stack">
+        <div class="field"><label for="verifyCode">Enter code</label><input id="verifyCode" inputmode="numeric" maxlength="6" placeholder="123456"/></div>
+        <div class="btn-row">
+          <button id="verifySubmit" class="btn-primary">Verify</button>
+          <button class="btn-chip" id="resendCode">Resend Code</button>
+        </div>
+        <span id="verifyError" class="error">Invalid code. Try 123456 for demo.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Welcome -->
+  <div class="overlay" id="welcomeModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#welcomeModal" aria-label="Close">✕</button>
+      <h3>Welcome, <span id="welcomeName">Guest</span> 🎬</h3>
+      <p class="sub">Your account is ready. Let's book your next movie.</p>
+      <div class="success show" id="welcomeBadge">Email verified. Membership perks unlocked.</div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn-primary" onclick="document.querySelector('#now-playing').scrollIntoView({behavior:'smooth'}); document.querySelector('#welcomeModal').classList.remove('show')">Start Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: Forgot Password -->
+  <div class="overlay" id="forgotPasswordModal" aria-hidden="true">
+    <div class="sheet">
+      <button class="close-x" data-close="#forgotPasswordModal" aria-label="Close">✕</button>
+      
+      <!-- Step 1: Enter Email -->
+      <div id="forgotStep1" class="forgot-step">
+        <h3>Forgot Password?</h3>
+        <p class="sub">We'll send a code to your email.</p>
+        <div class="stack">
+          <div class="field">
+            <label for="forgotEmail">Email Address</label>
+            <input id="forgotEmail" type="email" placeholder="you@example.com"/>
+          </div>
+          <span id="forgotStep1Error" class="error" style="display:none;"></span>
+          <button id="forgotSendCode" class="btn-primary btn-full">Send Code</button>
+          <button class="btn-chip btn-full" data-close="#forgotPasswordModal">Back to Sign In</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Verify Code & Set New Password -->
+      <div id="forgotStep2" class="forgot-step" style="display:none;">
+        <h3>Verify Code</h3>
+        <p class="sub">Enter the code sent to your email and set a new password.</p>
+        <div class="stack">
+          <div class="field">
+            <label for="forgotCode">Verification Code</label>
+            <input id="forgotCode" type="text" placeholder="123456" maxlength="6"/>
+            <span style="font-size:12px; color:var(--text-secondary); margin-top:4px;">6-digit code from your email</span>
+          </div>
+          <div class="field">
+            <label for="forgotNewPass">New Password</label>
+            <input id="forgotNewPass" type="password" placeholder="At least 8 characters"/>
+          </div>
+          <div class="field">
+            <label for="forgotNewPassConfirm">Confirm Password</label>
+            <input id="forgotNewPassConfirm" type="password" placeholder="Re-enter password"/>
+          </div>
+          <span id="forgotStep2Error" class="error" style="display:none;"></span>
+          <div id="forgotSuccess" class="success" style="display:none;">Password reset successful! Redirecting...</div>
+          <div class="btn-row">
+            <button id="forgotResetPass" class="btn-primary">Reset Password</button>
+            <button id="forgotBackBtn" class="btn-chip">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -503,41 +1320,106 @@
           !mobileMenuBtn.contains(e.target)) {
         closeMenu();
       }
+
+      // Close User Dropdown
+      const userDropdown = document.querySelector('#userDropdown');
+      if (userDropdown && userDropdown.classList.contains('show')) {
+        if (!userButton.contains(e.target) && !userDropdown.contains(e.target)) {
+          userDropdown.classList.remove('show');
+          userButton.classList.remove('dropdown-open');
+        }
+      }
   });
 
   // --- Auth Logic ---
-  function updateHeaderState() {
-    let session = null;
+  const userDropdown = document.querySelector('#userDropdown');
+
+  function getSession() {
     try {
       if (typeof loadSession === 'function') {
-        session = loadSession();
-      } else {
-        const SESSION_KEY = 'theatrum.session';
-        session = JSON.parse(localStorage.getItem(SESSION_KEY));
+        return loadSession();
       }
-    } catch(e) { /* ignore */ }
+      return JSON.parse(localStorage.getItem('theatrum.session'));
+    } catch(e) {
+      return null;
+    }
+  }
 
-    if (session) {
+  function getFirstName(name) {
+    if (!name) return 'User';
+    return name.split(' ')[0];
+  }
+
+  function updateHeaderState() {
+    const session = getSession();
+    const dropdownUserName = document.querySelector('#dropdownUserName');
+    const dropdownUserEmail = document.querySelector('#dropdownUserEmail');
+
+    // Remove all state classes
+    userButton.classList.remove('user-logged-in', 'user-guest', 'dropdown-open');
+
+    if (session && session.email === 'guest') {
+      // STATE: Guest user - show "Guest" with icon
+      userButton.classList.add('user-guest');
       userButton.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        <span>Account</span>
+        <div class="user-btn-avatar guest">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <span>Guest</span>
       `;
+    } else if (session) {
+      // STATE: Logged in user - show "Account" with icon and chevron
+      userButton.classList.add('user-logged-in');
+      userButton.innerHTML = `
+        <div class="user-btn-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <span>Account</span>
+        <svg class="user-btn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      `;
+      // Update dropdown with actual user info
+      if (dropdownUserName) dropdownUserName.textContent = session.name || 'User';
+      if (dropdownUserEmail) dropdownUserEmail.textContent = session.email || '';
     } else {
-      userButton.innerHTML = `<span>Sign In</span>`;
+      // STATE: Not logged in - show "Sign In / Up"
+      userButton.innerHTML = `<span>Sign In / Up</span>`;
     }
-    
-    if (typeof syncChoiceButtons === 'function') {
-      syncChoiceButtons(session);
+  }
+
+  // Handle user button click - different behavior based on state
+  function handleUserButtonClick(e) {
+    e.stopPropagation();
+    const session = getSession();
+
+    if (session && session.email !== 'guest') {
+      // Logged in user -> toggle dropdown
+      const dropdown = document.querySelector('#userDropdown');
+      if (dropdown) {
+        const isOpen = dropdown.classList.contains('show');
+        if (isOpen) {
+          dropdown.classList.remove('show');
+          userButton.classList.remove('dropdown-open');
+        } else {
+          dropdown.classList.add('show');
+          userButton.classList.add('dropdown-open');
+        }
+      }
+    } else {
+      // Not logged in OR guest -> show choice modal
+      if (typeof updateChoiceModalButtons === 'function') updateChoiceModalButtons();
+      if (typeof showModal === 'function') showModal('#choiceModal');
     }
+  }
+
+  if (userButton) {
+    userButton.addEventListener('click', handleUserButtonClick);
   }
 
   // Initial Run
   updateHeaderState();
   // Expose for external calls
-  window.syncUserButton = (session) => { updateHeaderState(); };
+  window.syncUserButton = () => { updateHeaderState(); };
+  window.updateHeaderState = updateHeaderState;
 
   // --- Mobile Menu Toggle ---
   if (mobileMenuBtn && mobileMenu) {
@@ -585,17 +1467,163 @@
   }
 
   // --- Event Listeners ---
-  if (userButton) {
-    userButton.addEventListener('click', () => {
-       const modal = document.querySelector('#choiceModal');
-       if (modal && typeof show === 'function') show(modal);
-       else if (modal) { modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); }
+  // Note: userButton click is handled by handleUserButtonClick below
+
+  // --- Global Close Button Handler ---
+  // Handle all close buttons with data-close attribute
+  document.addEventListener('click', (e) => {
+    const closeBtn = e.target.closest('[data-close]');
+    if (closeBtn) {
+      const targetSelector = closeBtn.getAttribute('data-close');
+      if (targetSelector) {
+        const modal = document.querySelector(targetSelector);
+        if (modal) {
+          modal.classList.remove('show');
+          modal.setAttribute('aria-hidden', 'true');
+        }
+      }
+    }
+  }, true); // Use capturing phase to ensure it runs early
+
+  // --- Global Modal Navigation Handlers ---
+  // These helper functions will be used to show/close modals
+  const getModal = (selector) => document.querySelector(selector);
+  
+  const closeAllModals = () => {
+    const modals = ['#choiceModal', '#loginModal', '#signupModal', '#verifyModal', '#welcomeModal', '#forgotPasswordModal'];
+    modals.forEach(selector => {
+      const modal = getModal(selector);
+      if (modal) {
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+      }
     });
-  }
+  };
+
+  const showModal = (selector) => {
+    closeAllModals();
+    const modal = getModal(selector);
+    if (modal) {
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    
+    // Update choice modal buttons based on session state
+    if (selector === '#choiceModal') {
+      updateChoiceModalButtons();
+    }
+  };
+
+  // Update choice modal to show correct state based on session
+  // Note: Logged-in users should NOT see the modal - they get the dropdown instead
+  const updateChoiceModalButtons = () => {
+    let session = null;
+    try {
+      const SESSION_KEY = 'theatrum.session';
+      session = JSON.parse(localStorage.getItem(SESSION_KEY));
+    } catch(e) { /* ignore */ }
+
+    // Get the two state containers (logged-in users use dropdown, not modal)
+    const stateNotLoggedIn = getModal('#authState-notLoggedIn');
+    const stateGuest = getModal('#authState-guest');
+
+    // Hide all states first
+    if (stateNotLoggedIn) stateNotLoggedIn.style.display = 'none';
+    if (stateGuest) stateGuest.style.display = 'none';
+
+    if (!session) {
+      // STATE 1: Not logged in - show login/signup/guest options
+      if (stateNotLoggedIn) stateNotLoggedIn.style.display = 'block';
+    } else if (session.email === 'guest') {
+      // STATE 2: Guest user - show upgrade options (login/signup) and logout
+      if (stateGuest) stateGuest.style.display = 'block';
+    }
+    // STATE 3: Logged-in users don't see the modal at all - they use dropdown
+  };
+
+  // Expose functions globally so they can be called from DOMContentLoaded handlers
+  window.updateChoiceModalButtons = updateChoiceModalButtons;
+  window.showModal = showModal;
+  window.closeAllModals = closeAllModals;
+  window.getModal = getModal;
+
+  // Handle navigation buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-modal]');
+    if (btn) {
+      const targetModal = btn.getAttribute('data-modal');
+      if (targetModal) {
+        showModal(targetModal);
+      }
+    }
+  }, true);
+
+  // Handle guest button (Continue as Guest)
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#goGuest')) {
+      const guestSession = { email: 'guest', name: 'Guest', ts: Date.now(), isGuest: true };
+      localStorage.setItem('theatrum.session', JSON.stringify(guestSession));
+      closeAllModals();
+      if (typeof updateHeaderState === 'function') updateHeaderState();
+      if (typeof window.syncUserButton === 'function') window.syncUserButton(guestSession);
+    }
+  }, true);
+
+  // Handle guest logout button
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#guestLogout')) {
+      localStorage.removeItem('theatrum.session');
+      if (typeof updateHeaderState === 'function') updateHeaderState();
+      if (typeof window.syncUserButton === 'function') window.syncUserButton(null);
+      // Update the modal to show not-logged-in state
+      updateChoiceModalButtons();
+    }
+  }, true);
+
+  // Handle logged-in user logout button
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#logoutBtn')) {
+      localStorage.removeItem('theatrum.session');
+      if (typeof updateHeaderState === 'function') updateHeaderState();
+      if (typeof window.syncUserButton === 'function') window.syncUserButton(null);
+      // Update the modal to show not-logged-in state
+      updateChoiceModalButtons();
+    }
+  }, true);
+
+  // Handle dropdown logout button (for logged-in users)
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#dropdownLogout')) {
+      localStorage.removeItem('theatrum.session');
+      // Hide the dropdown
+      const dropdown = getModal('#userDropdown');
+      if (dropdown) dropdown.classList.remove('show');
+      // Update header to show Sign In / Up button
+      if (typeof updateHeaderState === 'function') updateHeaderState();
+      if (typeof window.syncUserButton === 'function') window.syncUserButton(null);
+    }
+  }, true);
+
+  // Handle Account Dashboard button
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#accountDashboardBtn')) {
+      closeAllModals();
+      window.location.href = 'new-account-dashboard.html';
+    }
+  }, true);
+
+  // Handle View Bookings button
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#viewBookingsBtn')) {
+      closeAllModals();
+      window.location.href = 'new-booking-history.html';
+    }
+  }, true);
 
   // --- Auth Modal Handlers (global for header component) ---
   // These run globally so they work from any page
-  document.addEventListener('DOMContentLoaded', () => {
+  // Use immediate execution since header may be loaded after DOMContentLoaded
+  (function initAuthHandlers() {
     const choiceModal = document.querySelector('#choiceModal');
     const loginModal = document.querySelector('#loginModal');
     const signupModal = document.querySelector('#signupModal');
@@ -609,8 +1637,6 @@
     const accountDashboardBtn = document.querySelector('#accountDashboardBtn');
     const loginSubmitBtn = document.querySelector('#loginSubmit');
     const signupSubmitBtn = document.querySelector('#signupSubmit');
-    const closeButtons = document.querySelectorAll('[data-close]');
-    const swapButtons = document.querySelectorAll('[data-swap]');
 
     // Close modal function
     const closeModal = (modal) => {
@@ -620,63 +1646,9 @@
       }
     };
 
-    // Show modal function
-    const showModal = (modal) => {
-      if (modal) {
-        // Close all other modals
-        [choiceModal, loginModal, signupModal, verifyModal, welcomeModal].forEach(m => {
-          if (m && m !== modal) closeModal(m);
-        });
-        modal.classList.add('show');
-        modal.setAttribute('aria-hidden', 'false');
-      }
-    };
-
-    // Go to Login
-    if (goLoginBtn) {
-      goLoginBtn.addEventListener('click', () => {
-        showModal(loginModal);
-      });
-    }
-
-    // Go to Signup
-    if (goSignupBtn) {
-      goSignupBtn.addEventListener('click', () => {
-        showModal(signupModal);
-      });
-    }
-
-    // Go as Guest (or Continue as Guest)
-    if (goGuestBtn) {
-      goGuestBtn.addEventListener('click', () => {
-        // Set guest session
-        const guestSession = { email: 'guest', name: 'Guest', ts: Date.now() };
-        localStorage.setItem('theatrum.session', JSON.stringify(guestSession));
-        closeModal(choiceModal);
-        // Update header
-        if (typeof updateHeaderState === 'function') updateHeaderState();
-        if (typeof window.syncUserButton === 'function') window.syncUserButton(guestSession);
-      });
-    }
-
-    // Logout
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('theatrum.session');
-        closeModal(choiceModal);
-        closeModal(welcomeModal);
-        // Update header
-        if (typeof updateHeaderState === 'function') updateHeaderState();
-        if (typeof window.syncUserButton === 'function') window.syncUserButton(null);
-      });
-    }
-
-    // Account Dashboard
-    if (accountDashboardBtn) {
-      accountDashboardBtn.addEventListener('click', () => {
-        window.location.href = 'new-account-dashboard.html';
-      });
-    }
+    // Note: userButton click is now handled by handleUserButtonClick in the first script block
+    // goLogin, goSignup, goGuest, logoutBtn, guestLogout, accountDashboardBtn, viewBookingsBtn
+    // are all handled by global event delegation handlers above
 
     // Login Submit
     if (loginSubmitBtn) {
@@ -712,10 +1684,8 @@
             localStorage.setItem('theatrum.remember', emailVal);
           }
 
-          // Show welcome modal
-          showModal(welcomeModal);
-          const welcomeName = document.querySelector('#welcomeName');
-          if (welcomeName) welcomeName.textContent = session.name;
+          // Close all modals - logged-in users now use dropdown
+          if (typeof window.closeAllModals === 'function') window.closeAllModals();
 
           // Clear inputs
           email.value = '';
@@ -723,8 +1693,8 @@
           if (rememberMe) rememberMe.checked = false;
           if (loginError) loginError.style.display = 'none';
 
-          // Update header
-          if (typeof updateHeaderState === 'function') updateHeaderState();
+          // Update header to show dropdown button instead of Sign In/Up
+          if (typeof window.updateHeaderState === 'function') window.updateHeaderState();
           if (typeof window.syncUserButton === 'function') window.syncUserButton(session);
         } else {
           if (loginError) {
@@ -783,10 +1753,8 @@
         };
         localStorage.setItem('theatrum.session', JSON.stringify(session));
 
-        // Show welcome modal
-        showModal(welcomeModal);
-        const welcomeName = document.querySelector('#welcomeName');
-        if (welcomeName) welcomeName.textContent = session.name;
+        // Close all modals - logged-in users now use dropdown
+        if (typeof window.closeAllModals === 'function') window.closeAllModals();
 
         // Clear inputs
         firstName.value = '';
@@ -795,36 +1763,24 @@
         password.value = '';
         if (signupError) signupError.style.display = 'none';
 
-        // Update header
-        if (typeof updateHeaderState === 'function') updateHeaderState();
+        // Update header to show dropdown button instead of Sign In/Up
+        if (typeof window.updateHeaderState === 'function') window.updateHeaderState();
         if (typeof window.syncUserButton === 'function') window.syncUserButton(session);
       });
     }
 
-    // Close buttons
-    closeButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const targetSelector = btn.getAttribute('data-close');
-        if (targetSelector) {
-          const modal = document.querySelector(targetSelector);
-          closeModal(modal);
-        }
-      });
-    });
-
     // Swap buttons (navigate between modals)
-    swapButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-swap]')) {
         e.preventDefault();
+        const btn = e.target.closest('[data-swap]');
         const swapSelector = btn.getAttribute('data-swap');
         if (swapSelector) {
           const [closeSelector, openSelector] = swapSelector.split(',');
-          const closeModal1 = document.querySelector(closeSelector.trim());
-          const openModal = document.querySelector(openSelector.trim());
-          closeModal(closeModal1);
-          showModal(openModal);
+          const openSelectorTrim = openSelector.trim();
+          if (typeof window.showModal === 'function') window.showModal(openSelectorTrim);
         }
-      });
+      }
     });
 
     // Prevent closing when clicking inside modal sheet
@@ -848,7 +1804,151 @@
         closeModal(welcomeModal);
       }
     });
-  });
+
+    // --- Forgot Password Handlers (Two-Step Email Verification) ---
+    const forgotEmail = document.getElementById('forgotEmail');
+    const forgotCode = document.getElementById('forgotCode');
+    const forgotNewPass = document.getElementById('forgotNewPass');
+    const forgotNewPassConfirm = document.getElementById('forgotNewPassConfirm');
+    const forgotSendCode = document.getElementById('forgotSendCode');
+    const forgotResetPass = document.getElementById('forgotResetPass');
+    const forgotBackBtn = document.getElementById('forgotBackBtn');
+    const forgotStep1 = document.getElementById('forgotStep1');
+    const forgotStep2 = document.getElementById('forgotStep2');
+    const forgotStep1Error = document.getElementById('forgotStep1Error');
+    const forgotStep2Error = document.getElementById('forgotStep2Error');
+    const forgotSuccess = document.getElementById('forgotSuccess');
+
+    // Store generated code temporarily
+    let forgotVerificationCode = null;
+    let forgotUserEmail = null;
+
+    function loadUsers() {
+      try { return JSON.parse(localStorage.getItem('theatrum.users')) || []; }
+      catch { return []; }
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('theatrum.users', JSON.stringify(users));
+    }
+
+    // Generate 6-digit verification code
+    function generateCode() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    // Step 1: Send Code to Email
+    if (forgotSendCode) {
+      forgotSendCode.addEventListener('click', () => {
+        const email = (forgotEmail?.value || '').trim().toLowerCase();
+        
+        if (!email || !email.includes('@')) {
+          if (forgotStep1Error) {
+            forgotStep1Error.textContent = 'Please enter a valid email.';
+            forgotStep1Error.style.display = 'block';
+          }
+          return;
+        }
+
+        const users = loadUsers();
+        const userExists = users.find(u => u.email === email);
+
+        if (!userExists) {
+          if (forgotStep1Error) {
+            forgotStep1Error.textContent = 'No account found with this email.';
+            forgotStep1Error.style.display = 'block';
+          }
+          return;
+        }
+
+        // Generate code and store it
+        forgotVerificationCode = generateCode();
+        forgotUserEmail = email;
+
+        // In real app, would send email. For now, show code in console
+        console.log(`%cVerification Code: ${forgotVerificationCode}`, 'color: #10b981; font-size: 14px; font-weight: bold;');
+
+        // Clear step 1
+        if (forgotEmail) forgotEmail.value = '';
+        if (forgotStep1Error) forgotStep1Error.style.display = 'none';
+
+        // Show step 2
+        if (forgotStep1) forgotStep1.style.display = 'none';
+        if (forgotStep2) forgotStep2.style.display = 'block';
+      });
+    }
+
+    // Step 2: Verify Code & Reset Password
+    if (forgotResetPass) {
+      forgotResetPass.addEventListener('click', () => {
+        const code = (forgotCode?.value || '').trim();
+        const pass1 = (forgotNewPass?.value || '').trim();
+        const pass2 = (forgotNewPassConfirm?.value || '').trim();
+        let message = '';
+
+        if (code !== forgotVerificationCode) {
+          message = 'Invalid verification code.';
+        } else if (!pass1 || pass1.length < 8) {
+          message = 'Password must be at least 8 characters.';
+        } else if (pass1 !== pass2) {
+          message = 'Passwords do not match.';
+        }
+
+        if (message) {
+          if (forgotStep2Error) {
+            forgotStep2Error.textContent = message;
+            forgotStep2Error.style.display = 'block';
+          }
+          return;
+        }
+
+        // Update user password
+        const users = loadUsers();
+        const userIdx = users.findIndex(u => u.email === forgotUserEmail);
+        if (userIdx !== -1) {
+          users[userIdx].password = pass1;
+          saveUsers(users);
+        }
+
+        // Clear inputs
+        if (forgotCode) forgotCode.value = '';
+        if (forgotNewPass) forgotNewPass.value = '';
+        if (forgotNewPassConfirm) forgotNewPassConfirm.value = '';
+        if (forgotStep2Error) forgotStep2Error.style.display = 'none';
+
+        // Show success
+        if (forgotSuccess) forgotSuccess.style.display = 'block';
+
+        // Redirect after delay
+        setTimeout(() => {
+          if (typeof window.showModal === 'function') window.showModal('#loginModal');
+          if (forgotStep1) forgotStep1.style.display = 'block';
+          if (forgotStep2) forgotStep2.style.display = 'none';
+          if (forgotSuccess) forgotSuccess.style.display = 'none';
+          forgotVerificationCode = null;
+          forgotUserEmail = null;
+        }, 1200);
+      });
+    }
+
+    // Back button: return to step 1
+    if (forgotBackBtn) {
+      forgotBackBtn.addEventListener('click', () => {
+        // Clear step 2
+        if (forgotCode) forgotCode.value = '';
+        if (forgotNewPass) forgotNewPass.value = '';
+        if (forgotNewPassConfirm) forgotNewPassConfirm.value = '';
+        if (forgotStep2Error) forgotStep2Error.style.display = 'none';
+        if (forgotSuccess) forgotSuccess.style.display = 'none';
+        forgotVerificationCode = null;
+        forgotUserEmail = null;
+
+        // Show step 1
+        if (forgotStep1) forgotStep1.style.display = 'block';
+        if (forgotStep2) forgotStep2.style.display = 'none';
+      });
+    }
+  })(); // End of initAuthHandlers IIFE
 
   if (logo) {
     logo.addEventListener('click', () => {
