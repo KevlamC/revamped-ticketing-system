@@ -770,6 +770,7 @@
         <label style="display:flex;gap:8px;align-items:center;color:var(--text-secondary);font-size:14px">
           <input id="rememberMe" type="checkbox" style="accent-color:#dc2626"> Remember me
         </label>
+        <a id="forgotLink" href="forgot-password.html" style="color:var(--accent-red);font-weight:700;font-size:13px;align-self:flex-start;text-decoration:none;">Forgot your password?</a>
         <span id="loginError" class="error">Invalid email or password.</span>
         <div class="btn-row">
           <button id="loginSubmit" class="btn-primary">Sign In</button>
@@ -944,6 +945,11 @@
       syncChoiceButtons(session);
     }
     syncUserButton(loadSession());
+    const openLoginFlag = sessionStorage.getItem('openLogin');
+    if (openLoginFlag) {
+      sessionStorage.removeItem('openLogin');
+      show('#loginModal');
+    }
 
     // Schedule Data for calendar
     const scheduleData = {
