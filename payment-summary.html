@@ -242,6 +242,9 @@
         </div>
 
         <div class="actions">
+          <button class="btn-secondary" id="back-button">
+            ← Back
+          </button>
           <button class="btn-primary" id="proceed-payment">
             Proceed to payment
           </button>
@@ -441,12 +444,26 @@
       var proceedPaymentBtn = document.getElementById('proceed-payment');
       var editSnacksBtn = document.getElementById('edit-snacks');
       var editSeatsBtn = document.getElementById('edit-seats');
+      var backBtn = document.getElementById('back-button');
 
       if (proceedPaymentBtn) {
         proceedPaymentBtn.addEventListener('click', function () {
           window.location.href = 'paymentcard.html';
         });
       }
+
+      if (backBtn) {
+        backBtn.addEventListener('click', function () {
+          // Go back in browser history if possible
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            // Fallback if history is not available
+            window.location.href = 'checkout.html';
+          }
+        });
+      }
+
       if (editSnacksBtn) {
         editSnacksBtn.addEventListener('click', function () {
           window.location.href = 'food_selection.html';
