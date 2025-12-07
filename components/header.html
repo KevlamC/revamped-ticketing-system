@@ -362,7 +362,7 @@
     <!-- Desktop Links -->
     <ul class="nav-links">
       <li><a href="index.html#now-playing">Movies</a></li>
-      <li><a href="index.html#concessions">Food & Drinks</a></li>
+      <li><a href="food-selection.html">Food & Drinks</a></li>
       <li><a href="index.html#offers">Offers</a></li>
       <li><a href="theaters.html">Our Theaters</a></li>
     </ul>
@@ -378,7 +378,7 @@
         </svg>
       </div>
       
-      <button id="userButton" class="btn-primary">Sign In</button>
+      <button id="userButton" class="btn-primary">Sign In / Up</button>
       
       <!-- Hamburger -->
       <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Menu">
@@ -404,7 +404,7 @@
 
     <ul class="mobile-links">
       <li><a href="index.html#now-playing">Movies</a></li>
-      <li><a href="index.html#concessions">Food & Drinks</a></li>
+      <li><a href="food-selection.html">Food & Drinks</a></li>
       <li><a href="index.html#offers">Offers</a></li>
       <li><a href="theaters.html">Locations</a></li>
     </ul>
@@ -592,6 +592,263 @@
        else if (modal) { modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); }
     });
   }
+
+  // --- Auth Modal Handlers (global for header component) ---
+  // These run globally so they work from any page
+  document.addEventListener('DOMContentLoaded', () => {
+    const choiceModal = document.querySelector('#choiceModal');
+    const loginModal = document.querySelector('#loginModal');
+    const signupModal = document.querySelector('#signupModal');
+    const verifyModal = document.querySelector('#verifyModal');
+    const welcomeModal = document.querySelector('#welcomeModal');
+
+    const goLoginBtn = document.querySelector('#goLogin');
+    const goSignupBtn = document.querySelector('#goSignup');
+    const goGuestBtn = document.querySelector('#goGuest');
+    const logoutBtn = document.querySelector('#logoutBtn');
+    const accountDashboardBtn = document.querySelector('#accountDashboardBtn');
+    const loginSubmitBtn = document.querySelector('#loginSubmit');
+    const signupSubmitBtn = document.querySelector('#signupSubmit');
+    const closeButtons = document.querySelectorAll('[data-close]');
+    const swapButtons = document.querySelectorAll('[data-swap]');
+
+    // Close modal function
+    const closeModal = (modal) => {
+      if (modal) {
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+    };
+
+    // Show modal function
+    const showModal = (modal) => {
+      if (modal) {
+        // Close all other modals
+        [choiceModal, loginModal, signupModal, verifyModal, welcomeModal].forEach(m => {
+          if (m && m !== modal) closeModal(m);
+        });
+        modal.classList.add('show');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+    };
+
+    // Go to Login
+    if (goLoginBtn) {
+      goLoginBtn.addEventListener('click', () => {
+        showModal(loginModal);
+      });
+    }
+
+    // Go to Signup
+    if (goSignupBtn) {
+      goSignupBtn.addEventListener('click', () => {
+        showModal(signupModal);
+      });
+    }
+
+    // Go as Guest (or Continue as Guest)
+    if (goGuestBtn) {
+      goGuestBtn.addEventListener('click', () => {
+        // Set guest session
+        const guestSession = { email: 'guest', name: 'Guest', ts: Date.now() };
+        localStorage.setItem('theatrum.session', JSON.stringify(guestSession));
+        closeModal(choiceModal);
+        // Update header
+        if (typeof updateHeaderState === 'function') updateHeaderState();
+        if (typeof window.syncUserButton === 'function') window.syncUserButton(guestSession);
+      });
+    }
+
+    // Logout
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('theatrum.session');
+        closeModal(choiceModal);
+        closeModal(welcomeModal);
+        // Update header
+        if (typeof updateHeaderState === 'function') updateHeaderState();
+        if (typeof window.syncUserButton === 'function') window.syncUserButton(null);
+      });
+    }
+
+    // Account Dashboard
+    if (accountDashboardBtn) {
+      accountDashboardBtn.addEventListener('click', () => {
+        window.location.href = 'new-account-dashboard.html';
+      });
+    }
+
+    // Login Submit
+    if (loginSubmitBtn) {
+      loginSubmitBtn.addEventListener('click', () => {
+        const email = document.querySelector('#loginEmail');
+        const password = document.querySelector('#loginPass');
+        const rememberMe = document.querySelector('#rememberMe');
+        const loginError = document.querySelector('#loginError');
+
+        if (!email || !password) return;
+
+        const emailVal = email.value.trim().toLowerCase();
+        const passVal = password.value.trim();
+
+        if (!emailVal || !passVal) {
+          if (loginError) {
+            loginError.textContent = 'Please enter email and password.';
+            loginError.style.display = 'block';
+          }
+          return;
+        }
+
+        // Mock validation - in real app would check against backend
+        if (emailVal.includes('@') && passVal.length >= 6) {
+          // Create session
+          const session = {
+            email: emailVal,
+            name: emailVal.split('@')[0],
+            ts: Date.now()
+          };
+          localStorage.setItem('theatrum.session', JSON.stringify(session));
+          if (rememberMe && rememberMe.checked) {
+            localStorage.setItem('theatrum.remember', emailVal);
+          }
+
+          // Show welcome modal
+          showModal(welcomeModal);
+          const welcomeName = document.querySelector('#welcomeName');
+          if (welcomeName) welcomeName.textContent = session.name;
+
+          // Clear inputs
+          email.value = '';
+          password.value = '';
+          if (rememberMe) rememberMe.checked = false;
+          if (loginError) loginError.style.display = 'none';
+
+          // Update header
+          if (typeof updateHeaderState === 'function') updateHeaderState();
+          if (typeof window.syncUserButton === 'function') window.syncUserButton(session);
+        } else {
+          if (loginError) {
+            loginError.textContent = 'Invalid email or password.';
+            loginError.style.display = 'block';
+          }
+        }
+      });
+    }
+
+    // Signup Submit
+    if (signupSubmitBtn) {
+      signupSubmitBtn.addEventListener('click', () => {
+        const firstName = document.querySelector('#firstName');
+        const lastName = document.querySelector('#lastName');
+        const email = document.querySelector('#signupEmail');
+        const password = document.querySelector('#signupPass');
+        const signupError = document.querySelector('#signupError');
+
+        if (!firstName || !lastName || !email || !password) return;
+
+        const firstVal = firstName.value.trim();
+        const lastVal = lastName.value.trim();
+        const emailVal = email.value.trim().toLowerCase();
+        const passVal = password.value.trim();
+
+        if (!firstVal || !lastVal || !emailVal || !passVal) {
+          if (signupError) {
+            signupError.textContent = 'Please fill all fields.';
+            signupError.style.display = 'block';
+          }
+          return;
+        }
+
+        if (!emailVal.includes('@')) {
+          if (signupError) {
+            signupError.textContent = 'Please enter a valid email.';
+            signupError.style.display = 'block';
+          }
+          return;
+        }
+
+        if (passVal.length < 6) {
+          if (signupError) {
+            signupError.textContent = 'Password must be at least 6 characters.';
+            signupError.style.display = 'block';
+          }
+          return;
+        }
+
+        // Create session
+        const session = {
+          email: emailVal,
+          name: firstVal + ' ' + lastVal,
+          ts: Date.now()
+        };
+        localStorage.setItem('theatrum.session', JSON.stringify(session));
+
+        // Show welcome modal
+        showModal(welcomeModal);
+        const welcomeName = document.querySelector('#welcomeName');
+        if (welcomeName) welcomeName.textContent = session.name;
+
+        // Clear inputs
+        firstName.value = '';
+        lastName.value = '';
+        email.value = '';
+        password.value = '';
+        if (signupError) signupError.style.display = 'none';
+
+        // Update header
+        if (typeof updateHeaderState === 'function') updateHeaderState();
+        if (typeof window.syncUserButton === 'function') window.syncUserButton(session);
+      });
+    }
+
+    // Close buttons
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetSelector = btn.getAttribute('data-close');
+        if (targetSelector) {
+          const modal = document.querySelector(targetSelector);
+          closeModal(modal);
+        }
+      });
+    });
+
+    // Swap buttons (navigate between modals)
+    swapButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const swapSelector = btn.getAttribute('data-swap');
+        if (swapSelector) {
+          const [closeSelector, openSelector] = swapSelector.split(',');
+          const closeModal1 = document.querySelector(closeSelector.trim());
+          const openModal = document.querySelector(openSelector.trim());
+          closeModal(closeModal1);
+          showModal(openModal);
+        }
+      });
+    });
+
+    // Prevent closing when clicking inside modal sheet
+    [choiceModal, loginModal, signupModal, verifyModal, welcomeModal].forEach(modal => {
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal(modal);
+          }
+        });
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal(choiceModal);
+        closeModal(loginModal);
+        closeModal(signupModal);
+        closeModal(verifyModal);
+        closeModal(welcomeModal);
+      }
+    });
+  });
 
   if (logo) {
     logo.addEventListener('click', () => {
