@@ -193,11 +193,16 @@
 
   .search-box svg {
     position: absolute;
-    left: 12px;
+    right: 12px;
     color: var(--text-muted, #71717a);
-    pointer-events: none;
     width: 16px;
     height: 16px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .search-box svg:hover {
+    color: var(--text-primary, #fff);
   }
 
   /* User Button */
@@ -2007,10 +2012,33 @@
                 const genres = card.dataset.genres.toLowerCase();
                 card.style.display = (title.includes(q) || genres.includes(q)) ? '' : 'none';
               });
-              
-              // Scroll to movies if on mobile and typing? Maybe not, too aggressive.
           }
         });
+
+        // Handle Enter key - scroll to movies
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            const moviesSection = document.querySelector('#now-playing');
+            if (moviesSection) {
+              moviesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }
+        });
+    });
+
+    // Handle magnifying glass click - scroll to movies
+    const searchBoxes = document.querySelectorAll('.search-box');
+    searchBoxes.forEach(box => {
+      const svg = box.querySelector('svg');
+      if (svg) {
+        svg.style.cursor = 'pointer';
+        svg.addEventListener('click', () => {
+          const moviesSection = document.querySelector('#now-playing');
+          if (moviesSection) {
+            moviesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      }
     });
   }
 })();
