@@ -116,6 +116,33 @@
         .food-selection-page .order-panel-header {
             padding-left: 1rem;
         }
+        .order-meta-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            background: rgba(17, 21, 40, 0.8);
+            margin-bottom: 1rem;
+        }
+        .order-meta-label {
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0 0 0.35rem;
+        }
+        .order-meta-value {
+            margin: 0;
+            font-weight: 600;
+            color: #fff;
+        }
+        .order-meta-amount {
+            font-weight: 700;
+            color: #fff;
+        }
         .order-summary-list {
             list-style: none;
             padding: 0;
@@ -183,6 +210,10 @@
             color: rgba(255, 255, 255, 0.6);
             font-style: italic;
         }
+        .order-grand-total {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
         .food-selection-page main.food-page {
             margin-top: 6rem;
         }
@@ -219,6 +250,16 @@
             align-items: center;
             justify-content: space-between;
             gap: 0.75rem;
+        }
+        .food-selection-page .pill {
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            color: #fff;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
         }
         .food-selection-page .item-actions {
             display: flex;
@@ -275,6 +316,21 @@
             justify-content: center;
             font-size: 0.9rem;
             padding: 0.4rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .food-selection-page .size-btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .food-selection-page .size-btn.active {
+            background: linear-gradient(120deg, #f43f5e, #f97316);
+            border-color: #f43f5e;
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.35);
         }
         .food-selection-page .concession-pricing {
             display: flex;
@@ -342,7 +398,7 @@
         <section class="category-section" id="popcorn">
             <div class="category-heading">
                 <p class="kicker">CLASSIC FAVORITE</p>
-                <h3>Popcorn <span class="category-note">Freshly popped with butter + seasoning</span></h3>
+                <h3>Food <span class="category-note">Time for a feast!</span></h3>
             </div>
             <div class="concessions-grid">
                 <div class="concession-card" data-category="popcorn">
@@ -400,14 +456,14 @@
             </div>
             <div class="concessions-grid">
                 <div class="concession-card" data-category="combos">
-                    <div class="concession-image"><img src="https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg" alt="Ultimate Combo"></div>
+                    <div class="concession-image"><img src="assets/popcorncombo.jpg" alt="Ultimate Combo"></div>
                     <div class="concession-info">
                         <div class="card-heading">
                             <h3>Ultimate Combo</h3>
-                            <span class="pill">2 Drinks + Popcorn</span>
+                            <span class="pill">2 Regular Drinks + Large Popcorn</span>
                         </div>
                         <div class="size-options" role="group" aria-label="Combo size">
-                            <button class="size-btn active" data-size="Combo" data-price="14">Combo $14</button>
+                            <button class="size-btn active" data-size="Combo" data-price="14">Combo $22</button>
                         </div>
                         <div class="item-actions">
                             <div class="qty-group">
@@ -415,17 +471,17 @@
                                 <div class="snack-qty">0</div>
                                 <button class="btn-secondary qty-increase">+</button>
                             </div>
-                            <button class="btn-primary add-snack" data-price="14">Add</button>
+                            <button class="btn-primary add-snack" data-price="22">Add</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="concession-card" data-category="combos">
-                    <div class="concession-image"><img src="assets/hotdog.jpg" alt="Gourmet Dog Combo"></div>
+                    <div class="concession-image"><img src="assets/macho-nacho.jpg" alt="Gourmet Dog Combo"></div>
                     <div class="concession-info">
                         <div class="card-heading">
-                            <h3>Gourmet Dog Combo</h3>
-                            <span class="pill">Includes drink</span>
+                            <h3>Macho Nachos Combo</h3>
+                            <span class="pill">Includes Regular Drink</span>
                         </div>
                         <div class="size-options" role="group" aria-label="Combo size">
                             <button class="size-btn active" data-size="Combo" data-price="14">Combo $14</button>
@@ -450,11 +506,11 @@
             </div>
             <div class="concessions-grid">
                 <div class="concession-card" data-category="drinks">
-                    <div class="concession-image"><img src="assets/bev.png" alt="Premium Beverages"></div>
+                    <div class="concession-image"><img src="assets/milkshake.jpg" alt="Premium Beverages"></div>
                     <div class="concession-info">
                         <div class="card-heading">
-                            <h3>Premium Beverages</h3>
-                            <span class="pill">Fountain & cold brew</span>
+                            <h3>Milkshakes</h3>
+                            <span class="pill">Moolicious</span>
                         </div>
                         <div class="size-options" role="group" aria-label="Drink sizes">
                             <button class="size-btn active" data-size="Small" data-price="4">Small $4</button>
@@ -473,11 +529,11 @@
                 </div>
 
                 <div class="concession-card" data-category="drinks">
-                    <div class="concession-image"><img src="assets/candy.jpg" alt="Sparkling Water"></div>
+                    <div class="concession-image"><img src="assets/drinks.jpg" alt="Sparkling Water"></div>
                     <div class="concession-info">
                         <div class="card-heading">
-                            <h3>Sparkling Water</h3>
-                            <span class="pill">Zero sugar</span>
+                            <h3>Beverages</h3>
+                            <span class="pill">Refillable</span>
                         </div>
                         <div class="size-options" role="group" aria-label="Water sizes">
                             <button class="size-btn active" data-size="Small" data-price="3">Small $3</button>
@@ -504,10 +560,10 @@
             </div>
             <div class="concessions-grid">
                 <div class="concession-card" data-category="snacks">
-                    <div class="concession-image"><img src="assets/candy.jpg" alt="Chocolate Bites"></div>
+                    <div class="concession-image"><img src="assets/chocolate.jpg" alt="Chocolate Bites"></div>
                     <div class="concession-info">
                         <div class="card-heading">
-                            <h3>Chocolate Bites</h3>
+                            <h3>Chocolate</h3>
                             <span class="pill">Assorted mix</span>
                         </div>
                         <div class="concession-pricing">
@@ -525,11 +581,11 @@
                 </div>
 
                 <div class="concession-card" data-category="snacks">
-                    <div class="concession-image"><img src="assets/bev.png" alt="Ice Cream Cups"></div>
+                    <div class="concession-image"><img src="assets/ice-cream.jpg" alt="Ice Cream"></div>
                     <div class="concession-info">
                         <div class="card-heading">
-                            <h3>Ice Cream Cups</h3>
-                            <span class="pill">Cold</span>
+                            <h3>Ice Cream</h3>
+                            <span class="pill">Cold and Delicious</span>
                         </div>
                         <div class="concession-pricing">
                             <span class="price-option">$5 each</span>
@@ -546,11 +602,11 @@
                 </div>
 
                 <div class="concession-card" data-category="snacks">
-                    <div class="concession-image"><img src="assets/pop.jpg" alt="Candy Mix"></div>
+                    <div class="concession-image"><img src="assets/candy.jpg" alt="Candy Mix"></div>
                     <div class="concession-info">
                         <div class="card-heading">
                             <h3>Candy Mix</h3>
-                            <span class="pill">Pick & mix</span>
+                            <span class="pill">Sweet treats</span>
                         </div>
                         <div class="concession-pricing">
                             <span class="price-option">$3 each</span>
@@ -568,28 +624,43 @@
             </div>
         </section>
 
-        <div class="food-cta align-right">
-            <a href="seat_selection.html" class="btn-secondary btn-large">Back</a>
-            <button id="review-order" class="btn-primary btn-large">Continue to Payment</button>
-        </div>
         </section>
 
         <aside class="order-panel" aria-label="Order summary">
             <div class="order-panel-header">
                 <p class="kicker">Your Order</p>
-                <h3>Snacks Snapshot</h3>
+                <h3>Payment Summary</h3>
                 <p class="order-panel-subtext">Selections update in real time as you add items.</p>
+            </div>
+            <div class="order-meta-card">
+                <div>
+                    <p class="order-meta-label">Tickets</p>
+                    <p class="order-meta-value" id="summary-ticket-info">No tickets selected</p>
+                </div>
+                <strong class="order-meta-amount" id="summary-ticket-total">$0.00</strong>
+            </div>
+            <div class="order-meta-card">
+                <div>
+                    <p class="order-meta-label">Seats</p>
+                    <p class="order-meta-value" id="summary-seat-info">Select seats on the previous step</p>
+                </div>
             </div>
             <ul class="order-summary-list" id="food-summary-list">
                 <li class="summary-empty">No snacks selected yet.</li>
             </ul>
             <div class="order-summary-footer">
                 <div class="order-total-row">
-                    <span>Subtotal</span>
+                    <span>Snacks Subtotal</span>
                     <strong id="food-subtotal">$0.00</strong>
                 </div>
+                <div class="order-total-row order-grand-total">
+                    <span>Estimated Total</span>
+                    <strong id="food-grand-total">$0.00</strong>
+                </div>
                 <button type="button" id="clear-food-order" class="btn-secondary btn-full">Clear snacks</button>
-                <p class="order-hint">You'll confirm everything on the payment summary.</p>
+                <button id="review-order" class="btn-primary btn-full">Continue to Payment</button>
+                <a href="seat_selection.html" class="btn-secondary btn-full">Back to Seat Selection</a>
+                <p class="order-hint">Review seats and snacks on the payment summary.</p>
             </div>
         </aside>
     </main>
