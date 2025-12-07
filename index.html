@@ -1159,6 +1159,52 @@
         initNotifyModal();
     }
 
+    // ========== MOVIES DATABASE ==========
+    const moviesDatabase = {
+        'Dune: Part Two': {
+            title: 'Dune: Part Two',
+            genres: 'Sci-Fi, Adventure, Drama',
+            rating: 8.7,
+            description: 'Paul Atreides travels to the dangerous planet Dune to ensure the future of his family and people in this epic science fiction adventure.',
+            poster: 'dune2-poster.jpg'
+        },
+        'Oppenheimer': {
+            title: 'Oppenheimer',
+            genres: 'Drama, Biography, History',
+            rating: 8.5,
+            description: 'The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.',
+            poster: 'opp-poster.jpg'
+        },
+        'The Batman': {
+            title: 'The Batman',
+            genres: 'Action, Crime, Thriller',
+            rating: 8.2,
+            description: 'When the Riddler emerges as a serial killer, Batman must uncover his identity and solve the mystery while protecting Gotham City.',
+            poster: 'blackphone2-poster.jpg'
+        },
+        'Barbie': {
+            title: 'Barbie',
+            genres: 'Comedy, Fantasy, Adventure',
+            rating: 7.9,
+            description: 'Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land.',
+            poster: 'dune2-poster.jpg'
+        },
+        'Killers of the Flower Moon': {
+            title: 'Killers of the Flower Moon',
+            genres: 'Drama, Crime, History',
+            rating: 8.1,
+            description: 'When oil is discovered beneath their land, the Osage Nation become targets of a series of brutal murders in this historical crime thriller.',
+            poster: 'dune2-poster.jpg'
+        },
+        'A Quiet Place: Day One': {
+            title: 'A Quiet Place: Day One',
+            genres: 'Horror, Thriller, Sci-Fi',
+            rating: 7.8,
+            description: 'Experience the terrifying day the world goes silent in this prequel to the Quiet Place franchise.',
+            poster: 'insideout2-poster.jpg'
+        }
+    };
+
     // ========== TICKET BOOKING MODAL ==========
     function initTicketBooking() {
         const bookingModal = $('#ticketBookingModal');
@@ -1215,6 +1261,79 @@
                     bookingModal.classList.add('show');
                     document.body.style.overflow = 'hidden';
                 }
+            }
+        });
+
+        // Handle "View Details" button clicks from movie cards
+        document.addEventListener('click', (e) => {
+            const viewBtn = e.target.closest('[data-action="view"]');
+            if (viewBtn) {
+                const movieTitle = viewBtn.getAttribute('data-movie');
+                if (movieTitle && moviesDatabase[movieTitle]) {
+                    // Store movie data in localStorage
+                    localStorage.setItem('viewMovie', JSON.stringify(moviesDatabase[movieTitle]));
+                    // Navigate to movie detail page with movie name as parameter
+                    const encodedTitle = encodeURIComponent(movieTitle);
+                    window.location.href = `movie-detail.html?movie=${encodedTitle}`;
+                }
+            }
+        });
+
+        // Handle time button clicks from movie cards (showtime buttons)
+        document.addEventListener('click', (e) => {
+            const timeBtn = e.target.closest('.showtime-btn');
+            if (timeBtn && !timeBtn.classList.contains('btn-card-action')) {
+                movieTitle = timeBtn.getAttribute('data-movie') || 'Movie';
+                movieGenre = 'Now Playing • Check Times';
+                const timeValue = timeBtn.textContent.trim();
+                
+                $('#bookingMovieTitle').textContent = movieTitle;
+                $('#bookingMovieGenre').textContent = movieGenre;
+                
+                resetBooking();
+                bookingModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                // Pre-select the time and date - store for step 2
+                setTimeout(() => {
+                    // Set the selected time by clicking the matching time button
+                    const timeOptions = document.querySelectorAll('.time-option');
+                    timeOptions.forEach(option => {
+                        if (option.textContent.trim() === timeValue) {
+                            option.click();
+                        }
+                    });
+                    
+                    // Set a default date (today)
+                    const today = new Date();
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                        'July', 'August', 'September', 'October', 'November', 'December'];
+                    const dateStr = today.getDate() + ' ' + monthNames[today.getMonth()];
+                    
+                    // Click the calendar button for today
+                    const dateButtons = document.querySelectorAll('.date-option');
+                    dateButtons.forEach(btn => {
+                        if (btn.textContent.includes(today.getDate().toString())) {
+                            btn.click();
+                        }
+                    });
+                }, 50);
+            }
+        });
+
+        // Handle "Book Ticket" button clicks from movie cards
+        document.addEventListener('click', (e) => {
+            const bookBtn = e.target.closest('.btn-card-action.btn-card-primary');
+            if (bookBtn && bookBtn.classList.contains('book-btn')) {
+                movieTitle = bookBtn.getAttribute('data-movie') || 'Movie';
+                movieGenre = 'Now Playing • Check Times';
+                
+                $('#bookingMovieTitle').textContent = movieTitle;
+                $('#bookingMovieGenre').textContent = movieGenre;
+                
+                resetBooking();
+                bookingModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
             }
         });
 
