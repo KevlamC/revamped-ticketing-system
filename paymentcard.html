@@ -456,15 +456,7 @@
       }
 
       // ---- Calculate totals ----
-      function mapTicketLabel(typeKey) {
-        var key = (typeKey || 'standard').toLowerCase();
-        if (key === 'imax') return 'IMAX';
-        if (key === 'dolby') return 'Dolby Cinema';
-        if (key === '3d') return '3D';
-        return 'Standard';
-      }
-
-      var ticketLabelType = mapTicketLabel(ticketType);
+      var ticketLabelType = ticketType === '3d' ? '3D' : 'Standard';
       var ticketSubtotal = ticketQty * ticketUnitPrice;
 
       var snacksTotal = 0;
