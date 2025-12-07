@@ -230,67 +230,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // -----------------------
   // Ticket quantity page
   // -----------------------
-  const ticketCountEl = document.getElementById('ticket-count');
-  const incrementBtn = document.getElementById('increment');
-  const decrementBtn = document.getElementById('decrement');
   const proceedToSeatsBtn = document.getElementById('proceed-to-seats');
-  const ticketPriceEl = document.getElementById('ticket-price');
-  const ticketTypeEl = document.getElementById('ticket-type');
-
-  if (ticketCountEl && incrementBtn && decrementBtn) {
-    let count = parseQty(localStorage.getItem('ticketQty')) || 1;
-    // determine initial price per ticket from saved value or selected ticket type
-    let pricePer = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
-    if (ticketTypeEl && ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0]) {
-      pricePer = parseFloat(ticketTypeEl.selectedOptions[0].dataset.price) || pricePer;
-    }
-
-    const render = () => {
-      ticketCountEl.textContent = count;
-      ticketPriceEl && (ticketPriceEl.textContent = `$${pricePer.toFixed(2)}`);
-    };
-    render();
-
-    // when ticket type changes, update pricePer and persist
-    if (ticketTypeEl) {
-      ticketTypeEl.addEventListener('change', () => {
-        const opt = ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0];
-        const newPrice = opt ? parseFloat(opt.dataset.price) || pricePer : pricePer;
-        pricePer = newPrice;
-        // save selected type and unit price for later pages (upsell/checkout)
-        localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
-        localStorage.setItem('ticketUnitPrice', String(pricePer));
-        render();
-      });
-      // ensure we persist initial selection as well
-      localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
-      localStorage.setItem('ticketUnitPrice', String(pricePer));
-    }
-
-    incrementBtn.addEventListener('click', () => {
-      count = Math.min(10, count + 1);
-      localStorage.setItem('ticketQty', count);
-      render();
+  if (proceedToSeatsBtn) {
+    proceedToSeatsBtn.addEventListener('click', () => {
+      const qty = parseQty(localStorage.getItem('ticketQty')) || 0;
+      if (qty < 1) {
+        notify('Please select at least one ticket', 'error');
+        return;
+      }
+      // Ensure unit price is set (fallback)
+      if (!localStorage.getItem('ticketUnitPrice')) {
+        const adultPrice = 17;
+        localStorage.setItem('ticketUnitPrice', String(adultPrice));
+      }
+      window.location.href = 'seat_selection.html';
     });
-
-    decrementBtn.addEventListener('click', () => {
-      count = Math.max(1, count - 1);
-      localStorage.setItem('ticketQty', count);
-      render();
-    });
-
-    proceedToSeatsBtn &&
-      proceedToSeatsBtn.addEventListener('click', () => {
-        localStorage.setItem('ticketQty', count);
-        // also persist the latest unit price (in case user didn't change type after load)
-        if (ticketTypeEl) {
-          const opt = ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0];
-          const unit = opt ? parseFloat(opt.dataset.price) || pricePer : pricePer;
-          localStorage.setItem('ticketUnitPrice', String(unit));
-          localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
-        }
-        window.location.href = 'seat_selection.html';
-      });
   }
 
   // -----------------------

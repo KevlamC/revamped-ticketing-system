@@ -682,7 +682,7 @@
         <li><a href="#offers">Offers</a></li>
         <li><a href="#locations">Locations</a></li>
       </ul>
-      <div class="nav-actions">
+            <div class="nav-actions">
         <div class="search-box">
           <input id="globalSearch" type="text" placeholder="Search movies...">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -690,7 +690,7 @@
             <path d="m21 21-4.35-4.35"></path>
           </svg>
         </div>
-        <button id="userButton" class="btn-primary">Alex</button>
+                <button id="userButton" class="btn-primary">Sign In</button>
       </div>
     </div>
   </nav>
@@ -766,17 +766,17 @@
                 <!-- Profile Section -->
                 <section id="profile" class="profile-card">
                     <div class="profile-header">
-                        <div class="profile-avatar">A</div>
-                        <div class="profile-info">
-                            <h2>Alex</h2>
-                            <p class="profile-email">Alex@example.com</p>
-                            <div class="profile-badges">
-                                <span class="profile-badge">⭐ Gold Member</span>
-                                <span class="profile-badge">🎬 Movie Buff</span>
-                                <span class="profile-badge">🍿 Foodie</span>
+                            <div id="profileAvatar" class="profile-avatar">A</div>
+                            <div class="profile-info">
+                                <h2 id="profileName">Member</h2>
+                                <p id="profileEmail" class="profile-email">you@example.com</p>
+                                <div class="profile-badges">
+                                    <span class="profile-badge">⭐ Gold Member</span>
+                                    <span class="profile-badge">🎬 Movie Buff</span>
+                                    <span class="profile-badge">🍿 Foodie</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <div class="profile-stats">
                         <div class="stat-item">
                             <div class="stat-value">47</div>
@@ -1056,24 +1056,26 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="firstName">First Name</label>
-                                <input type="text" id="firstName" value="John">
+                                <input type="text" id="firstName" placeholder="First name">
                             </div>
                             <div class="form-group">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" id="lastName" value="Doe">
+                                <input type="text" id="lastName" placeholder="Last name">
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" value="john.doe@example.com">
+                            <input type="email" id="email" placeholder="you@example.com">
                         </div>
+
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" value="+1 (555) 123-4567">
+                            <input type="tel" id="phone" placeholder="(+ country code)">
                         </div>
-                        
+
                         <h3 style="font-size: 18px; font-weight: 700; margin-top: 24px; margin-bottom: 16px;">Notification Preferences</h3>
-                        
+
                         <div class="toggle-group">
                             <div class="toggle-info">
                                 <h4>Email Notifications</h4>
@@ -1289,7 +1291,83 @@
                     alert('Rewards redemption page would open here.');
                 });
             }
-        });
-    </script>
+                });
+        </script>
+
+        <script>
+            (function () {
+                const SESSION_KEY = 'theatrum.session';
+
+                function tryParse(s) {
+                    try { return JSON.parse(s); } catch (e) { return null; }
+                }
+
+                function splitName(full) {
+                    if (!full) return ['', ''];
+                    const parts = String(full).trim().split(/\s+/);
+                    const first = parts.shift() || '';
+                    const last = parts.length ? parts.join(' ') : '';
+                    return [first, last];
+                }
+
+                function populateFrom(obj) {
+                    if (!obj) return false;
+                    const first = obj.firstName || splitName(obj.username || obj.name)[0] || '';
+                    const last = obj.lastName || splitName(obj.username || obj.name)[1] || '';
+                    const email = obj.email || '';
+                    const phone = obj.phone || '';
+
+                    const elF = document.getElementById('firstName');
+                    const elL = document.getElementById('lastName');
+                    const elE = document.getElementById('email');
+                    const elP = document.getElementById('phone');
+
+                    // Profile/header elements
+                    const profileAvatar = document.getElementById('profileAvatar');
+                    const profileName = document.getElementById('profileName');
+                    const profileEmail = document.getElementById('profileEmail');
+                    const userBtn = document.getElementById('userButton');
+
+                    if (elF && first) elF.value = first;
+                    if (elL && last) elL.value = last;
+                    if (elE && email) elE.value = email;
+                    if (elP && phone) elP.value = phone;
+
+                    // populate header/profile UI
+                    const displayName = (first || last) ? ((first + ' ' + last).trim()) : (obj.username || obj.name || 'Member');
+                    const initial = (first || last) ? (first.charAt(0) || '').toUpperCase() : (String(displayName).charAt(0) || 'M');
+                    if (profileAvatar) profileAvatar.textContent = initial;
+                    if (profileName) profileName.textContent = displayName;
+                    if (profileEmail && email) profileEmail.textContent = email;
+                    if (userBtn) userBtn.textContent = displayName.split(' ')[0] || displayName;
+                    return true;
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const session = tryParse(localStorage.getItem(SESSION_KEY));
+                    let did = populateFrom(session);
+
+                    if (!did) {
+                        const users = tryParse(localStorage.getItem('theatrum.users')) || [];
+                        if (session && session.email) {
+                            const u = users.find(u => u.email === session.email);
+                            if (u) did = populateFrom(u);
+                        }
+                        if (!did && users.length) {
+                            populateFrom(users[users.length - 1]);
+                        }
+                    }
+
+                    const cancel = document.getElementById('settingsCancel');
+                    if (cancel) {
+                        cancel.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const s = tryParse(localStorage.getItem(SESSION_KEY)) || (tryParse(localStorage.getItem('theatrum.users')) || [])[0];
+                            populateFrom(s);
+                        });
+                    }
+                });
+            })();
+        </script>
 </body>
 </html>
