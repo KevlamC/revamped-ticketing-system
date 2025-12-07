@@ -1450,6 +1450,34 @@
                     date: selectedDate,
                     time: selectedTime
                 };
+                const rawLabel = (selectedFormat || '').toLowerCase();
+                let typeKey = 'standard';
+                if (rawLabel.includes('imax')) {
+                    typeKey = 'imax';
+                } else if (rawLabel.includes('dolby')) {
+                    typeKey = 'dolby';
+                } else if (rawLabel.includes('3d')) {
+                    typeKey = '3d';
+                }
+
+                // Persist ticket type so seat selection / payment keep the same experience
+                localStorage.setItem('ticketType', typeKey);
+
+                // Persist current show info for ticket page + payment summary + confirmation
+                try {
+                    const movieData = moviesDatabase[movieTitle] || {};
+                    const currentShow = {
+                        movie: bookingData.movie,
+                        date: bookingData.date,
+                        time: bookingData.time,
+                        format: selectedFormat,
+                        poster: movieData.poster || null
+                    };
+                    localStorage.setItem('currentShow', JSON.stringify(currentShow));
+                } catch (err) {
+                    console.warn('Could not save currentShow', err);
+                }
+
                 window.location.href = 'ticket_quantity.html?booking=' + encodeURIComponent(JSON.stringify(bookingData));
             }
         });

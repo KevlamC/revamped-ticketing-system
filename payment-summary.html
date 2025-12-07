@@ -338,6 +338,47 @@
       } catch (e) {
         upsellCart = [];
       }
+            // Update movie label using saved currentShow
+      var movieLabelEl = document.getElementById('movie-label');
+      if (movieLabelEl) {
+        try {
+          var rawShow = localStorage.getItem('currentShow');
+          if (rawShow) {
+            var show = JSON.parse(rawShow);
+
+            var labelParts = [];
+
+            if (show.movie) {
+              labelParts.push(show.movie);
+            }
+
+            // Format label based on ticketType
+            var typeKey2 = (ticketType || 'standard').toLowerCase();
+            var typeLabels2 = {
+              standard: 'Standard',
+              '3d': '3D',
+              imax: 'IMAX',
+              dolby: 'Dolby Cinema'
+            };
+            var formatLabel = typeLabels2[typeKey2] || 'Standard';
+            if (formatLabel) {
+              labelParts.push(formatLabel);
+            }
+
+            var meta = [];
+            if (show.date) meta.push(show.date);
+            if (show.time) meta.push(show.time);
+            if (meta.length) {
+              labelParts.push(meta.join(' • '));
+            }
+
+            movieLabelEl.textContent = labelParts.join(' • ');
+          }
+        } catch (err) {
+          console.warn('Could not read currentShow for payment summary', err);
+        }
+      }
+
 
       // DOM refs
       var ticketSummaryLabel = document.getElementById('ticket-summary-label');
@@ -357,9 +398,22 @@
       var sidebarTotal = document.getElementById('sidebar-total');
 
       // Tickets
-      var ticketLabelType = ticketType === '3d' ? '3D' : 'Standard';
+      var typeKey = (ticketType || 'standard').toLowerCase();
+      var typeLabels = {
+        standard: 'Standard',
+        '3d': '3D',
+        imax: 'IMAX',
+        dolby: 'Dolby Cinema'
+      };
+      var ticketLabelType = typeLabels[typeKey] || 'Standard';
+
       if (ticketSummaryLabel) {
-        ticketSummaryLabel.textContent = ticketQty + ' × ' + ticketLabelType + ' ticket' + (ticketQty === 1 ? '' : 's');
+        ticketSummaryLabel.textContent =
+          ticketQty +
+          ' × ' +
+          ticketLabelType +
+          ' ticket' +
+          (ticketQty === 1 ? '' : 's');
       }
       if (ticketSummarySub) {
         ticketSummarySub.textContent = '$' + ticketUnitPrice.toFixed(2) + ' each';

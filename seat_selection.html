@@ -462,8 +462,15 @@
       if (userBtn) userBtn.textContent = storedName;
 
       var ticketQty = parseIntSafe(localStorage.getItem('ticketQty'));
-      var ticketType = localStorage.getItem('ticketType') || 'standard';
-      var formatLabel = ticketType === '3d' ? '3D' : 'Standard';
+      var ticketTypeKey = (localStorage.getItem('ticketType') || 'standard').toLowerCase();
+      var formatLabels = {
+        standard: 'Standard',
+        '3d': '3D',
+        imax: 'IMAX',
+        dolby: 'Dolby Cinema'
+      };
+      var formatLabel = formatLabels[ticketTypeKey] || 'Standard';
+
 
       var seatCountLabel = document.getElementById('seat-ticket-count-label');
       var stepHelper = document.getElementById('seat-step-helper');

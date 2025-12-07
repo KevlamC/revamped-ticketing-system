@@ -456,7 +456,15 @@
       }
 
       // ---- Calculate totals ----
-      var ticketLabelType = ticketType === '3d' ? '3D' : 'Standard';
+      var typeKey = (ticketType || 'standard').toLowerCase();
+      var typeLabels = {
+        standard: 'Standard',
+        '3d': '3D',
+        imax: 'IMAX',
+        dolby: 'Dolby Cinema'
+      };
+      var ticketLabelType = typeLabels[typeKey] || 'Standard';
+
       var ticketSubtotal = ticketQty * ticketUnitPrice;
 
       var snacksTotal = 0;
@@ -682,6 +690,18 @@
           total: totalDue,
           createdAt: new Date().toISOString()
         };
+        try {
+          var rawShow = localStorage.getItem('currentShow');
+          if (rawShow) {
+            var show = JSON.parse(rawShow);
+            if (show.movie) confirmation.movie = show.movie;
+            if (show.date) confirmation.showDate = show.date;
+            if (show.time) confirmation.showTime = show.time;
+            if (show.format) confirmation.formatLabel = show.format;
+          }
+        } catch (err) {
+          console.warn('Could not attach currentShow to orderConfirmation', err);
+        }
 
         localStorage.setItem('orderConfirmation', JSON.stringify(confirmation));
 
