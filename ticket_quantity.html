@@ -7,33 +7,34 @@
     <link rel="stylesheet" href="styles/index_styles.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html#now-playing">Now Playing</a></li>
-                <li><a href="index.html#coming-soon">Coming Soon</a></li>
-                <li><a href="food_selection.html">Food & Drinks</a></li>
-                <li><a href="index.html#offers">Offers</a></li>
-                <li><a href="index.html#locations">Locations</a></li>
+  <div id="header-placeholder"></div>
+  <script>
+    // Load shared header from components/header.html so the navbar stays in sync
+    (async () => {
+      const placeholder = document.getElementById('header-placeholder');
+      if (!placeholder) return;
+      try {
+        const res = await fetch('components/header.html');
+        const html = await res.text();
+        placeholder.innerHTML = html;
+        // Re-run any scripts defined inside the fetched fragment
+        placeholder.querySelectorAll('script').forEach((oldScript) => {
+          const s = document.createElement('script');
+          if (oldScript.src) {
+            s.src = oldScript.src;
+            s.defer = oldScript.defer;
+          } else {
+            s.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(s);
+        });
+      } catch (err) {
+        console.warn('Failed to load shared header', err);
+      }
+    })();
+  </script>
 
-            </ul>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <input type="text" placeholder="Search movies...">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </div>
-                <button class="btn-secondary" style="background-color: var(--accent-red); color: white; border: none;">Alex</button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="container" style="padding-top:60px;padding-bottom:60px;">
+    <main class="container" style="padding-top:80px;padding-bottom:60px;">
         <div style="max-width:1000px;margin:0 auto;">
             <div class="section-header" style="margin-bottom:30px;">
                 <div>
@@ -48,8 +49,8 @@
 
         <!-- Movie Title -->
         <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:24px;flex-wrap:wrap;max-width:1000px;margin-left:auto;margin-right:auto;">
-            <h3 id="selected-title" style="font-size:28px;font-weight:800;margin:0;color:var(--text-primary);">DUNE: PART TWO</h3>
-            <p id="selected-info" style="margin:0;font-size:13px;color:var(--text-secondary);">PG-13 • 2h 46m • Sci-Fi</p>
+            <h3 id="selected-title" style="font-size:28px;font-weight:800;margin:0;color:var(--text-primary);">Selected Movie</h3>
+            <p id="selected-info" style="margin:0;font-size:13px;color:var(--text-secondary);">Select a showtime to see details</p>
         </div>
 
         <div style="display:grid;grid-template-columns:0.8fr 1.2fr;gap:32px;align-items:center;max-width:1000px;margin:0 auto;">
@@ -183,66 +184,70 @@
     </footer>
 
     <script>
-        // Update price display when ticket type changes
-        const ticketTypeSelect = document.getElementById('ticket-type');
-        const ticketCountEl = document.getElementById('ticket-count');
-        const ticketPriceEl = document.getElementById('ticket-price');
-        const totalPriceEl = document.getElementById('total-price');
-        const decrementBtn = document.getElementById('decrement');
-        const incrementBtn = document.getElementById('increment');
-        try {
-        const rawShow = localStorage.getItem('currentShow');
-            if (rawShow) {
-                const show = JSON.parse(rawShow);
-                const titleEl = document.getElementById('selected-title');
-                const infoEl = document.getElementById('selected-info');
+  // Update price display when ticket type changes
+  const ticketTypeSelect = document.getElementById('ticket-type');
+  const ticketCountEl = document.getElementById('ticket-count');
+  const ticketPriceEl = document.getElementById('ticket-price');
+  const totalPriceEl = document.getElementById('total-price');
+  const decrementBtn = document.getElementById('decrement');
+  const incrementBtn = document.getElementById('increment');
 
-                // Update title if we have one
-                if (titleEl && show.movie) {
-                    titleEl.textContent = show.movie;
-                }
+  // Populate movie details from saved selection
+  try {
+    const rawShow = localStorage.getItem('currentShow');
+    if (rawShow) {
+      const show = JSON.parse(rawShow);
+      const titleEl = document.getElementById('selected-title');
+      const infoEl = document.getElementById('selected-info');
+      const posterEl = document.getElementById('selected-poster');
 
-                // Build a simple "date • time" line if present
-                if (infoEl) {
-                    const parts = [];
-                    if (show.date) parts.push(show.date);
-                    if (show.time) parts.push(show.time);
-                    if (parts.length) {
-                        infoEl.textContent = parts.join(' • ');
-                    }
-                }
-            }
-    } catch (e) {
-        console.warn('Could not load previous show selection', e);
+      if (titleEl && show.movie) titleEl.textContent = show.movie;
+
+      if (infoEl) {
+        const parts = [];
+        if (show.date) parts.push(show.date);
+        if (show.time) parts.push(show.time);
+        if (parts.length) infoEl.textContent = parts.join(' • ');
+      }
+
+      if (posterEl && show.poster) {
+        posterEl.src = show.poster;
+        posterEl.alt = show.movie || 'Selected movie';
+      }
     }
-        
-        let ticketCount = 1;
-        
-        function updatePrices() {
-            const pricePerTicket = parseFloat(ticketTypeSelect.options[ticketTypeSelect.selectedIndex].dataset.price);
-            const total = pricePerTicket * ticketCount;
-            
-            ticketPriceEl.textContent = `$${pricePerTicket.toFixed(2)}`;
-            totalPriceEl.textContent = `$${total.toFixed(2)}`;
-        }
-        
-        ticketTypeSelect.addEventListener('change', updatePrices);
-        
-        decrementBtn.addEventListener('click', () => {
-            if (ticketCount > 1) {
-                ticketCount--;
-                ticketCountEl.textContent = ticketCount;
-                updatePrices();
-            }
-        });
-        
-        incrementBtn.addEventListener('click', () => {
-            ticketCount++;
-            ticketCountEl.textContent = ticketCount;
-            updatePrices();
-        });
-    </script>
+  } catch (e) {
+    console.warn('Could not load previous show selection', e);
+  }
+  
+  let ticketCount = 1;
+  
+  function updatePrices() {
+      const pricePerTicket = parseFloat(ticketTypeSelect.options[ticketTypeSelect.selectedIndex].dataset.price);
+      const total = pricePerTicket * ticketCount;
+      
+      ticketPriceEl.textContent = `$${pricePerTicket.toFixed(2)}`;
+      totalPriceEl.textContent = `$${total.toFixed(2)}`;
+  }
+  
+  ticketTypeSelect.addEventListener('change', updatePrices);
+  
+  decrementBtn.addEventListener('click', () => {
+      if (ticketCount > 1) {
+          ticketCount--;
+          ticketCountEl.textContent = ticketCount;
+          updatePrices();
+      }
+  });
+  
+  incrementBtn.addEventListener('click', () => {
+      ticketCount++;
+      ticketCountEl.textContent = ticketCount;
+      updatePrices();
+  });
 
-    <script src="scripts/booking.js"></script>
+  // Initialize totals on load
+  updatePrices();
+</script>
+<script src="scripts/booking.js"></script>
 </body>
 </html>
