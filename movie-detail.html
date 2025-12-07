@@ -642,7 +642,8 @@
       const payload = {
         movie: movieData.title,
         date: selectedDate,
-        time: selectedTime
+        time: selectedTime,
+        poster: movieData.poster
       };
       
       localStorage.setItem('currentShow', JSON.stringify(payload));

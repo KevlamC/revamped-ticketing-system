@@ -1214,10 +1214,12 @@
 
     // Booking bottom sheet
     const bookingSheet = $('#bookingSheet');
-    let selectedMovie = null, selectedDate = null, selectedTime = null;
+    let selectedMovie = null, selectedPoster = null, selectedDate = null, selectedTime = null;
 
     $$('.book-btn').forEach(b => b.addEventListener('click', (e) => {
       selectedMovie = e.currentTarget.dataset.movie;
+      const card = e.currentTarget.closest('.movie-card');
+      selectedPoster = card ? (card.querySelector('.movie-poster img')?.src || null) : null;
       $('#sheetTitle').textContent = selectedMovie;
       prepDates();
       $('#confirmMsg').classList.remove('show');
@@ -1292,7 +1294,8 @@
     const payload = {
       movie: selectedMovie,
       date: selectedDate,
-      time: selectedTime
+      time: selectedTime,
+      poster: selectedPoster
     };
 
     try {
