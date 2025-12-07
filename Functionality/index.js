@@ -162,7 +162,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 5. Update Buttons
     if (heroCtaEl) heroCtaEl.onclick = slide.ctaAction;
-    if (heroTrailerEl) heroTrailerEl.onclick = () => window.open(`https://www.youtube.com/watch?v=${slide.videoId}`, '_blank');
+    if (heroTrailerEl) {
+      heroTrailerEl.onclick = (e) => {
+        e.preventDefault();
+        const trailerModal = document.getElementById('trailerModal');
+        const trailerFrame = document.getElementById('trailerFrame');
+        const trailerTitle = document.getElementById('trailerTitle');
+        const trailerDescription = document.getElementById('trailerDescription');
+        
+        if (trailerModal && trailerFrame) {
+          trailerFrame.src = `https://www.youtube.com/embed/${slide.videoId}?autoplay=1&controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
+          trailerTitle.textContent = slide.title;
+          trailerDescription.textContent = slide.description;
+          trailerModal.classList.add('show');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+    }
 
     renderDots();
 

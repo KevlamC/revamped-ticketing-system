@@ -528,7 +528,7 @@
         <div class="coming-soon-carousel">
           <div class="coming-soon-grid" id="comingSoonGrid">
             <!-- Card 1: Deadpool & Wolverine -->
-            <div class="coming-card" data-release-date="2025-07-26">
+            <div class="coming-card" data-release-date="2025-07-26" data-title="Deadpool & Wolverine" data-trailer="xJ7L1TxYy6E">
               <div class="coming-poster">
                 <img src="Pictures/deadpool&wolverine-poster.jpg" alt="Deadpool & Wolverine">
                 <div class="coming-date"><span class="date-month">JUL</span><span class="date-day">26</span></div>
@@ -548,12 +548,13 @@
                   <div class="genre-label">Genre</div>
                   <div class="genres-list">Action, Comedy</div>
                 </div>
+                <div class="coming-card-divider"></div>
                 <button class="btn-notify">Notify Me</button>
               </div>
             </div>
 
             <!-- Card 2: Gladiator II -->
-            <div class="coming-card" data-release-date="2025-11-22">
+            <div class="coming-card" data-release-date="2025-11-22" data-title="Gladiator II" data-trailer="h1nwvCPL-hQ">
               <div class="coming-poster">
                 <img src="Pictures/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Gladiator II">
                 <div class="coming-date"><span class="date-month">NOV</span><span class="date-day">22</span></div>
@@ -573,12 +574,13 @@
                   <div class="genre-label">Genre</div>
                   <div class="genres-list">Drama, Action</div>
                 </div>
+                <div class="coming-card-divider"></div>
                 <button class="btn-notify">Notify Me</button>
               </div>
             </div>
 
             <!-- Card 3: Wicked -->
-            <div class="coming-card" data-release-date="2025-12-25">
+            <div class="coming-card" data-release-date="2025-12-25" data-title="Wicked" data-trailer="tSKvH7bkPvg">
               <div class="coming-poster">
                 <img src="Pictures/896d0b12-9ebf-4064-a121-f4294531c9c6.jpg" alt="Wicked">
                 <div class="coming-date"><span class="date-month">DEC</span><span class="date-day">25</span></div>
@@ -598,6 +600,7 @@
                   <div class="genre-label">Genre</div>
                   <div class="genres-list">Fantasy, Musical</div>
                 </div>
+                <div class="coming-card-divider"></div>
                 <button class="btn-notify">Notify Me</button>
               </div>
             </div>
@@ -942,39 +945,216 @@
     // ... (Existing Helpers) ...
     
     // Trailer Logic (Merged)
-    const trailerModal = $('#trailerModal');
-    const trailerFrame = $('#trailerFrame');
-    const trailerClose = $('.trailer-close');
+    function initTrailerModal() {
+        const trailerModal = $('#trailerModal');
+        const trailerFrame = $('#trailerFrame');
+        const trailerCloseBtn = $('.trailer-close-btn');
+        const trailerTitle = $('#trailerTitle');
+        const trailerDescription = $('#trailerDescription');
 
-    if(trailerModal) {
-        document.addEventListener('click', (e) => {
-            const btn = e.target.closest('[data-action="trailer"]');
-            if (btn) {
-                e.stopPropagation(); 
-                const card = btn.closest('.movie-card');
-                const trailerId = card.dataset.trailer;
-                if (trailerId) {
-                    trailerFrame.src = `https://www.youtube.com/embed/${trailerId}?autoplay=1&modestbranding=1&rel=0`;
-                    trailerModal.classList.add('show');
+        if(trailerModal) {
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-action="trailer"]');
+                if (btn) {
+                    e.stopPropagation(); 
+                    const card = btn.closest('.movie-card') || btn.closest('.coming-card');
+                    const trailerId = card.dataset.trailer;
+                    const movieTitle = card.dataset.title || card.querySelector('h3')?.textContent || 'Trailer';
+                    
+                    if (trailerId) {
+                        trailerFrame.src = `https://www.youtube.com/embed/${trailerId}?autoplay=1&controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
+                        
+                        trailerFrame.onload = () => {
+                            try {
+                                const iframeDoc = trailerFrame.contentDocument || trailerFrame.contentWindow.document;
+                                if (iframeDoc) {
+                                    const style = iframeDoc.createElement('style');
+                                    style.textContent = `
+                                        button[aria-label="Share"], 
+                                        .ytp-share-button,
+                                        [data-tooltip-id="ytp-share-button"],
+                                        .yt-simple-endpoint[aria-label*="Share"] {
+                                            display: none !important;
+                                            visibility: hidden !important;
+                                        }
+                                    `;
+                                    iframeDoc.head.appendChild(style);
+                                }
+                            } catch(e) {
+                                console.log('Cross-origin iframe - using CSS approach');
+                            }
+                        };
+                        
+                        trailerTitle.textContent = movieTitle;
+                        trailerDescription.textContent = 'Watch the official trailer in high quality';
+                        
+                        trailerModal.classList.add('show');
+                        document.body.style.overflow = 'hidden';
+                    }
                 }
+            });
+
+            function closeTrailer() {
+                trailerModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+                setTimeout(() => { trailerFrame.src = ''; }, 300);
+            }
+            
+            document.addEventListener('fullscreenchange', () => {
+                // When exiting fullscreen, the modal should still be visible
+            });
+            
+            if (trailerCloseBtn) {
+                trailerCloseBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeTrailer();
+                });
+            }
+            
+            trailerModal.addEventListener('click', (e) => {
+                if (e.target === trailerModal) closeTrailer();
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && trailerModal.classList.contains('show')) {
+                    closeTrailer();
+                }
+            });
+        }
+    }
+
+    // Initialize trailer modal when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTrailerModal);
+    } else {
+        initTrailerModal();
+    }
+
+    // ========== NOTIFY ME MODAL ==========
+    function initNotifyModal() {
+        const notifyModal = $('#notifyModal');
+        const notifyCloseBtn = document.querySelector('.notify-close-btn');
+        const notifyEmailInput = $('#notifyEmailInput');
+        const notifyConfirmBtn = $('#notifyConfirmBtn');
+        const notifyError = $('#notifyError');
+        const notifyEmailState = $('#notifyEmailState');
+        const notifyConfirmState = $('#notifyConfirmState');
+        const notifyConfirmEmail = $('#notifyConfirmEmail');
+        const notifyMovieTitle = $('#notifyMovieTitle');
+        const notifyMovieTitleConfirm = $('#notifyMovieTitleConfirm');
+        const notifyCloseConfirmBtn = $('#notifyCloseConfirmBtn');
+
+        let currentMovieTitle = '';
+        let userEmail = '';
+
+        function openNotifyModal(movieTitle) {
+            currentMovieTitle = movieTitle;
+            notifyMovieTitle.textContent = movieTitle;
+            notifyError.style.display = 'none';
+            notifyEmailInput.value = '';
+
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (currentUser && currentUser.email) {
+                // User is logged in - show confirmation state
+                userEmail = currentUser.email;
+                notifyConfirmEmail.textContent = userEmail;
+                notifyMovieTitleConfirm.textContent = movieTitle;
+                notifyEmailState.style.display = 'none';
+                notifyConfirmState.style.display = 'flex';
+            } else {
+                // User not logged in - show email input state
+                notifyEmailState.style.display = 'flex';
+                notifyConfirmState.style.display = 'none';
+            }
+
+            notifyModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNotifyModal() {
+            notifyModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                notifyEmailState.style.display = 'flex';
+                notifyConfirmState.style.display = 'none';
+            }, 300);
+        }
+
+        // Validate email
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Handle confirm button click
+        if (notifyConfirmBtn) {
+            notifyConfirmBtn.addEventListener('click', () => {
+                const email = notifyEmailInput.value.trim();
+
+                if (!email) {
+                    notifyError.textContent = 'Please enter your email';
+                    notifyError.style.display = 'block';
+                    return;
+                }
+
+                if (!validateEmail(email)) {
+                    notifyError.textContent = 'Please enter a valid email';
+                    notifyError.style.display = 'block';
+                    return;
+                }
+
+                // Show confirmation with the entered email
+                userEmail = email;
+                notifyConfirmEmail.textContent = email;
+                notifyMovieTitleConfirm.textContent = currentMovieTitle;
+                notifyEmailState.style.display = 'none';
+                notifyConfirmState.style.display = 'flex';
+
+                // In a real app, you would save this notification preference to your backend
+                console.log(`Notification saved for ${email} for movie: ${currentMovieTitle}`);
+            });
+        }
+
+        // Handle Notify Me button clicks
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-notify');
+            if (btn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const card = btn.closest('.coming-card');
+                const movieTitle = card.querySelector('h3')?.textContent || 'Movie';
+                openNotifyModal(movieTitle);
             }
         });
 
-        function closeTrailer() {
-            trailerModal.classList.remove('show');
-            setTimeout(() => { trailerFrame.src = ''; }, 300);
+        // Close modal handlers
+        if (notifyCloseBtn) {
+            notifyCloseBtn.addEventListener('click', closeNotifyModal);
         }
-        
-        trailerClose.addEventListener('click', closeTrailer);
-        trailerModal.addEventListener('click', (e) => {
-            if (e.target === trailerModal) closeTrailer();
+
+        if (notifyCloseConfirmBtn) {
+            notifyCloseConfirmBtn.addEventListener('click', closeNotifyModal);
+        }
+
+        notifyModal.addEventListener('click', (e) => {
+            if (e.target === notifyModal) closeNotifyModal();
         });
-        
+
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && trailerModal.classList.contains('show')) {
-                closeTrailer();
+            if (e.key === 'Escape' && notifyModal.classList.contains('show')) {
+                closeNotifyModal();
             }
         });
+    }
+
+    // Initialize notify modal when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNotifyModal);
+    } else {
+        initNotifyModal();
     }
 
     const show = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.add('show'); el.setAttribute('aria-hidden','false'); };
@@ -1447,5 +1627,85 @@
   <script src="Functionality/index.js"></script>
   <script src="Functionality/theatrum_auth.js"></script>
   <script src="Functionality/theatrum_booking.js"></script>
+
+  <!-- Premium Trailer Modal -->
+  <div id="trailerModal" class="trailer-modal-overlay">
+    <button class="trailer-close-btn" aria-label="Close trailer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <div class="trailer-modal-container">
+      <div class="trailer-video-wrapper">
+        <iframe 
+          id="trailerFrame" 
+          class="trailer-video-player" 
+          allow="autoplay; encrypted-media; fullscreen"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <div class="trailer-info-panel">
+        <h2 id="trailerTitle" class="trailer-title">Movie Title</h2>
+        <p id="trailerDescription" class="trailer-description">Trailer description will appear here</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notify Me Modal -->
+  <div id="notifyModal" class="notify-modal-overlay">
+    <div class="notify-modal-container">
+      <button class="notify-close-btn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Email Input State (for non-logged-in users) -->
+      <div id="notifyEmailState" class="notify-state">
+        <div class="notify-header">
+          <h2 class="notify-title">Get Notified</h2>
+          <p class="notify-subtitle" id="notifyMovieTitle">Movie Title</p>
+        </div>
+
+        <div class="notify-content">
+          <p class="notify-message">Enter your email to be notified when this movie releases</p>
+          <div class="notify-form">
+            <input 
+              type="email" 
+              id="notifyEmailInput" 
+              class="notify-input" 
+              placeholder="Enter your email"
+              aria-label="Email address"
+            >
+            <button id="notifyConfirmBtn" class="notify-btn-primary">Confirm</button>
+          </div>
+          <p class="notify-error" id="notifyError" style="display:none;"></p>
+        </div>
+      </div>
+
+      <!-- Confirmation State -->
+      <div id="notifyConfirmState" class="notify-state" style="display:none;">
+        <div class="notify-header">
+          <h2 class="notify-title">Notification Set! 🎬</h2>
+        </div>
+
+        <div class="notify-content">
+          <div class="notify-success-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+            </svg>
+          </div>
+          <p class="notify-confirmation-message">
+            We'll send you an email to <strong id="notifyConfirmEmail"></strong> when <strong id="notifyMovieTitleConfirm"></strong> is released!
+          </p>
+          <button id="notifyCloseConfirmBtn" class="notify-btn-secondary">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

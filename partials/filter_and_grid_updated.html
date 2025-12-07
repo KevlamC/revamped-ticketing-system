@@ -1,0 +1,601 @@
+      <div class="filter-bar-container">
+        <!-- 1. Date Dropdown -->
+        <div class="filter-dropdown" id="dateDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('dateDropdown')">
+            <span id="selectedDateLabel">Date</span> 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="dateOptions">
+            <div class="dropdown-item" data-val="all" onclick="selectDate('all')">All Dates</div>
+            <div class="dropdown-item" data-val="today" onclick="selectDate('today')">Today</div>
+            <div class="dropdown-item" data-val="tomorrow" onclick="selectDate('tomorrow')">Tomorrow</div>
+            <div class="v-sep" style="width:100%; height:1px; margin:4px 0; background:var(--border)"></div>
+            <div class="dropdown-item" onclick="selectDate('calendar')" style="color:var(--accent-red); justify-content:center; font-weight:700">Pick Date...</div>
+          </div>
+        </div>
+
+        <!-- 2. Time Dropdown (New) -->
+        <div class="filter-dropdown" id="timeDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('timeDropdown')">
+            Time 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="timeMenu">
+            <label class="dropdown-item"><input type="checkbox" value="morning"> Morning <span style="font-size:10px; color:var(--text-muted); margin-left:auto">Before 12pm</span></label>
+            <label class="dropdown-item"><input type="checkbox" value="afternoon"> Afternoon <span style="font-size:10px; color:var(--text-muted); margin-left:auto">12pm - 5pm</span></label>
+            <label class="dropdown-item"><input type="checkbox" value="evening"> Evening <span style="font-size:10px; color:var(--text-muted); margin-left:auto">5pm - 9pm</span></label>
+            <label class="dropdown-item"><input type="checkbox" value="night"> Night <span style="font-size:10px; color:var(--text-muted); margin-left:auto">After 9pm</span></label>
+          </div>
+        </div>
+
+        <div class="v-sep"></div>
+
+        <!-- 3. Genre Dropdown -->
+        <div class="filter-dropdown" id="genreDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('genreDropdown')">
+            Genre 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="genreMenu">
+            <label class="dropdown-item"><input type="checkbox" value="Action"> Action</label>
+            <label class="dropdown-item"><input type="checkbox" value="Adventure"> Adventure</label>
+            <label class="dropdown-item"><input type="checkbox" value="Comedy"> Comedy</label>
+            <label class="dropdown-item"><input type="checkbox" value="Drama"> Drama</label>
+            <label class="dropdown-item"><input type="checkbox" value="Horror"> Horror</label>
+            <label class="dropdown-item"><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+            <label class="dropdown-item"><input type="checkbox" value="Thriller"> Thriller</label>
+          </div>
+        </div>
+
+        <!-- 4. Experience Dropdown -->
+        <div class="filter-dropdown" id="formatDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('formatDropdown')">
+            Format 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="formatMenu">
+            <label class="dropdown-item"><input type="checkbox" value="IMAX"> IMAX</label>
+            <label class="dropdown-item"><input type="checkbox" value="DOLBY"> Dolby Cinema</label>
+            <label class="dropdown-item"><input type="checkbox" value="3D"> 3D</label>
+            <label class="dropdown-item"><input type="checkbox" value="70MM"> 70MM</label>
+            <label class="dropdown-item"><input type="checkbox" value="VIP"> VIP</label>
+          </div>
+        </div>
+
+        <!-- 5. Sort Dropdown -->
+        <div class="filter-dropdown sort-group" id="sortDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('sortDropdown')">
+            <span id="sortLabel">Sort by Showtime</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" style="right:0; left:auto;">
+            <div class="dropdown-item" onclick="applySort('showtime', 'Sort by Showtime')">Showtime (Earliest)</div>
+            <div class="dropdown-item" onclick="applySort('title', 'Sort by Title')">Title (A-Z)</div>
+            <div class="dropdown-item" onclick="applySort('rating', 'Sort by Rating')">Rating (High-Low)</div>
+            <div class="dropdown-item" onclick="applySort('release', 'Sort by Release')">Release Date</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="movies-grid" id="moviesGrid">
+        
+        <!-- Card 1: Dune Part Two -->
+        <div class="movie-card" 
+             data-title="Dune: Part Two" 
+             data-rating="8.7" 
+             data-release="2024-03-01" 
+             data-genres="Sci-Fi,Adventure,Drama" 
+             data-duration="2h 46m" 
+             data-trailer="Way9Dexny3w" 
+             data-formats="IMAX,DOLBY"
+             data-locations="Downtown Premiere,Riverside Cinema,North Hills IMAX,Westside Multiplex"
+             data-availability="today,tomorrow">
+          <div class="movie-poster">
+            <img src="Pictures/dune2-poster.jpg" alt="Dune: Part Two">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge imax">IMAX</span>
+              <span class="format-badge dolby">DOLBY</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Dune: Part Two</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.7</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">2h 46m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
+            </div>
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Dune: Part Two">2:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Dune: Part Two">5:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Dune: Part Two">9:00 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Dune: Part Two">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Dune: Part Two">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Oppenheimer -->
+        <div class="movie-card" 
+             data-title="Oppenheimer" 
+             data-rating="8.5" 
+             data-release="2023-07-21" 
+             data-genres="Drama,Biography,History" 
+             data-duration="3h 00m" 
+             data-trailer="uYPbbksJxIg" 
+             data-formats="70MM,IMAX"
+             data-locations="Downtown Premiere,North Hills IMAX"
+             data-availability="today,tomorrow">
+          <div class="movie-poster">
+            <img src="Pictures/opp-poster.jpg" alt="Oppenheimer">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge premium">70MM</span>
+              <span class="format-badge imax">IMAX</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Oppenheimer</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.5</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">3h 00m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">R</div>
+            </div>
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Oppenheimer">1:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Oppenheimer">4:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Oppenheimer">8:00 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Oppenheimer">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Oppenheimer">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: The Batman -->
+        <div class="movie-card" 
+             data-title="The Batman" 
+             data-rating="8.2" 
+             data-release="2022-03-04" 
+             data-genres="Action,Crime,Thriller" 
+             data-duration="2h 56m" 
+             data-trailer="mqqft2x_Aa4" 
+             data-formats="DOLBY,4DX"
+             data-locations="Downtown Premiere,Westside Multiplex"
+             data-availability="today,tomorrow">
+          <div class="movie-poster">
+            <img src="Pictures/3de84cca07fc963b66a01a5465c2638066119711e89c707ce952555783dd4b4f-2.jpg" alt="The Batman">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge dolby">DOLBY</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>The Batman</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.2</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">2h 56m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
+            </div>
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="The Batman">3:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="The Batman">6:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="The Batman">10:00 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="The Batman">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="The Batman">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Barbie -->
+        <div class="movie-card" 
+             data-title="Barbie" 
+             data-rating="7.9" 
+             data-release="2023-07-21" 
+             data-genres="Comedy,Fantasy,Adventure" 
+             data-duration="1h 54m" 
+             data-trailer="pBk4NYhUOQ0" 
+             data-formats="STD"
+             data-locations="Downtown Premiere,Riverside Cinema,Westside Multiplex,North Hills IMAX"
+             data-availability="today,tomorrow">
+          <div class="movie-poster">
+            <img src="Pictures/p13472534_p_v8_am.jpg" alt="Barbie">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge">STD</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Barbie</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>7.9</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">1h 54m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
+            </div>
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Barbie">1:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Barbie">4:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Barbie">7:30 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Barbie">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Barbie">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Killers of the Flower Moon -->
+        <div class="movie-card" 
+             data-title="Killers of the Flower Moon" 
+             data-rating="8.1" 
+             data-release="2023-10-20" 
+             data-genres="Drama,Crime,History" 
+             data-duration="3h 26m" 
+             data-trailer="EP34Yoxs3FQ" 
+             data-formats="VIP,DOLBY"
+             data-locations="Downtown Premiere,Riverside Cinema"
+             data-availability="today,tomorrow">
+          <div class="movie-poster">
+            <img src="Pictures/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzZhOWE1N2ZkLTY4MzgtNDA3Yi05MDEwLWQzN2QwMTFkZDdmNS5qcGc.jpeg" alt="Killers of the Flower Moon">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge premium">VIP</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Killers of the Flower Moon</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.1</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">3h 26m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">R</div>
+            </div>
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">2:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">6:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">9:30 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Killers of the Flower Moon">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Killers of the Flower Moon">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: A Quiet Place: Day One -->
+        <div class="movie-card" 
+             data-title="A Quiet Place: Day One" 
+             data-rating="7.8" 
+             data-release="2024-06-28" 
+             data-genres="Horror,Thriller,Sci-Fi" 
+             data-duration="1h 40m" 
+             data-trailer="YPY7J-flzE8" 
+             data-formats="3D,DOLBY"
+             data-locations="Westside Multiplex,North Hills IMAX"
+             data-availability="today,tomorrow">
+          <div class="movie-poster">
+            <img src="Pictures/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzIyNDlkYjk2LTUwZmQtNDgzOS04ZGIyLWI3NzZlMWE0OGNkNi5qcGc.jpeg" alt="A Quiet Place: Day One">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge">3D</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>A Quiet Place: Day One</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>7.8</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">1h 40m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
+            </div>
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">3:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">7:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">10:30 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="A Quiet Place: Day One">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="A Quiet Place: Day One">View Details</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+        <!-- Filter Logic Script -->
+        <script>
+          function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const allDropdowns = document.querySelectorAll('.filter-dropdown');
+            
+            // Close others
+            allDropdowns.forEach(d => {
+              if (d.id !== id) d.classList.remove('is-open');
+            });
+
+            // Toggle current
+            dropdown.classList.toggle('is-open');
+          }
+
+          // Close on click outside
+          document.addEventListener('click', (e) => {
+            if (!e.target.closest('.filter-dropdown')) {
+              document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('is-open'));
+            }
+          });
+
+          // --- FILTER LOGIC ---
+          const cards = Array.from(document.querySelectorAll('#moviesGrid .movie-card'));
+          const moviesGrid = document.getElementById('moviesGrid');
+
+          // State
+          let activeGenres = new Set();
+          let activeFormats = new Set();
+          let activeTimes = new Set();
+          let currentDate = 'all';
+          let currentLocation = localStorage.getItem('theatrum_location') || 'All Locations';
+
+          // Listen for Location Change (from Header)
+          window.addEventListener('location-changed', (e) => {
+              currentLocation = e.detail.location;
+              applyFilters();
+          });
+
+          // Listeners for Checkboxes
+          document.querySelectorAll('#genreMenu input').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+              if(e.target.checked) activeGenres.add(e.target.value);
+              else activeGenres.delete(e.target.value);
+              applyFilters();
+            });
+          });
+
+          document.querySelectorAll('#formatMenu input').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+              if(e.target.checked) activeFormats.add(e.target.value);
+              else activeFormats.delete(e.target.value);
+              applyFilters();
+            });
+          });
+
+          document.querySelectorAll('#timeMenu input').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+              if(e.target.checked) activeTimes.add(e.target.value);
+              else activeTimes.delete(e.target.value);
+              applyFilters();
+            });
+          });
+
+          // --- CALENDAR LOGIC ---
+          const calendarModal = document.getElementById('calendarModal');
+          const customDateInput = document.getElementById('customDateInput');
+
+          window.selectDate = function(val) {
+              const dropdown = document.getElementById('dateDropdown');
+              dropdown.classList.remove('is-open');
+
+              if (val === 'calendar') {
+                  // Open Modal
+                  if (!customDateInput.value) {
+                      const today = new Date().toISOString().split('T')[0];
+                      customDateInput.value = today;
+                  }
+                  calendarModal.classList.add('show');
+                  return;
+              }
+
+              // Preset Logic
+              currentDate = val;
+              
+              const label = document.getElementById('selectedDateLabel');
+              if(val === 'all') label.textContent = 'All Dates';
+              else if(val === 'today') label.textContent = 'Today';
+              else if(val === 'tomorrow') label.textContent = 'Tomorrow';
+              
+              applyFilters();
+          };
+
+          window.closeCalendar = function() {
+              calendarModal.classList.remove('show');
+          };
+
+          window.confirmCustomDate = function() {
+              const rawDate = customDateInput.value;
+              if (!rawDate) return;
+
+              currentDate = rawDate;
+              
+              // Format Label
+              const dateObj = new Date(rawDate + 'T00:00:00'); 
+              const options = { month: 'short', day: 'numeric' };
+              let labelText = dateObj.toLocaleDateString('en-US', options);
+              
+              document.getElementById('selectedDateLabel').textContent = labelText;
+              
+              closeCalendar();
+              applyFilters();
+          };
+
+          // Helper: Parse "2:00 PM" to minutes
+          function parseTimeStr(timeStr) {
+              if(!timeStr) return 9999; 
+              const [time, mod] = timeStr.split(' ');
+              let [h, m] = time.split(':').map(Number);
+              if(h === 12 && mod === 'AM') h = 0;
+              if(h !== 12 && mod === 'PM') h += 12;
+              return h * 60 + m;
+          }
+
+          // Helper: Check if time falls in selected buckets
+          function checkTimeBucket(timeInMinutes) {
+              if (activeTimes.size === 0) return true; // No filter
+              
+              const ranges = {
+                  'morning': [0, 719],    // 00:00 - 11:59 (719 min)
+                  'afternoon': [720, 1019], // 12:00 - 16:59 (1019 min)
+                  'evening': [1020, 1259], // 17:00 - 20:59 (1259 min)
+                  'night': [1260, 1440]    // 21:00 - 23:59
+              };
+
+              return [...activeTimes].some(bucket => {
+                  const [start, end] = ranges[bucket];
+                  return timeInMinutes >= start && timeInMinutes <= end;
+              });
+          }
+
+          // Sort Logic
+          window.applySort = function(type, label) {
+              document.getElementById('sortLabel').textContent = label;
+              document.getElementById('sortDropdown').classList.remove('is-open');
+              
+              const sorted = [...cards].sort((a, b) => {
+                  if (type === 'showtime') {
+                      // Find earliest showtime button
+                      const getFirstTime = (card) => {
+                          const btn = card.querySelector('.showtime-btn');
+                          return btn ? parseTimeStr(btn.textContent) : 9999;
+                      };
+                      return getFirstTime(a) - getFirstTime(b);
+                  }
+                  if (type === 'title') return a.dataset.title.localeCompare(b.dataset.title);
+                  if (type === 'rating') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+                  if (type === 'release') return new Date(b.dataset.release) - new Date(a.dataset.release);
+                  return 0;
+              });
+
+              sorted.forEach(card => moviesGrid.appendChild(card));
+          };
+
+          // Main Filter Function
+          function applyFilters() {
+              cards.forEach(card => {
+                  // 1. Genres
+                  const cardGenres = card.dataset.genres.split(',').map(s => s.trim());
+                  const genreMatch = activeGenres.size === 0 || [...activeGenres].some(g => cardGenres.includes(g));
+
+                  // 2. Formats
+                  const cardFormats = (card.dataset.formats || '').split(',').map(s => s.trim());
+                  const formatMatch = activeFormats.size === 0 || [...activeFormats].some(f => cardFormats.includes(f));
+
+                  // 3. Location Check
+                  const cardLocations = (card.dataset.locations || '').split(',').map(s => s.trim());
+                  const locationMatch = (currentLocation === 'All Locations') || cardLocations.includes(currentLocation);
+
+                  // 4. Date Availability
+                  const availability = (card.dataset.availability || '').split(',');
+                  let dateMatch = true;
+                  if (currentDate === 'today' || currentDate === 'tomorrow') {
+                      dateMatch = availability.includes(currentDate);
+                  } 
+
+                  // 5. Time Bucket Check
+                  const showtimeBtns = Array.from(card.querySelectorAll('.showtime-btn'));
+                  const hasValidShowtime = showtimeBtns.some(btn => {
+                      const t = parseTimeStr(btn.textContent);
+                      return checkTimeBucket(t);
+                  });
+
+                  if (genreMatch && formatMatch && locationMatch && dateMatch && hasValidShowtime) {
+                      card.style.display = '';
+                  } else {
+                      card.style.display = 'none';
+                  }
+              });
+          }
+          
+          // Initial trigger
+          applyFilters();
+        </script>

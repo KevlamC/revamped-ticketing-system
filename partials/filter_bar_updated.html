@@ -1,0 +1,78 @@
+      <div class="filter-bar-container">
+        <!-- 1. Date Dropdown -->
+        <div class="filter-dropdown" id="dateDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('dateDropdown')">
+            <span id="selectedDateLabel">Date</span> 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="dateOptions">
+            <div class="dropdown-item" data-val="all" onclick="selectDate('all')">All Dates</div>
+            <div class="dropdown-item" data-val="today" onclick="selectDate('today')">Today</div>
+            <div class="dropdown-item" data-val="tomorrow" onclick="selectDate('tomorrow')">Tomorrow</div>
+            <div class="v-sep" style="width:100%; height:1px; margin:4px 0; background:var(--border)"></div>
+            <div class="dropdown-item" onclick="selectDate('calendar')" style="color:var(--accent-red); justify-content:center; font-weight:700">Pick Date...</div>
+          </div>
+        </div>
+
+        <!-- 2. Time Dropdown (New) -->
+        <div class="filter-dropdown" id="timeDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('timeDropdown')">
+            Time 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="timeMenu">
+            <label class="dropdown-item"><input type="checkbox" value="morning"> Morning <span style="font-size:10px; color:var(--text-muted); margin-left:auto">Before 12pm</span></label>
+            <label class="dropdown-item"><input type="checkbox" value="afternoon"> Afternoon <span style="font-size:10px; color:var(--text-muted); margin-left:auto">12pm - 5pm</span></label>
+            <label class="dropdown-item"><input type="checkbox" value="evening"> Evening <span style="font-size:10px; color:var(--text-muted); margin-left:auto">5pm - 9pm</span></label>
+            <label class="dropdown-item"><input type="checkbox" value="night"> Night <span style="font-size:10px; color:var(--text-muted); margin-left:auto">After 9pm</span></label>
+          </div>
+        </div>
+
+        <div class="v-sep"></div>
+
+        <!-- 3. Genre Dropdown -->
+        <div class="filter-dropdown" id="genreDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('genreDropdown')">
+            Genre 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="genreMenu">
+            <label class="dropdown-item"><input type="checkbox" value="Action"> Action</label>
+            <label class="dropdown-item"><input type="checkbox" value="Adventure"> Adventure</label>
+            <label class="dropdown-item"><input type="checkbox" value="Comedy"> Comedy</label>
+            <label class="dropdown-item"><input type="checkbox" value="Drama"> Drama</label>
+            <label class="dropdown-item"><input type="checkbox" value="Horror"> Horror</label>
+            <label class="dropdown-item"><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+            <label class="dropdown-item"><input type="checkbox" value="Thriller"> Thriller</label>
+          </div>
+        </div>
+
+        <!-- 4. Experience Dropdown -->
+        <div class="filter-dropdown" id="formatDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('formatDropdown')">
+            Format 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="formatMenu">
+            <label class="dropdown-item"><input type="checkbox" value="IMAX"> IMAX</label>
+            <label class="dropdown-item"><input type="checkbox" value="DOLBY"> Dolby Cinema</label>
+            <label class="dropdown-item"><input type="checkbox" value="3D"> 3D</label>
+            <label class="dropdown-item"><input type="checkbox" value="70MM"> 70MM</label>
+            <label class="dropdown-item"><input type="checkbox" value="VIP"> VIP</label>
+          </div>
+        </div>
+
+        <!-- 5. Sort Dropdown -->
+        <div class="filter-dropdown sort-group" id="sortDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('sortDropdown')">
+            <span id="sortLabel">Sort by Showtime</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" style="right:0; left:auto;">
+            <div class="dropdown-item" onclick="applySort('showtime', 'Sort by Showtime')">Showtime (Earliest)</div>
+            <div class="dropdown-item" onclick="applySort('title', 'Sort by Title')">Title (A-Z)</div>
+            <div class="dropdown-item" onclick="applySort('rating', 'Sort by Rating')">Rating (High-Low)</div>
+            <div class="dropdown-item" onclick="applySort('release', 'Sort by Release')">Release Date</div>
+          </div>
+        </div>
+      </div>

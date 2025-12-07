@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>THEATRUM - Food & Drinks Selection</title>
+
+  <link rel="stylesheet" href="styles/index_styles.css" />
+
+  <!-- Critical-path modal styles kept minimal here -->
+  <style>
+  /* Hero background styles (critical) */
+  .hero{position:relative;min-height:520px;display:flex;align-items:center;color:var(--text-primary);overflow:hidden;background:#07070b}
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center center;transition:opacity .3s ease;opacity:1}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,6,8,0.35),rgba(6,6,8,0.6));pointer-events:none}
+  .hero-content{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:80px 24px}
+    .overlay{position:fixed;inset:0;background:rgba(10,10,15,.6);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:2000}
+    .overlay.show{display:flex}
+    .sheet{width:min(680px,92vw);background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow-2);animation:modal-pop 220ms ease-out;position:relative}
+    @keyframes modal-pop{from{transform:scale(.98);opacity:.5}}
+    .close-x{position:absolute;top:14px;right:14px;cursor:pointer;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary)}
+    .stack{display:grid;gap:12px}
+    .grid-2{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+    .field{display:grid;gap:6px}
+    .field label{font-size:13px;color:var(--text-secondary)}
+    .field input{background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text-primary)}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn-chip{background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:999px;font-weight:700;cursor:pointer}
+    .btn-chip:hover{background:var(--accent-red);color:#fff;border-color:var(--accent-red)}
+    .error{color:#fda4af;font-size:13px;display:none}
+    .error.show{display:block}
+    .success{background:rgba(16,185,129,.12);color:#a7f3d0;border:1px solid rgba(16,185,129,.35);padding:10px 12px;border-radius:10px;font-size:14px;display:none}
+    .success.show{display:block}
+    .bottom-sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg-card);border-top:1px solid var(--border);border-radius:16px 16px 0 0;transform:translateY(100%);transition:transform .24s ease;z-index:1900;padding:20px 18px 28px;max-height:80vh;overflow:auto}
+    .bottom-sheet.show{transform:translateY(0)}
+    .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+    .sheet-head h4{font-size:18px;font-weight:800;margin:0}
+    .kicker{color:var(--text-muted);font-size:12px;letter-spacing:1.2px}
+    .date-row,.showtime-row{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:700}
+    .pill.selected{background:var(--accent-red);color:#fff;border-color:var(--accent-red)}
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo" id="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html#now-playing">Now Playing</a></li>
+        <li><a href="index.html#coming-soon">Coming Soon</a></li>
+        <li><a href="#concessions" class="active">Food & Drinks</a></li>
+        <li><a href="index.html#offers">Offers</a></li>
+        <li><a href="index.html#locations">Locations</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="search-box">
+          <input id="globalSearch" type="text" placeholder="Search movies...">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <button id="userButton" class="btn-primary">Alex</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Food & Drinks Selection -->
+  <section class="concessions section-block" id="concessions">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2>Food & Drinks</h2>
+          <p class="section-subtitle">ORDER AHEAD • SKIP THE LINE • DELIVERED TO YOUR SEAT</p>
+        </div>
+      </div>
+
+      <!-- Tabs for Food and Drinks -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="food">Food</button>
+        <button class="tab-btn" data-tab="drinks">Drinks</button>
+      </div>
+
+      <!-- Food Items -->
+  <div class="tab-content active" id="food">
+        <div class="concessions-grid">
+          <div class="concession-card">
+            <div class="concession-image">
+              <img src="Pictures/AR-1733309-classic-caramel-corn-ddmfs-2x1-68e0287ce691483ea6bfdce272b0ec5a.jpg" alt="Popcorn">
+              <div class="concession-badge">BEST SELLER</div>
+            </div>
+            <div class="concession-info">
+              <h3>Classic Popcorn</h3>
+              <p>Freshly popped with real butter</p>
+              <div class="size-options" role="tablist" aria-label="Size options">
+                <div class="size-row">
+                  <span class="size-label">Small $4</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Classic Popcorn" data-size="Small" data-price="4">-</button>
+                    <span class="quantity" data-item="Classic Popcorn" data-size="Small">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Classic Popcorn" data-size="Small" data-price="4">+</button>
+                  </div>
+                </div>
+                <div class="size-row">
+                  <span class="size-label">Medium $6</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Classic Popcorn" data-size="Medium" data-price="6">-</button>
+                    <span class="quantity" data-item="Classic Popcorn" data-size="Medium">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Classic Popcorn" data-size="Medium" data-price="6">+</button>
+                  </div>
+                </div>
+                <div class="size-row">
+                  <span class="size-label">Large $10</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Classic Popcorn" data-size="Large" data-price="10">-</button>
+                    <span class="quantity" data-item="Classic Popcorn" data-size="Large">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Classic Popcorn" data-size="Large" data-price="10">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="concession-card">
+            <div class="concession-image">
+              <img src="Pictures/stock-photo-scattered-popcorn-and-two-buckets-of-nachos-next-to-the-video-camera-and-take-to-stop-and-continue-1198582738.jpg" alt="Nachos">
+            </div>
+            <div class="concession-info">
+              <h3>Loaded Nachos</h3>
+              <p>Cheese, jalapenos, sour cream</p>
+              <div class="size-options" role="tablist" aria-label="Size options">
+                <div class="size-row">
+                  <span class="size-label">Regular $9</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Loaded Nachos" data-size="Regular" data-price="9">-</button>
+                    <span class="quantity" data-item="Loaded Nachos" data-size="Regular">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Loaded Nachos" data-size="Regular" data-price="9">+</button>
+                  </div>
+                </div>
+                <div class="size-row">
+                  <span class="size-label">Large $12</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Loaded Nachos" data-size="Large" data-price="12">-</button>
+                    <span class="quantity" data-item="Loaded Nachos" data-size="Large">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Loaded Nachos" data-size="Large" data-price="12">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="concession-card">
+            <div class="concession-image">
+              <img src="Pictures/83393badc124840730cb91e3cd839b93_220516_gg_q3_recipe_hotdogs_v3.jpg.avif" alt="Gourmet Hot Dogs">
+              <div class="concession-badge">NEW</div>
+            </div>
+            <div class="concession-info">
+              <h3>Gourmet Hot Dogs</h3>
+              <p>Signature toppings available</p>
+              <div class="size-options" role="tablist" aria-label="Size options">
+                <div class="size-row">
+                  <span class="size-label">Classic $8</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Gourmet Hot Dogs" data-size="Classic" data-price="8">-</button>
+                    <span class="quantity" data-item="Gourmet Hot Dogs" data-size="Classic">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Gourmet Hot Dogs" data-size="Classic" data-price="8">+</button>
+                  </div>
+                </div>
+                <div class="size-row">
+                  <span class="size-label">Premium $11</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Gourmet Hot Dogs" data-size="Premium" data-price="11">-</button>
+                    <span class="quantity" data-item="Gourmet Hot Dogs" data-size="Premium">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Gourmet Hot Dogs" data-size="Premium" data-price="11">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drinks Items -->
+  <div class="tab-content" id="drinks">
+        <div class="concessions-grid">
+          <div class="concession-card">
+            <div class="concession-image">
+              <img src="Pictures/Schweppes (1).png" alt="Drinks">
+            </div>
+            <div class="concession-info">
+              <h3>Premium Beverages</h3>
+              <p>Soft drinks, smoothies, specialty coffee</p>
+              <div class="size-options" role="tablist" aria-label="Size options">
+                <div class="size-row">
+                  <span class="size-label">Medium $5</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Premium Beverages" data-size="Medium" data-price="5">-</button>
+                    <span class="quantity" data-item="Premium Beverages" data-size="Medium">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Premium Beverages" data-size="Medium" data-price="5">+</button>
+                  </div>
+                </div>
+                <div class="size-row">
+                  <span class="size-label">Large $7</span>
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" data-action="decrease" data-item="Premium Beverages" data-size="Large" data-price="7">-</button>
+                    <span class="quantity" data-item="Premium Beverages" data-size="Large">0</span>
+                    <button class="quantity-btn" data-action="increase" data-item="Premium Beverages" data-size="Large" data-price="7">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cart Summary -->
+  <div style="position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg-card); border-top: 1px solid var(--border); padding: 20px 18px; z-index: 1800;">
+    <div class="container" style="margin: 0 auto; max-width: 1200px;">
+      <!-- Cart Items List -->
+      <div id="cartItemsList" style="margin-bottom: 16px; max-height: 150px; overflow-y: auto; padding: 0 0 10px 0; border-bottom: 1px solid var(--border); display: none;">
+        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; font-weight: 700;">YOUR ORDER:</div>
+        <div id="cartItems"></div>
+      </div>
+
+      <!-- Total and Buttons -->
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <button id="backBtn" style="background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-primary); padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+          ← Back
+        </button>
+        
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          <span style="color: var(--text-secondary); font-size: 14px;">Total:</span>
+          <span id="totalPrice" style="font-size: 20px; font-weight: 800; color: var(--accent-red);">$0.00</span>
+        </div>
+        
+        <button id="confirmPayBtn" class="btn-primary" style="padding: 12px 30px;">
+          Confirm & Pay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer" style="margin-bottom: 120px;">
+    <div class="container">
+      <div class="footer-content">
+          <div class="footer-section">
+          <div class="footer-logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
+          <p>Experience cinema the way it was meant to be seen.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073C0 18.063 4.388 23.027 10.125 23.927v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" aria-label="X">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.61-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h4>Movies</h4>
+          <ul>
+            <li><a href="index.html#now-playing">Now Playing</a></li>
+            <li><a href="index.html#coming-soon">Coming Soon</a></li>
+            <li><a href="#">Movie Formats</a></li>
+            <li><a href="#">Private Events</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Membership</h4>
+          <ul>
+            <li><a href="#">Premium Pass</a></li>
+            <li><a href="#">Rewards Program</a></li>
+            <li><a href="#">Gift Cards</a></li>
+            <li><a href="#">Corporate Sales</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Newsletter</h4>
+          <p>Get the latest movies and exclusive offers</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email">
+            <button class="btn-primary">Subscribe</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 THEATRUM. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Settings</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+
+    // Tab switching logic
+    document.querySelectorAll('.tab-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        button.classList.add('active');
+        document.getElementById(button.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Cart management
+    const cartData = {};
+
+    // Quantity button handlers
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        const item = btn.dataset.item;
+        const size = btn.dataset.size;
+        const price = parseFloat(btn.dataset.price);
+        
+        const key = `${item}-${size}`;
+        
+        if (!cartData[key]) {
+          cartData[key] = { item, size, price, quantity: 0 };
+        }
+        
+        if (action === 'increase') {
+          cartData[key].quantity++;
+        } else if (action === 'decrease' && cartData[key].quantity > 0) {
+          cartData[key].quantity--;
+        }
+        
+        // Update quantity display
+        document.querySelectorAll(`.quantity[data-item="${item}"][data-size="${size}"]`).forEach(el => {
+          el.textContent = cartData[key].quantity;
+        });
+        
+        updateCart();
+      });
+    });
+
+    function updateCart() {
+      const cartItems = Object.values(cartData).filter(item => item.quantity > 0);
+      let total = 0;
+      
+      if (cartItems.length === 0) {
+        $('#cartItemsList').style.display = 'none';
+        $('#cartItems').innerHTML = '';
+      } else {
+        $('#cartItemsList').style.display = 'block';
+        $('#cartItems').innerHTML = cartItems.map(item => {
+          const itemTotal = item.price * item.quantity;
+          total += itemTotal;
+          return `<div style="font-size: 12px; color: var(--text-primary); margin-bottom: 6px; display: flex; justify-content: space-between;">
+            <span>${item.item} (${item.size}) x${item.quantity}</span>
+            <span>$${itemTotal.toFixed(2)}</span>
+          </div>`;
+        }).join('');
+      }
+      
+      // Calculate total
+      cartItems.forEach(item => {
+        total += item.price * item.quantity;
+      });
+      
+      $('#totalPrice').textContent = `$${total.toFixed(2)}`;
+    }
+
+    // Back button
+    $('#backBtn').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    // Confirm & Pay button
+    $('#confirmPayBtn').addEventListener('click', () => {
+      const cartItems = Object.values(cartData).filter(item => item.quantity > 0);
+      if (cartItems.length === 0) {
+        alert('Please add items to your order');
+        return;
+      }
+      alert('Proceeding to payment...');
+      // Implement payment flow
+    });
+
+    // Logo link back to index
+    $('#logo').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
