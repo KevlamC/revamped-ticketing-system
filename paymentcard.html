@@ -2,46 +2,215 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Theatrum — Payment</title>
   <link rel="stylesheet" href="styles/index_styles.css" />
   <style>
-    .checkout-shell { max-width: 1200px; margin: 120px auto 64px; padding: 0 32px; }
-    .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-    @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
-    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .card h2 { font-size: 28px; margin-bottom: 8px; }
-    .muted { color: var(--text-secondary); font-size: 14px; }
-    .divider { height:1px; background: var(--border); margin: 16px 0 20px; }
-    .pay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;}
-    .pay-option { display:flex; align-items:center; gap:10px; background: var(--bg-elevated); border:1px solid var(--border); padding:12px 14px; border-radius:10px; cursor:pointer; }
-    .pay-option input { accent-color: #dc2626; }
-    .pay-new {grid-column: 1 / -1; display: flex;align-items: center; gap: 8px;background: var(--bg-elevated); padding:12px 14px; border-radius:10px;border:1px dashed var(--border);}
-    .form-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-    .form-group { display:flex; flex-direction:column; gap:6px; }
-    .form-group label { font-size:13px; color: var(--text-secondary); }
-    .form-group input, .form-group select {
-      background: var(--bg-elevated);
-      border:1px solid var(--border);
-      border-radius:8px;
-      padding:10px 12px;
-      color: var(--text-primary);
-      font-size:14px;
+    .checkout-shell {
+      max-width: 1200px;
+      margin: 120px auto 64px;
+      padding: 0 32px;
     }
-    .row { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-    .save-card { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:13px; color: var(--text-secondary); }
-    .save-card input { accent-color: #dc2626; }
-    .form-actions { display:flex; gap:8px; margin-top: 16px; }
-    .actions { margin-top:20px; display:flex; justify-content:space-between; gap:12px; align-items:center; }
-    .summary-row { display:flex; justify-content:space-between; margin:8px 0; color: var(--text-secondary); }
-    .summary-row.total { font-weight:700; color: var(--text-primary); font-size:18px; }
-    .pill { display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background: var(--bg-secondary); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
-    .pill.step-pill { background: rgba(34,197,94,.08); border-color: rgba(34,197,94,.25); color:#4ade80; }
-    .full-width { grid-column: 1 / -1; }
+    .payment-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(260px, 1.2fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .payment-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .card h2 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+    .muted {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0 20px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .pill.step-pill {
+      background: rgba(96, 165, 250, 0.1);
+      border-color: rgba(96, 165, 250, 0.3);
+      color: #60a5fa;
+    }
+
+    /* Left column: payment card + form */
+    .card-preview {
+      border-radius: 16px;
+      padding: 18px 18px 20px;
+      background: radial-gradient(circle at top left, rgba(248, 113, 113, 0.35), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.4), transparent 55%),
+                  #020617;
+      color: #e5e7eb;
+      box-shadow: 0 22px 45px rgba(15, 23, 42, 0.65);
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 150px;
+    }
+    .card-preview-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    .card-brand {
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .card-chip {
+      width: 30px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+    .card-preview-number {
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      margin: 18px 0 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .card-preview-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .card-holder-label,
+    .card-exp-label {
+      opacity: 0.7;
+      margin-bottom: 2px;
+    }
+    .card-holder-value,
+    .card-exp-value {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .card-placeholder {
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    .payment-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card-form {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+      padding: 16px;
+      display: none; /* initially hidden */
+    }
+    .card-form-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card-form-group {
+      margin-bottom: 12px;
+    }
+    .card-form-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .card-form-group input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+    .card-form-group input:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.7);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+    }
+
+    .pay-btn-wrapper {
+      margin-top: 12px;
+    }
+
+    /* Right column: order summary */
+    .sidebar-heading {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .sidebar-section {
+      margin-bottom: 16px;
+    }
+    .sidebar-section:last-child {
+      margin-bottom: 0;
+    }
+    .sidebar-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+    .sidebar-value {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    .summary-row span:last-child {
+      font-weight: 600;
+    }
+    .tax-note {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
- <!-- NAV -->
+  <!-- NAV -->
   <nav class="navbar">
     <div class="nav-container">
       <div class="logo" id="logo">
@@ -56,7 +225,7 @@
       </ul>
       <div class="nav-actions">
         <div class="search-box">
-          <input id="globalSearch" type="text" placeholder="Search movies...">
+          <input id="globalSearch" type="text" placeholder="Search movies..." />
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
@@ -67,160 +236,140 @@
     </div>
   </nav>
 
-  <!-- Content -->
   <main class="checkout-shell">
-    <div class="row" style="margin-bottom:20px">
-      <span class="pill step-pill">Step 2 of 2 — Payment</span>
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px;">
+      <!-- 🔹 Step label fixed to be sequential -->
+      <span class="pill step-pill">Step 4 — Payment</span>
+      <span class="muted">Final step — add a card and confirm your booking.</span>
     </div>
 
-    <div class="checkout-grid">
-      <!-- Left: Payment form -->
+    <div class="payment-layout">
+      <!-- Left: card + form -->
       <section class="card">
-        <h2>Payment</h2>
-        <p class="muted">Enter your payment details to complete your booking.</p>
+        <h2>Payment method</h2>
+        <p class="muted">
+          Securely pay for your tickets and snacks. Your card won’t be charged until you confirm.
+        </p>
         <div class="divider"></div>
 
-        <h3 style="margin-bottom:12px;">Payment Method</h3>
-        <div class="pay-grid">
-          <label class="pay-option">
-            <input type="radio" name="pay-method" value="card" checked/>
-            <span>Credit / Debit Card</span>
-          </label>
-          <label class="pay-option">
-            <input type="radio" name="pay-method" value="apple"/>
-            <span>Apple Pay</span>
-          </label>
-          <label class="pay-option">
-            <input type="radio" name="pay-method" value="google"/>
-            <span>Google Pay</span>
-          </label>
-          <div class="pay-new">
-            <span>💳</span>
-            <span>Add new card</span>
+        <!-- Card preview -->
+        <div class="card-preview" id="card-preview">
+          <div class="card-preview-top">
+            <span class="card-brand">Theatrum</span>
+            <div class="card-chip">••</div>
+          </div>
+          <div class="card-preview-number" id="preview-number">
+            •••• •••• •••• ••••
+          </div>
+          <div class="card-preview-bottom">
+            <div>
+              <div class="card-holder-label">Cardholder</div>
+              <div class="card-holder-value" id="preview-name">
+                No card added
+              </div>
+            </div>
+            <div>
+              <div class="card-exp-label">Expires</div>
+              <div class="card-exp-value" id="preview-exp">
+                -- / --
+              </div>
+            </div>
+          </div>
+          <div class="card-placeholder" id="card-placeholder">
+            Click “Add card” to enter your payment details.
           </div>
         </div>
 
-        <div class="divider"></div>
-
-        <h3 style="margin-bottom:12px;">Card Details</h3>
-        <div class="form-grid">
-          <div class="form-group full-width">
-            <label for="card-name">Name on Card</label>
-            <input id="card-name" type="text" placeholder="Alex Doe" />
-          </div>
-          <div class="form-group full-width">
-            <label for="card-number">Card Number</label>
-            <input id="card-number" type="text" placeholder="1234 5678 9012 3456" maxlength="19" />
-          </div>
-          <div class="form-group">
-            <label for="expiry-date">Expiry Date</label>
-            <input id="expiry-date" type="text" placeholder="MM/YY" maxlength="5"/>
-          </div>
-          <div class="form-group">
-            <label for="cvv">CVV</label>
-            <input id="cvv" type="password" placeholder="123" maxlength="3" />
-          </div>
+        <div class="payment-actions">
+          <button class="btn-secondary" id="add-card-btn">
+            Add card
+          </button>
         </div>
 
-        <div class="save-card">
-          <input type="checkbox" id="save-card" checked>
-          <label for="save-card">Save this card for future purchases</label>
-        </div>
-        <div class="form-actions">
-          <button class="btn-secondary" id="cancel-payment">Cancel</button>
-          <button class="btn-primary" id="save-payment">Save Payment Method</button>
-        </div>
-
-        <div class="divider"></div>
-
-        <!-- Billing name + email (static demo) -->
-        <div class="row">
-          <div>
-            <div class="muted">Billed to</div>
-            <div>Alex</div>
+        <!-- Hidden card form (shown after clicking Add card) -->
+        <form class="card-form" id="card-form" novalidate>
+          <div class="card-form-group">
+            <label for="card-name">Name on card</label>
+            <input type="text" id="card-name" autocomplete="cc-name" />
           </div>
-          <div style="text-align:right">
-            <div class="muted">Receipt</div>
-            <div>Alex@example.com</div>
+          <div class="card-form-group">
+            <label for="card-number">Card number</label>
+            <input type="text" id="card-number" maxlength="19" placeholder="1234 5678 9012 3456" autocomplete="cc-number" />
           </div>
-        </div>
+          <div class="card-form-row">
+            <div class="card-form-group">
+              <label for="card-exp">Expiry (MM/YY)</label>
+              <input type="text" id="card-exp" maxlength="5" placeholder="MM/YY" autocomplete="cc-exp" />
+            </div>
+            <div class="card-form-group">
+              <label for="card-cvv">CVV</label>
+              <input type="password" id="card-cvv" maxlength="4" autocomplete="cc-csc" />
+            </div>
+          </div>
+          <div class="card-form-group">
+            <label for="card-postal">Postal code</label>
+            <input type="text" id="card-postal" autocomplete="postal-code" />
+          </div>
 
-        <div class="actions">
-          <button class="btn-secondary" onclick="window.location.href='payment-summary.html'">Back</button>
-          <button class="btn-primary" onclick="window.location.href='thanks.html'">Complete Purchase</button>
-        </div>
-        <p class="muted" style="margin-top:10px;">☆ Payments are processed securely.</p>
+          <div class="pay-btn-wrapper">
+            <button type="button" class="btn-primary" id="pay-now-btn">
+              Pay now
+            </button>
+            <p class="tax-note">By tapping “Pay now”, you agree to Theatrum’s terms and privacy policy.</p>
+          </div>
+        </form>
       </section>
 
-      <!-- Right: Order Summary -->
+      <!-- Right: order summary -->
       <aside class="card">
-        <h2>Order Summary</h2>
-        <p class="muted" id="pay-summary-subtitle">Your selected showtime</p>
-        <div class="divider"></div>
+        <h3 class="sidebar-heading">Order summary</h3>
 
-        <div class="summary-row">
-          <span id="pay-tickets-label">Tickets</span>
-          <span id="pay-tickets-price">$0.00</span>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Tickets</div>
+          <div class="sidebar-value" id="summary-tickets-line">0 × Standard</div>
         </div>
-        <div id="pay-food-rows"></div>
-        <div id="pay-upsell-rows"></div>
 
-        <div class="summary-row">
-          <span>Seats</span>
-          <span id="pay-seats">-</span>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Seats</div>
+          <div class="sidebar-value" id="summary-seats">None selected</div>
         </div>
-        <div class="summary-row">
-          <span>Format</span>
-          <span class="pill" id="pay-format">Standard</span>
+
+        <div class="sidebar-section">
+          <div class="sidebar-label">Snacks & extras</div>
+          <div class="sidebar-value" id="summary-snacks">No add-ons</div>
         </div>
 
         <div class="divider"></div>
+
         <div class="summary-row">
           <span>Subtotal</span>
-          <span id="pay-subtotal">$0.00</span>
+          <span id="summary-subtotal">$0.00</span>
         </div>
         <div class="summary-row">
-          <span>Fees &amp; Tax</span>
-          <span id="pay-fees">$0.00</span>
+          <span>Estimated tax & fees</span>
+          <span id="summary-fees">$0.00</span>
         </div>
-        <div class="summary-row total">
-          <span>Total</span>
-          <span id="pay-total">$0.00</span>
+        <div class="summary-row" style="margin-top: 10px; font-size: 16px;">
+          <span>Total due</span>
+          <span id="summary-total">$0.00</span>
         </div>
-
-        <div class="divider"></div>
-        <button class="btn-secondary" style="width:100%; margin-top:4px;">Apply Promo Code</button>
+        <p class="tax-note">
+          Exact tax and fees may vary slightly based on your payment provider.
+        </p>
       </aside>
     </div>
   </main>
 
-   <footer class="footer">
+  <!-- Footer -->
+  <footer class="footer">
     <div class="container">
       <div class="footer-content">
-          <div class="footer-section">
-          <div class="footer-logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
-          <p>Experience cinema the way it was meant to be seen.</p>
-          <div class="social-links">
-            <a href="#" aria-label="Facebook">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.955 10.125 11.854v-8.385H7.078v-3.47h3.047V9.413c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-            </a>
-            <a href="#" aria-label="Twitter">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.932 4.932 0 002.163-2.723c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 00-8.384 4.482C7.691 8.575 4.066 6.864 1.64 3.905a4.822 4.822 0 00-.666 2.475c0 1.708.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.902 4.902 0 01-2.224.084 4.933 4.933 0 004.604 3.417A9.867 9.867 0 010 21.543 13.94 13.94 0 007.548 24c9.142 0 14.307-7.721 13.995-14.646A10.025 10.025 0 0024 4.59z"/>
-              </svg>
-            </a>
-            <a href="#" aria-label="Instagram">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.325.975.975 1.262 2.242 1.324 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.324 3.608-.975.975-2.242 1.262-3.608 1.324-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.324-.975-.975-1.262-2.242-1.324-3.608C2.175 15.747 2.163 15.367 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.324-3.608.975-.975 2.242-1.262 3.608-1.324C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.015 7.052.072 5.775.13 4.638.428 3.678 1.388 2.718 2.347 2.42 3.484 2.362 4.761 2.305 6.041 2.29 6.45 2.29 12s.015 5.959.072 7.239c.058 1.277.356 2.414 1.316 3.373.96.96 2.097 1.258 3.373 1.316C8.332 23.985 8.741 24 12 24s3.668-.015 4.948-.072c1.277-.058 2.414-.356 3.373-1.316.96-.96 1.258-2.097 1.316-3.373.058-1.28.072-1.689.072-7.239s-.015-5.959-.072-7.239c-.058-1.277-.356-2.414-1.316-3.373C19.362.428 18.225.13 16.948.072 15.668.015 15.259 0 12 0z"/>
-                <path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8z"/>
-                <circle cx="18.406" cy="5.594" r="1.44"/>
-              </svg>
-            </a>
+        <div class="footer-section">
+          <div class="footer-logo">
+            <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
           </div>
+          <p>Experience cinema the way it was meant to be seen.</p>
         </div>
-
         <div class="footer-section">
           <h4>Customer Support</h4>
           <ul>
@@ -230,17 +379,15 @@
             <li><a href="#">Careers</a></li>
           </ul>
         </div>
-
         <div class="footer-section">
           <h4>Newsletter</h4>
           <p>Get the latest movies and exclusive offers</p>
           <div class="newsletter-form">
-            <input type="email" placeholder="Your email">
+            <input type="email" placeholder="Your email" />
             <button class="btn-primary">Subscribe</button>
           </div>
         </div>
       </div>
-
       <div class="footer-bottom">
         <p>&copy; 2025 THEATRUM. All rights reserved.</p>
         <div class="footer-links">
@@ -252,224 +399,225 @@
     </div>
   </footer>
 
-    
   <script src="scripts/booking.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      function getOrderSnapshot() {
-        var safeParseQty = (typeof parseQty === 'function')
-          ? parseQty
-          : function (v) { v = parseInt(v, 10); return isNaN(v) ? 0 : Math.max(0, v); };
-
-        var ticketQty = safeParseQty(localStorage.getItem('ticketQty')) || 0;
-        var ticketType = localStorage.getItem('ticketType') || 'standard';
-        var ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
-        var seats = [];
-        try {
-          seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]') || [];
-        } catch (e) { seats = []; }
-
-        var foodOrder = {};
-        if (typeof getNormalizedFoodOrder === 'function') {
-          foodOrder = getNormalizedFoodOrder();
+      function safeInt(v) {
+        var n = parseInt(v, 10);
+        return isNaN(n) ? 0 : n;
+      }
+      function safeFloat(v, fallback) {
+        var n = parseFloat(v);
+        return isNaN(n) ? (fallback || 0) : n;
+      }
+      function notify(message, type) {
+        if (typeof showToast === 'function') {
+          showToast(message, type || 'info');
         } else {
-          try {
-            foodOrder = JSON.parse(localStorage.getItem('foodOrder') || '{}') || {};
-          } catch (e) { foodOrder = {}; }
+          alert(message);
         }
+      }
 
-        var upsellCart = [];
+      // Load booking data
+      var ticketQty = safeInt(localStorage.getItem('ticketQty'));
+      var ticketType = localStorage.getItem('ticketType') || 'standard';
+      var ticketUnitPrice = safeFloat(localStorage.getItem('ticketUnitPrice'), 12.0);
+
+      var seats = [];
+      try {
+        seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]');
+      } catch (e) {
+        seats = [];
+      }
+
+      var foodOrder = {};
+      if (typeof getNormalizedFoodOrder === 'function') {
+        foodOrder = getNormalizedFoodOrder();
+      } else {
         try {
-          upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]') || [];
-        } catch (e) { upsellCart = []; }
+          foodOrder = JSON.parse(localStorage.getItem('foodOrder') || '{}');
+        } catch (e) {
+          foodOrder = {};
+        }
+      }
 
-        var typeLabelMap = { standard: 'Standard', '3d': '3D' };
-        var formatLabel = typeLabelMap[ticketType] || 'Standard';
+      var upsellCart = [];
+      try {
+        upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]');
+      } catch (e) {
+        upsellCart = [];
+      }
 
-        var ticketTotal = ticketQty * ticketUnitPrice;
-        var foodItems = [];
-        var foodTotal = 0;
+      // ---- Calculate totals ----
+      var ticketLabelType = ticketType === '3d' ? '3D' : 'Standard';
+      var ticketSubtotal = ticketQty * ticketUnitPrice;
 
-        Object.keys(foodOrder).forEach(function (k) {
-          var raw = foodOrder[k] || {};
-          var name = raw.name || k;
-          var size = raw.size || null;
-          var qty = safeParseQty(raw.qty);
-          var price = parseFloat(raw.price);
-          if (isNaN(price)) price = 0;
-          if (!qty) return;
-          var lineTotal = price * qty;
-          foodTotal += lineTotal;
-          foodItems.push({
-            name: name,
-            size: size,
-            qty: qty,
-            unit: price,
-            total: lineTotal
-          });
-        });
+      var snacksTotal = 0;
+      var hasSnacksOrExtras = false;
+      Object.keys(foodOrder || {}).forEach(function (k) {
+        var it = foodOrder[k];
+        if (!it) return;
+        var qty = safeInt(it.qty);
+        var unitPrice = safeFloat(it.price, 0);
+        if (qty <= 0) return;
+        snacksTotal += qty * unitPrice;
+        hasSnacksOrExtras = true;
+      });
 
-        var upsellItems = [];
-        var upsellTotal = 0;
+      var upsellTotal = 0;
+      if (Array.isArray(upsellCart)) {
         upsellCart.forEach(function (u) {
-          if (!u) return;
-          var label = u.item || 'Addon';
-          var price = parseFloat(u.price);
-          if (isNaN(price)) price = 0;
-          upsellTotal += price;
-          upsellItems.push({
-            name: label,
-            qty: 1,
-            unit: price,
-            total: price
-          });
-        });
-
-        var subtotal = ticketTotal + foodTotal + upsellTotal;
-
-        return {
-          ticketQty: ticketQty,
-          ticketType: ticketType,
-          formatLabel: formatLabel,
-          ticketUnitPrice: ticketUnitPrice,
-          ticketTotal: ticketTotal,
-          seats: seats,
-          foodItems: foodItems,
-          foodTotal: foodTotal,
-          upsellItems: upsellItems,
-          upsellTotal: upsellTotal,
-          subtotal: subtotal
-        };
-      }
-
-      var order = getOrderSnapshot();
-
-      var subtitleEl = document.getElementById('pay-summary-subtitle');
-      if (subtitleEl && !subtitleEl.dataset.locked) {
-        subtitleEl.textContent = 'Your selected showtime';
-      }
-
-      var ticketsLabelEl = document.getElementById('pay-tickets-label');
-      var ticketsPriceEl = document.getElementById('pay-tickets-price');
-      if (ticketsLabelEl) {
-        var plural = order.ticketQty === 1 ? 'Ticket' : 'Tickets';
-        ticketsLabelEl.textContent = (order.ticketQty || 0) + ' × ' + order.formatLabel + ' ' + plural;
-      }
-      if (ticketsPriceEl) {
-        ticketsPriceEl.textContent = '$' + order.ticketTotal.toFixed(2);
-      }
-
-      var foodRowsEl = document.getElementById('pay-food-rows');
-      if (foodRowsEl) {
-        foodRowsEl.innerHTML = '';
-        order.foodItems.forEach(function (item) {
-          var row = document.createElement('div');
-          row.className = 'summary-row';
-          var label = item.qty + ' × ' + item.name;
-          if (item.size) label += ' (' + item.size + ')';
-          row.innerHTML =
-            '<span>' + label + '</span>' +
-            '<span>$' + item.total.toFixed(2) + '</span>';
-          foodRowsEl.appendChild(row);
+          upsellTotal += safeFloat(u.price, 0);
+          hasSnacksOrExtras = true;
         });
       }
 
-      var upsellRowsEl = document.getElementById('pay-upsell-rows');
-      if (upsellRowsEl) {
-        upsellRowsEl.innerHTML = '';
-        order.upsellItems.forEach(function (item) {
-          var row = document.createElement('div');
-          row.className = 'summary-row';
-          row.innerHTML =
-            '<span>' + item.name + '</span>' +
-            '<span>$' + item.total.toFixed(2) + '</span>';
-          upsellRowsEl.appendChild(row);
+      var subtotal = ticketSubtotal + snacksTotal + upsellTotal;
+      var estimatedFees = subtotal * 0.08; // simple 8% estimate
+      var totalDue = subtotal + estimatedFees;
+
+      // ---- Fill summary on the right ----
+      var summaryTicketsLine = document.getElementById('summary-tickets-line');
+      var summarySeatsEl = document.getElementById('summary-seats');
+      var summarySnacksEl = document.getElementById('summary-snacks');
+      var summarySubtotal = document.getElementById('summary-subtotal');
+      var summaryFees = document.getElementById('summary-fees');
+      var summaryTotal = document.getElementById('summary-total');
+
+      if (summaryTicketsLine) {
+        summaryTicketsLine.textContent =
+          ticketQty +
+          ' × ' +
+          ticketLabelType +
+          ' ticket' +
+          (ticketQty === 1 ? '' : 's');
+      }
+      if (summarySeatsEl) {
+        summarySeatsEl.textContent = seats && seats.length ? seats.join(', ') : 'None selected';
+      }
+      if (summarySnacksEl) {
+        summarySnacksEl.textContent = hasSnacksOrExtras ? 'Included' : 'No add-ons';
+      }
+      if (summarySubtotal) summarySubtotal.textContent = '$' + subtotal.toFixed(2);
+      if (summaryFees) summaryFees.textContent = '$' + estimatedFees.toFixed(2);
+      if (summaryTotal) summaryTotal.textContent = '$' + totalDue.toFixed(2);
+
+      // ---- Card UI + form behaviour ----
+      var addCardBtn = document.getElementById('add-card-btn');
+      var cardForm = document.getElementById('card-form');
+      var payNowBtn = document.getElementById('pay-now-btn');
+
+      var cardNameInput = document.getElementById('card-name');
+      var cardNumberInput = document.getElementById('card-number');
+      var cardExpInput = document.getElementById('card-exp');
+      var cardCvvInput = document.getElementById('card-cvv');
+      var cardPostalInput = document.getElementById('card-postal');
+
+      var previewName = document.getElementById('preview-name');
+      var previewNumber = document.getElementById('preview-number');
+      var previewExp = document.getElementById('preview-exp');
+      var cardPlaceholder = document.getElementById('card-placeholder');
+
+      var cardFormVisible = false;
+
+      function formatCardNumber(value) {
+        return value
+          .replace(/\D/g, '')
+          .slice(0, 16)
+          .replace(/(.{4})/g, '$1 ')
+          .trim();
+      }
+
+      function formatExp(value) {
+        var digits = value.replace(/\D/g, '').slice(0, 4);
+        if (digits.length <= 2) return digits;
+        return digits.slice(0, 2) + '/' + digits.slice(2);
+      }
+
+      if (addCardBtn) {
+        addCardBtn.addEventListener('click', function () {
+          cardFormVisible = !cardFormVisible;
+          cardForm.style.display = cardFormVisible ? 'block' : 'none';
+          addCardBtn.textContent = cardFormVisible ? 'Hide card details' : 'Add card';
+
+          if (cardFormVisible) {
+            cardPlaceholder.textContent = 'Fill in your details below to save this card for this purchase.';
+          } else {
+            cardPlaceholder.textContent = 'Click “Add card” to enter your payment details.';
+          }
         });
       }
 
-      var seatsEl = document.getElementById('pay-seats');
-      if (seatsEl) {
-        seatsEl.textContent = order.seats.length ? order.seats.join(', ') : '-';
+      // Live preview updates
+      if (cardNameInput) {
+        cardNameInput.addEventListener('input', function () {
+          previewName.textContent = cardNameInput.value.trim() || 'No card added';
+        });
       }
-      var formatEl = document.getElementById('pay-format');
-      if (formatEl) {
-        formatEl.textContent = order.formatLabel;
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function () {
+          var formatted = formatCardNumber(cardNumberInput.value);
+          cardNumberInput.value = formatted;
+          previewNumber.textContent = formatted || '•••• •••• •••• ••••';
+        });
+      }
+      if (cardExpInput) {
+        cardExpInput.addEventListener('input', function () {
+          var formatted = formatExp(cardExpInput.value);
+          cardExpInput.value = formatted;
+          previewExp.textContent = formatted || '-- / --';
+        });
       }
 
-      var subtotalEl = document.getElementById('pay-subtotal');
-      var feesEl = document.getElementById('pay-fees');
-      var totalEl = document.getElementById('pay-total');
+      if (payNowBtn) {
+        payNowBtn.addEventListener('click', function () {
+          if (!cardFormVisible) {
+            notify('Please add a card before paying.', 'error');
+            cardForm.style.display = 'block';
+            cardFormVisible = true;
+            addCardBtn.textContent = 'Hide card details';
+            return;
+          }
 
-      var subtotal = order.subtotal;
-      var fees = subtotal * 0.05; // 5% tax/fees
-      var grandTotal = subtotal + fees;
+          var name = cardNameInput.value.trim();
+          var number = cardNumberInput.value.replace(/\s+/g, '');
+          var exp = cardExpInput.value.trim();
+          var cvv = cardCvvInput.value.trim();
+          var postal = cardPostalInput.value.trim();
 
-      if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
-      if (feesEl) feesEl.textContent = '$' + fees.toFixed(2);
-      if (totalEl) totalEl.textContent = '$' + grandTotal.toFixed(2);
+          if (!name || !number || !exp || !cvv || !postal) {
+            notify('Please fill in all card details.', 'error');
+            return;
+          }
+          if (number.length < 12) {
+            notify('Please enter a valid card number.', 'error');
+            return;
+          }
+          if (!/^\d{2}\/\d{2}$/.test(exp)) {
+            notify('Please enter a valid expiry in MM/YY format.', 'error');
+            return;
+          }
+          if (cvv.length < 3) {
+            notify('Please enter a valid CVV.', 'error');
+            return;
+          }
 
-      var payBtn = document.querySelector('.actions .btn-primary');
-      if (payBtn && !payBtn.dataset.labelLocked) {
-        payBtn.textContent = 'Complete Purchase — $' + grandTotal.toFixed(2);
+          // "Process" payment
+          notify('Payment successful! Your booking is confirmed.', 'success');
+
+          // Clear state and redirect home after a short pause
+          setTimeout(function () {
+            localStorage.removeItem('ticketQty');
+            localStorage.removeItem('ticketType');
+            localStorage.removeItem('ticketUnitPrice');
+            localStorage.removeItem('selectedSeats');
+            localStorage.removeItem('foodOrder');
+            localStorage.removeItem('upsellCart');
+            window.location.href = 'index.html';
+          }, 900);
+        });
       }
     });
   </script>
-  <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const newPaymentToggle = document.getElementById('new-payment-toggle');
-        const newPaymentSection = document.getElementById('new-payment-section');
-        const useExistingToggle = document.getElementById('use-existing-toggle');
-        const existingCardSection = document.getElementById('existing-card-section');
-
-        newPaymentToggle.addEventListener('change', function() {
-          if (this.checked) {
-            newPaymentSection.style.display = 'block';
-            existingCardSection.style.display = 'none';
-          }
-        });
-
-        useExistingToggle.addEventListener('change', function() {
-          if (this.checked) {
-            newPaymentSection.style.display = 'none';
-            existingCardSection.style.display = 'block';
-          }
-        });
-
-        document.getElementById('save-payment').addEventListener('click', function() {
-          document.getElementById('card-name').value = '';
-          document.getElementById('card-number').value = '';
-          document.getElementById('expiry-date').value = '';
-          document.getElementById('cvv').value = '';
-          document.getElementById('country').value = '';
-          document.getElementById('zip-code').value = '';
-        });
-        
-        const cardNumberInput = document.getElementById('card-number');
-        cardNumberInput.addEventListener('input', function() {
-          let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-          let formattedValue = '';
-          
-          for (let i = 0; i < value.length; i++) {
-            if (i > 0 && i % 4 === 0) {
-              formattedValue += ' ';
-            }
-            formattedValue += value[i];
-          }
-          
-          this.value = formattedValue;
-        });
-        
-        const expiryDateInput = document.getElementById('expiry-date');
-        expiryDateInput.addEventListener('input', function() {
-          let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-          
-          if (value.length >= 2) {
-            this.value = value.substring(0, 2) + '/' + value.substring(2, 4);
-          } else {
-            this.value = value;
-          }
-        });
-      });
-    </script>
 </body>
 </html>
