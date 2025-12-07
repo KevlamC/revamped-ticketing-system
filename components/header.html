@@ -1,0 +1,611 @@
+<style>
+  /* Universal Fixed Container */
+  #header-placeholder {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+  }
+
+  /* Navbar Styles */
+  .navbar {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(11, 14, 23, 0.98), rgba(11, 14, 23, 0.85));
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border, #27272a);
+    height: 72px;
+    position: relative; /* Context for absolute mobile menu */
+  }
+
+  .nav-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    justify-content: space-between;
+  }
+
+  /* Logo */
+  .logo {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .logo-thea { color: var(--text-primary, #ffffff); }
+  .logo-trum { color: var(--accent-red, #dc2626); }
+
+  /* Location Picker */
+  .location-container {
+    position: relative; /* Anchor for dropdown */
+    margin-left: 24px;
+  }
+
+  .location-picker {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .location-picker:hover, .location-picker.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border, #27272a);
+  }
+
+  .location-icon { color: var(--accent-red, #dc2626); }
+  .location-name { 
+    font-size: 13px; 
+    font-weight: 600; 
+    color: var(--text-primary, #ffffff);
+    white-space: nowrap;
+  }
+  .location-chevron { 
+    color: var(--text-secondary, #a1a1aa); 
+    transition: transform 0.2s ease;
+  }
+  .location-picker.active .location-chevron { transform: rotate(180deg); }
+
+  /* Location Dropdown */
+  .location-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    width: 200px;
+    background: var(--bg-card, #1a1a24);
+    border: 1px solid var(--border, #27272a);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    z-index: 1100;
+  }
+  
+  .location-dropdown.show { display: flex; }
+
+  .location-option {
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text-secondary, #a1a1aa);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.1s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .location-option:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary, #ffffff);
+  }
+  
+  .location-option.selected {
+    background: rgba(220, 38, 38, 0.15); /* Red tint */
+    color: var(--accent-red, #dc2626);
+    font-weight: 700;
+  }
+
+  /* Desktop Links */
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary, #a1a1aa);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+    padding: 8px 0;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--text-primary, #ffffff);
+  }
+  
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-red, #dc2626);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* Actions Group */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  /* Desktop Search */
+  .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-box input {
+    background: var(--bg-card, #1a1a24);
+    border: 1px solid var(--border, #27272a);
+    border-radius: 999px;
+    padding: 8px 16px 8px 36px;
+    color: var(--text-primary, #ffffff);
+    font-size: 13px;
+    width: 200px;
+    transition: all 0.3s ease;
+  }
+
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--accent-red, #dc2626);
+    width: 240px;
+    background: var(--bg-secondary, #13131a);
+  }
+
+  .search-box svg {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted, #71717a);
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* User Button */
+  .btn-primary {
+    background: var(--accent-red, #dc2626);
+    color: var(--text-primary, #ffffff);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  }
+
+  /* Hamburger Menu Button */
+  .hamburger-btn {
+    display: none; /* Hidden on desktop */
+    background: transparent;
+    border: none;
+    color: var(--text-primary, #ffffff);
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 8px;
+  }
+  
+  /* Mobile Menu Container */
+  .mobile-menu {
+    position: absolute;
+    top: 72px; /* Height of header */
+    left: 0;
+    right: 0;
+    background: var(--bg-primary, #0a0a0f);
+    border-bottom: 1px solid var(--border, #27272a);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transform: translateY(-150%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: -1; /* Behind header until open */
+    pointer-events: none;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+
+  .mobile-menu.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Mobile Links */
+  .mobile-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mobile-links a {
+    color: var(--text-primary, #ffffff);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .mobile-search {
+    position: relative;
+    width: 100%;
+  }
+  .mobile-search input {
+    width: 100%;
+    background: var(--bg-card, #1a1a24);
+    border: 1px solid var(--border, #27272a);
+    padding: 12px 16px 12px 40px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px; /* prevent zoom on iOS */
+  }
+  .mobile-search svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 1100px) {
+    .nav-links { gap: 16px; }
+    .search-box input { width: 160px; }
+  }
+
+  @media (max-width: 950px) {
+    /* Tablet/Mobile Transition */
+    .nav-links { display: none; } /* Hide desktop links */
+    .search-box { display: none; } /* Hide desktop search */
+    .hamburger-btn { display: block; } /* Show hamburger */
+    
+    .nav-container {
+      padding: 0 20px;
+      /* Keep standard spacing but simpler */
+    }
+    
+    .location-picker {
+      margin-left: 16px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    /* Small Mobile */
+    .location-name { display: none; } /* Hide location text, keep icon */
+    .location-picker { margin-left: 12px; padding: 6px; }
+    .nav-container { padding: 0 16px; }
+    .btn-primary { padding: 8px 12px; font-size: 12px; } /* Compact user button */
+  }
+</style>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <!-- Left Group -->
+    <div style="display:flex; align-items:center;">
+      <div class="logo" id="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+
+      <div class="location-container">
+        <div class="location-picker" id="locationPicker" title="Change Theater">
+          <svg class="location-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span class="location-name" id="selectedLocationText">Downtown Premiere</span>
+          <svg class="location-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        
+        <div class="location-dropdown" id="locationDropdown">
+          <div class="location-option selected" data-value="Downtown Premiere">Downtown Premiere</div>
+          <div class="location-option" data-value="Riverside Cinema">Riverside Cinema</div>
+          <div class="location-option" data-value="Westside Multiplex">Westside Multiplex</div>
+          <div class="location-option" data-value="North Hills IMAX">North Hills IMAX</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Links -->
+    <ul class="nav-links">
+      <li><a href="index.html#now-playing">Movies</a></li>
+      <li><a href="index.html#concessions">Food & Drinks</a></li>
+      <li><a href="index.html#offers">Offers</a></li>
+      <li><a href="index.html#locations">Our Theaters</a></li>
+    </ul>
+
+    <!-- Right Actions -->
+    <div class="nav-actions">
+      <!-- Desktop Search -->
+      <div class="search-box">
+        <input class="search-input-js" type="text" placeholder="Search movies...">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </div>
+      
+      <button id="userButton" class="btn-primary">Sign In</button>
+      
+      <!-- Hamburger -->
+      <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Dropdown -->
+  <div class="mobile-menu" id="mobileMenu">
+    <!-- Mobile Search -->
+    <div class="mobile-search">
+      <input class="search-input-js" type="text" placeholder="Search movies, events...">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </div>
+
+    <ul class="mobile-links">
+      <li><a href="index.html#now-playing">Movies</a></li>
+      <li><a href="index.html#concessions">Food & Drinks</a></li>
+      <li><a href="index.html#offers">Offers</a></li>
+      <li><a href="index.html#locations">Locations</a></li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+(function() {
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+  
+  const userButton = $('#userButton');
+  const logo = $('#logo');
+  const locationPicker = $('#locationPicker');
+  const locationDropdown = $('#locationDropdown');
+  const selectedLocationText = $('#selectedLocationText');
+  const mobileMenuBtn = $('#mobileMenuBtn');
+  const mobileMenu = $('#mobileMenu');
+  const searchInputs = $$('.search-input-js'); 
+
+  // --- Location Logic ---
+  const savedLocation = localStorage.getItem('theatrum_location') || 'Downtown Premiere';
+  if(selectedLocationText) selectedLocationText.textContent = savedLocation;
+  
+  // Highlight correct initial option
+  $$('.location-option').forEach(opt => {
+      if(opt.dataset.value === savedLocation) opt.classList.add('selected');
+      else opt.classList.remove('selected');
+      
+      // Click Handler
+      opt.addEventListener('click', (e) => {
+          e.stopPropagation(); // prevent closing immediately
+          const val = opt.dataset.value;
+          
+          // Update Text
+          selectedLocationText.textContent = val;
+          localStorage.setItem('theatrum_location', val);
+          
+          // Update Visuals
+          $$('.location-option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+          
+          // Close
+          locationDropdown.classList.remove('show');
+          locationPicker.classList.remove('active');
+          
+          // Optional: Reload page or filter content here
+          // window.location.reload(); 
+      });
+  });
+
+  if (locationPicker) {
+      locationPicker.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = locationDropdown.classList.contains('show');
+          if(isOpen) {
+              locationDropdown.classList.remove('show');
+              locationPicker.classList.remove('active');
+          } else {
+              locationDropdown.classList.add('show');
+              locationPicker.classList.add('active');
+          }
+      });
+  }
+  
+  // Close Dropdowns on Click Outside
+  document.addEventListener('click', (e) => {
+      // Close Location Dropdown
+      if (locationDropdown && locationDropdown.classList.contains('show')) {
+          if (!locationPicker.contains(e.target) && !locationDropdown.contains(e.target)) {
+               locationDropdown.classList.remove('show');
+               locationPicker.classList.remove('active');
+          }
+      }
+      
+      // Close Mobile Menu (existing logic merged)
+      if (mobileMenu && mobileMenu.classList.contains('open') && 
+          !mobileMenu.contains(e.target) && 
+          !mobileMenuBtn.contains(e.target)) {
+        closeMenu();
+      }
+  });
+
+  // --- Auth Logic ---
+  function updateHeaderState() {
+    let session = null;
+    try {
+      if (typeof loadSession === 'function') {
+        session = loadSession();
+      } else {
+        const SESSION_KEY = 'theatrum.session';
+        session = JSON.parse(localStorage.getItem(SESSION_KEY));
+      }
+    } catch(e) { /* ignore */ }
+
+    if (session) {
+      userButton.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Account</span>
+      `;
+    } else {
+      userButton.innerHTML = `<span>Sign In</span>`;
+    }
+    
+    if (typeof syncChoiceButtons === 'function') {
+      syncChoiceButtons(session);
+    }
+  }
+
+  // Initial Run
+  updateHeaderState();
+  // Expose for external calls
+  window.syncUserButton = (session) => { updateHeaderState(); };
+
+  // --- Mobile Menu Toggle ---
+  if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent immediate closing
+      const isOpen = mobileMenu.classList.contains('open');
+      
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Close when clicking a link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    // Close when clicking outside - REMOVED (Merged into global listener above)
+  }
+
+  function openMenu() {
+    mobileMenu.classList.add('open');
+    // Change hamburger to X
+    mobileMenuBtn.innerHTML = `
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    `;
+  }
+
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    // Change X back to hamburger
+    mobileMenuBtn.innerHTML = `
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    `;
+  }
+
+  // --- Event Listeners ---
+  if (userButton) {
+    userButton.addEventListener('click', () => {
+       const modal = document.querySelector('#choiceModal');
+       if (modal && typeof show === 'function') show(modal);
+       else if (modal) { modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); }
+    });
+  }
+
+  if (logo) {
+    logo.addEventListener('click', () => {
+       const modal = document.querySelector('#choiceModal');
+       if (modal && typeof show === 'function') show(modal); 
+       else window.location.href = 'index.html';
+    });
+  }
+  
+  // locationPicker listener removed (logic moved to Location Logic section)
+
+  // --- Search Logic (Universal) ---
+  if (searchInputs.length > 0) {
+    searchInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+          const q = e.target.value.toLowerCase();
+          
+          // Sync values between inputs (if user types in mobile, then opens desktop)
+          searchInputs.forEach(otherInput => {
+              if (otherInput !== input) otherInput.value = input.value;
+          });
+
+          // Perform filtering
+          const cards = document.querySelectorAll('#moviesGrid .movie-card');
+          if(cards.length > 0) {
+              cards.forEach(card => {
+                const title = card.dataset.title.toLowerCase();
+                const genres = card.dataset.genres.toLowerCase();
+                card.style.display = (title.includes(q) || genres.includes(q)) ? '' : 'none';
+              });
+              
+              // Scroll to movies if on mobile and typing? Maybe not, too aggressive.
+          }
+        });
+    });
+  }
+})();
+</script>

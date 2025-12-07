@@ -6,12 +6,13 @@
   <title>THEATRUM - Premium Cinema Experience</title>
 
   <link rel="stylesheet" href="styles/index_styles.css" />
+  <link rel="stylesheet" href="styles/hero.css" />
 
   <!-- Critical-path modal styles kept minimal here -->
   <style>
   /* Critical modal/calendar styles (keep minimal inline) */
   /* Keep hero-bg here (carousel uses this element) */
-  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center center;transition:opacity .3s ease;opacity:1}
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center top;transition:opacity .3s ease;opacity:1}
     .overlay{position:fixed;inset:0;background:rgba(10,10,15,.6);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:2000}
     .overlay.show{display:flex}
     .sheet{width:min(680px,92vw);background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow-2);animation:modal-pop 220ms ease-out;position:relative}
@@ -59,37 +60,14 @@
 
 <body>
   <!-- NAV -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="logo" id="logo">
-        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-      </div>
-      <ul class="nav-links">
-        <li><a href="#now-playing" >Now Playing</a></li>
-        <li><a href="#coming-soon">Coming Soon</a></li>
-        <li><a href="#concessions">Food & Drinks</a></li>
-        <li><a href="#offers">Offers</a></li>
-        <li><a href="#locations">Locations</a></li>
-      </ul>
-      <div class="nav-actions">
-        <div class="search-box">
-          <input id="globalSearch" type="text" placeholder="Search movies...">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-        </div>
-  <!-- Will turn into username after login/guest -->
-  <!-- Buy Tickets removed; Sign In promoted to primary and moved to the right -->
-  <button id="userButton" class="btn-primary user-icon-btn" aria-label="Sign In">Sign In</button>
-      </div>
-    </div>
-  </nav>
+  <div id="header-placeholder"></div>
+  <script src="scripts/load-header.js"></script>
 
   <!-- HERO -->
   <section class="hero">
   <!-- Hero background used by the carousel script -->
   <div id="hero-image" class="hero-bg" aria-hidden="true"></div>
+  <div id="hero-video" class="hero-video-wrapper"></div>
   <div class="hero-overlay"></div>
 
     <!-- nav controls and dots for hero slider -->
@@ -104,14 +82,14 @@
       <h1 id="hero-title" class="hero-title">DUNE: PART TWO</h1>
       <p id="hero-subtitle" class="hero-description">Experience the epic conclusion on the biggest screen with Dolby Atmos sound</p>
       <div class="hero-buttons">
-        <button id="hero-cta" class="btn-primary btn-large" onclick="document.querySelector('#now-playing').scrollIntoView({behavior:'smooth'})">Get Tickets</button>
-        <button class="btn-secondary btn-large">Watch Trailer</button>
+        <button id="hero-cta" class="btn-primary btn-large">Get Tickets</button>
+        <button id="hero-trailer" class="btn-secondary btn-large">Watch Trailer</button>
       </div>
       <div class="hero-info">
-        <span class="info-badge">PG-13</span>
-        <span class="info-item">2h 46m</span>
-        <span class="info-item">Sci-Fi, Adventure</span>
-        <span class="info-item">★ 8.7/10</span>
+        <span id="hero-rating" class="info-badge">PG-13</span>
+        <span id="hero-duration" class="info-item">2h 46m</span>
+        <span id="hero-genre" class="info-item">Sci-Fi, Adventure</span>
+        <span id="hero-score" class="info-item">★ 8.7/10</span>
       </div>
     </div>
   </section>
@@ -886,11 +864,14 @@
     const $$ = s => Array.from(document.querySelectorAll(s));
     const show = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.add('show'); el.setAttribute('aria-hidden','false'); };
     const hide = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.remove('show'); el.setAttribute('aria-hidden','true'); };
+    window.show = show;
+    window.hide = hide;
 
     const SESSION_KEY = 'theatrum.session';
     const USERS_KEY = 'theatrum.users';
     const defaultUserLabel = 'Sign In';
-    const userButton = $('#userButton');
+    // userButton and other header elements will be defined after header load
+    let userButton; 
     const logoutBtn = $('#logoutBtn');
     const dashboardBtn = $('#accountDashboardBtn');
     const choiceButtons = {
@@ -928,7 +909,14 @@
       if (choiceButtons.logout) choiceButtons.logout.style.display = hasSession ? 'inline-flex' : 'none';
       if (choiceButtons.dashboard) choiceButtons.dashboard.style.display = hasSession ? 'inline-flex' : 'none';
     }
-    function syncUserButton(session){
+    
+    // Global function so load-header.js can call it if needed, 
+    // though the event listener below handles the main init.
+    window.syncUserButton = function(session){
+      // Re-select in case it was just injected
+      userButton = $('#userButton');
+      if(!userButton) return;
+
       const name = session?.username || 'Guest';
       $('#welcomeName').textContent = name;
       if (session) {
@@ -944,12 +932,27 @@
       userButton.classList.remove('btn-secondary');
       syncChoiceButtons(session);
     }
-    syncUserButton(loadSession());
-    const openLoginFlag = sessionStorage.getItem('openLogin');
-    if (openLoginFlag) {
-      sessionStorage.removeItem('openLogin');
-      show('#loginModal');
-    }
+
+    // Logic to run AFTER header is injected
+    document.addEventListener('headerLoaded', () => {
+        // Init user button state
+        syncUserButton(loadSession());
+        
+        // Attach header event listeners
+        $('#userButton').addEventListener('click', () => show('#choiceModal'));
+        $('#logo').addEventListener('click', () => show('#choiceModal'));
+        
+        // Search listener
+        $('#globalSearch').addEventListener('input', (e) => {
+          const q = e.target.value.toLowerCase();
+          const cards = $$('#moviesGrid .movie-card');
+          cards.forEach(card => {
+            const title = card.dataset.title.toLowerCase();
+            const genres = card.dataset.genres.toLowerCase();
+            card.style.display = (title.includes(q) || genres.includes(q)) ? '' : 'none';
+          });
+        });
+    });
 
     // Schedule Data for calendar
     const scheduleData = {
@@ -1068,9 +1071,7 @@
       generateDropdownCalendar();
     }
 
-    // Open Account Choice
-    $('#userButton').addEventListener('click', () => show('#choiceModal'));
-    $('#logo').addEventListener('click', () => show('#choiceModal'));
+    // Open Account Choice (Moved to headerLoaded)
     logoutBtn?.addEventListener('click', () => {
       clearSession();
       hide('#choiceModal');
@@ -1187,14 +1188,7 @@
     const moviesGrid = $('#moviesGrid');
     const cards = $$('#moviesGrid .movie-card');
 
-    $('#globalSearch').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      cards.forEach(card => {
-        const title = card.dataset.title.toLowerCase();
-        const genres = card.dataset.genres.toLowerCase();
-        card.style.display = (title.includes(q) || genres.includes(q)) ? '' : 'none';
-      });
-    });
+    // globalSearch listener moved to headerLoaded
 
     $$('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
       $$('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1232,18 +1226,24 @@
       show(bookingSheet);
     }));
 
-    // View details (overlay) - currently opens booking modal as a quick details flow
+    // View details (redirect to movie-detail.html)
     document.body.addEventListener('click', (e) => {
       const v = e.target.closest('[data-action="view"]');
       if (v) {
-        const title = v.getAttribute('data-movie');
-        selectedMovie = title;
-        $('#sheetTitle').textContent = title;
-        prepDates();
-        $('#confirmMsg').classList.remove('show');
-        $('#timesRow').innerHTML = '';
-        selectedTime = null;
-        show(bookingSheet);
+        const card = v.closest('.movie-card');
+        if (!card) return;
+
+        const movieData = {
+          title: card.dataset.title,
+          rating: card.dataset.rating,
+          release: card.dataset.release,
+          genres: card.dataset.genres,
+          poster: card.querySelector('.movie-poster img').src,
+          description: "Experience the epic conclusion on the biggest screen with Dolby Atmos sound." // Placeholder
+        };
+
+        localStorage.setItem('viewMovie', JSON.stringify(movieData));
+        window.location.href = 'movie-detail.html';
       }
     });
 
@@ -1260,6 +1260,7 @@
       dropdownCurrentYear = today.getFullYear();
       generateDropdownCalendar();
     }
+    window.prepDates = prepDates;
 
     function prepTimes() {
       const row = $('#timesRow');

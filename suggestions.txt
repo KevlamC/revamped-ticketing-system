@@ -1,0 +1,27 @@
+# Suggestions for THEATRUM Improvements
+
+## Navigation & Architecture
+1. **"Movies" Page vs. Scroll:** 
+   - Currently, "Now Playing" just scrolls down on the homepage. As the movie list grows, create a dedicated `movies.html` page with advanced filters (Genre, Date, Format).
+   - "Coming Soon" should also likely be its own page or a tab on the `movies.html` page.
+
+2. **"View All" Functionality:**
+   - The homepage should only show the top 8-12 movies. Add a "View All Movies" button at the bottom of the "Now Playing" grid that leads to the dedicated movies page.
+
+## User Experience (UX)
+3. **Location Filtering Logic:**
+   - The header now has a visual "Location Picker". You need to implement the logic: when a user selects "Riverside", the homepage should strictly hide movies/showtimes not available at that specific venue.
+   - Store the selected location in `localStorage` so it persists across visits.
+
+4. **Membership/Rewards Portal:**
+   - "Offers" is currently a section. Consider elevating this to a "Rewards" program (points system) which is a major driver for theater chains.
+   - Add a progress bar for "Points to next free popcorn" in the Account dropdown or Dashboard.
+
+## Search
+5. **Dedicated Search Results:**
+   - Currently, search filters the homepage grid in real-time. If a user searches for a movie not on the homepage (e.g., a movie from last month or way in the future), they get no feedback.
+   - Implement a search results dropdown or a `search.html` page to handle queries with more detail.
+
+## Booking Flow
+6. **Guest Checkout Upsells:**
+   - If a user continues as Guest, offer a "Sign up now to save $2 in booking fees" prompt before final payment.
