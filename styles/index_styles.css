@@ -1279,4 +1279,49 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
         flex-direction: column;
     }
 }
+/* ---------- Global toast / popup ---------- */
+.app-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(120%);
+    background: rgba(15, 23, 42, 0.96); /* dark slate */
+    color: #f9fafb;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition:
+      opacity 0.18s ease-out,
+      transform 0.18s ease-out;
+  }
+  
+  .app-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+  
+  .app-toast-icon {
+    font-size: 14px;
+  }
+  
+  .app-toast[data-type="error"] {
+    background: rgba(248, 113, 113, 0.96); /* red-ish */
+  }
+  
+  .app-toast[data-type="success"] {
+    background: rgba(52, 211, 153, 0.96); /* green-ish */
+  }
+  
+  .app-toast[data-type="info"] {
+    background: rgba(59, 130, 246, 0.96); /* blue-ish */
+  }
+  
 /* End of cleaned stylesheet */

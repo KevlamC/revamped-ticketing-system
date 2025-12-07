@@ -43,7 +43,9 @@ const normalizeFoodOrder = raw => {
       const rawItem = raw[k];
       const it = normalizeFoodItem(k, rawItem);
       const key = `${it.name}||${it.size || 'Default'}`;
-      if (!normalized[key]) normalized[key] = { name: it.name, size: it.size, qty: 0, price: it.price };
+      if (!normalized[key]) {
+        normalized[key] = { name: it.name, size: it.size, qty: 0, price: it.price };
+      }
       // accumulate quantity
       normalized[key].qty = (normalized[key].qty || 0) + (parseQty(it.qty) || 0);
       // prefer an explicit price if provided
@@ -65,6 +67,15 @@ const getNormalizedFoodOrder = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  // small helper to unify popups (toast first, fallback to alert)
+  const notify = (message, type = 'info') => {
+    if (typeof showToast === 'function') {
+      showToast(message, type);
+    } else {
+      alert(message);
+    }
+  };
+
   // -----------------------
   // Checkout page
   // -----------------------
@@ -77,10 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalEl = document.getElementById('checkout-total');
     const finalizeBtn = document.getElementById('finalize-purchase');
 
-  const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
-  const ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
+    const ticketQty = parseQty(localStorage.getItem('ticketQty')) || 0;
+    const ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
     const seats = JSON.parse(localStorage.getItem('selectedSeats') || '[]');
-  const foodOrder = getNormalizedFoodOrder();
+    const foodOrder = getNormalizedFoodOrder();
     const upsellCart = JSON.parse(localStorage.getItem('upsellCart') || '[]');
 
     // Small price map fallback
@@ -173,29 +184,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const total = ticketQty * ticketUnitPrice + foodTotal + upsellTotal;
     totalEl.textContent = `$${total.toFixed(2)}`;
 
-    finalizeBtn && finalizeBtn.addEventListener('click', () => {
-      const foodSummary = Object.keys(foodOrder).length ? Object.keys(foodOrder).map(k => {
-          const raw = foodOrder[k];
-          const it = normalizeFoodItem(k, raw);
-          return `${it.name}${it.size ? ` (${it.size})` : ''}×${it.qty} ($${(parseFloat(it.price || 0) * parseQty(it.qty)).toFixed(2)})`;
-        }).join(', ') : 'None';
+    finalizeBtn &&
+      finalizeBtn.addEventListener('click', () => {
+        const foodSummary = Object.keys(foodOrder).length
+          ? Object.keys(foodOrder)
+              .map(k => {
+                const raw = foodOrder[k];
+                const it = normalizeFoodItem(k, raw);
+                return `${it.name}${
+                  it.size ? ` (${it.size})` : ''
+                }×${it.qty} ($${(parseFloat(it.price || 0) * parseQty(it.qty)).toFixed(2)})`;
+              })
+              .join(', ')
+          : 'None';
 
-      const upsellSummary = upsellCart.length ? upsellCart.map(u => `${u.item} ($${(u.price||0).toFixed(2)})`).join(', ') : 'None';
+        const upsellSummary = upsellCart.length
+          ? upsellCart.map(u => `${u.item} ($${(u.price || 0).toFixed(2)})`).join(', ')
+          : 'None';
 
-      alert('Thank you for your purchase!\n\nOrder details:\n' +
-        `Tickets: ${ticketQty} ($${(ticketQty * ticketUnitPrice).toFixed(2)})\n` +
-        `Seats: ${seats.length ? seats.join(', ') : '-'}\n` +
-        `Snacks: ${foodSummary}\n` +
-        `Upsells: ${upsellSummary}\n` +
-        `Total: $${total.toFixed(2)}`);
+        const fullMessage =
+          'Thank you for your purchase!\n\nOrder details:\n' +
+          `Tickets: ${ticketQty} ($${(ticketQty * ticketUnitPrice).toFixed(2)})\n` +
+          `Seats: ${seats.length ? seats.join(', ') : '-'}\n` +
+          `Snacks: ${foodSummary}\n` +
+          `Upsells: ${upsellSummary}\n` +
+          `Total: $${total.toFixed(2)}`;
 
-      // clear demo state
-      localStorage.removeItem('ticketQty');
-      localStorage.removeItem('selectedSeats');
-      localStorage.removeItem('foodOrder');
-      localStorage.removeItem('upsellCart');
-      window.location.href = 'index.html';
-    });
+        // Use toast for a clean success popup, log full details to console
+        if (typeof showToast === 'function') {
+          console.log(fullMessage);
+          notify('Thank you for your purchase!', 'success');
+        } else {
+          alert(fullMessage);
+        }
+
+        // clear demo state
+        localStorage.removeItem('ticketQty');
+        localStorage.removeItem('selectedSeats');
+        localStorage.removeItem('foodOrder');
+        localStorage.removeItem('upsellCart');
+        window.location.href = 'index.html';
+      });
   }
 
   // -----------------------
@@ -250,28 +279,29 @@ document.addEventListener('DOMContentLoaded', () => {
       render();
     });
 
-    proceedToSeatsBtn && proceedToSeatsBtn.addEventListener('click', () => {
-      localStorage.setItem('ticketQty', count);
-      // also persist the latest unit price (in case user didn't change type after load)
-      if (ticketTypeEl) {
-        const opt = ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0];
-        const unit = opt ? parseFloat(opt.dataset.price) || pricePer : pricePer;
-        localStorage.setItem('ticketUnitPrice', String(unit));
-        localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
-      }
-      window.location.href = 'seat_selection.html';
-    });
+    proceedToSeatsBtn &&
+      proceedToSeatsBtn.addEventListener('click', () => {
+        localStorage.setItem('ticketQty', count);
+        // also persist the latest unit price (in case user didn't change type after load)
+        if (ticketTypeEl) {
+          const opt = ticketTypeEl.selectedOptions && ticketTypeEl.selectedOptions[0];
+          const unit = opt ? parseFloat(opt.dataset.price) || pricePer : pricePer;
+          localStorage.setItem('ticketUnitPrice', String(unit));
+          localStorage.setItem('ticketType', ticketTypeEl.value || 'standard');
+        }
+        window.location.href = 'seat_selection.html';
+      });
   }
 
   // -----------------------
-  // Seat selection page
+  // Seat selection page (old grid-based version)
   // -----------------------
   const seatMapEl = document.getElementById('seat-map');
   const selectedQtyEl = document.getElementById('selected-qty');
   const confirmSeatsBtn = document.getElementById('confirm-seats');
   if (seatMapEl) {
-  const rows = 6;
-  const cols = 9;
+    const rows = 6;
+    const cols = 9;
     const totalSeats = rows * cols;
     const desiredQty = parseQty(localStorage.getItem('ticketQty')) || 1;
     selectedQtyEl && (selectedQtyEl.textContent = desiredQty);
@@ -298,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const index = r * cols + c;
-  const btn = document.createElement('button');
+        const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'showtime-btn';
         btn.textContent = `${r + 1}${String.fromCharCode(65 + c)}`;
@@ -322,15 +352,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    confirmSeatsBtn && confirmSeatsBtn.addEventListener('click', () => {
-      const selected = Array.from(seatMapEl.querySelectorAll('button[data-selected="true"]')).map(b => b.textContent);
-      if (selected.length !== desiredQty) {
-        alert(`Please select ${desiredQty} seats.`);
-        return;
-      }
-      localStorage.setItem('selectedSeats', JSON.stringify(selected));
-      window.location.href = 'food_selection.html';
-    });
+    confirmSeatsBtn &&
+      confirmSeatsBtn.addEventListener('click', () => {
+        const selected = Array.from(
+          seatMapEl.querySelectorAll('button[data-selected="true"]')
+        ).map(b => b.textContent);
+        if (selected.length !== desiredQty) {
+          notify(`Please select ${desiredQty} seat${desiredQty === 1 ? '' : 's'}.`, 'error');
+          return;
+        }
+        localStorage.setItem('selectedSeats', JSON.stringify(selected));
+        window.location.href = 'food_selection.html';
+      });
   }
 
   // -----------------------
@@ -338,8 +371,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // -----------------------
   if (document.querySelectorAll('.concession-card').length) {
     const snackCards = Array.from(document.querySelectorAll('.concession-card'));
-  // order keyed by `${name}||${size}` -> { name, size, qty, price }
-  const order = getNormalizedFoodOrder();
+    // order keyed by `${name}||${size}` -> { name, size, qty, price }
+    const order = getNormalizedFoodOrder();
 
     snackCards.forEach(card => {
       const qtyEl = card.querySelector('.snack-qty');
@@ -352,32 +385,53 @@ document.addEventListener('DOMContentLoaded', () => {
       const renderQty = () => qtyEl && (qtyEl.textContent = qty);
       renderQty();
 
-      inc && inc.addEventListener('click', () => { qty = Math.min(10, qty + 1); renderQty(); });
-      dec && dec.addEventListener('click', () => { qty = Math.max(0, qty - 1); renderQty(); });
+      inc &&
+        inc.addEventListener('click', () => {
+          qty = Math.min(10, qty + 1);
+          renderQty();
+        });
+      dec &&
+        dec.addEventListener('click', () => {
+          qty = Math.max(0, qty - 1);
+          renderQty();
+        });
 
-      add && add.addEventListener('click', () => {
-        const name = card.querySelector('h3').textContent.trim();
-        let selectedSize = null;
-        let unitPrice = parseFloat(add.dataset.price) || 0;
-        if (sizeSelect && sizeSelect.selectedOptions && sizeSelect.selectedOptions[0]) {
-          const opt = sizeSelect.selectedOptions[0];
-          selectedSize = opt.dataset.size || opt.textContent || null;
-          unitPrice = parseFloat(opt.dataset.price) || unitPrice;
-        }
-        if (qty <= 0) return alert('Choose a quantity first');
-  const key = `${name}||${selectedSize || 'Default'}`;
-  if (!order[key]) order[key] = { name, size: selectedSize, qty: 0, price: unitPrice };
-  order[key].qty = (order[key].qty || 0) + qty;
-  order[key].price = unitPrice;
-  // write normalized order back to storage
-  localStorage.setItem('foodOrder', JSON.stringify(order));
-        qty = 0; renderQty();
-        alert(`${name}${selectedSize ? ' (' + selectedSize + ')' : ''} added to your order`);
-      });
+      add &&
+        add.addEventListener('click', () => {
+          const name = card.querySelector('h3').textContent.trim();
+          let selectedSize = null;
+          let unitPrice = parseFloat(add.dataset.price) || 0;
+          if (sizeSelect && sizeSelect.selectedOptions && sizeSelect.selectedOptions[0]) {
+            const opt = sizeSelect.selectedOptions[0];
+            selectedSize = opt.dataset.size || opt.textContent || null;
+            unitPrice = parseFloat(opt.dataset.price) || unitPrice;
+          }
+
+          if (qty <= 0) {
+            notify('Choose a quantity first', 'error');
+            return;
+          }
+
+          const key = `${name}||${selectedSize || 'Default'}`;
+          if (!order[key]) {
+            order[key] = { name, size: selectedSize, qty: 0, price: unitPrice };
+          }
+          order[key].qty = (order[key].qty || 0) + qty;
+          order[key].price = unitPrice;
+          // write normalized order back to storage
+          localStorage.setItem('foodOrder', JSON.stringify(order));
+          qty = 0;
+          renderQty();
+          notify(
+            `${name}${selectedSize ? ' (' + selectedSize + ')' : ''} added to your order`,
+            'success'
+          );
+        });
     });
 
     const reviewBtn = document.getElementById('review-order');
-    reviewBtn && reviewBtn.addEventListener('click', () => window.location.href = 'snack_upsell.html');
+    reviewBtn &&
+      reviewBtn.addEventListener('click', () => (window.location.href = 'snack_upsell.html'));
   }
 
   // -----------------------
@@ -393,7 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ticketUnitPrice = parseFloat(localStorage.getItem('ticketUnitPrice')) || 12.0;
     baseTotal += ticketQty * ticketUnitPrice;
 
-  const foodOrder = getNormalizedFoodOrder();
+    const foodOrder = getNormalizedFoodOrder();
     Object.keys(foodOrder).forEach(k => {
       const raw = foodOrder[k];
       const it = normalizeFoodItem(k, raw);
@@ -403,7 +457,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let upsellTotal = 0;
-    const renderTotal = () => totalEl && (totalEl.textContent = `$${(baseTotal + upsellTotal).toFixed(2)}`);
+    const renderTotal = () =>
+      totalEl && (totalEl.textContent = `$${(baseTotal + upsellTotal).toFixed(2)}`);
     renderTotal();
 
     upsells.forEach(btn => {
@@ -422,7 +477,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const completeBtn = document.getElementById('complete-purchase');
     if (completeBtn) {
-      completeBtn.addEventListener('click', () => { /* navigation link will go to checkout */ });
+      completeBtn.addEventListener('click', () => {
+        /* navigation link will go to checkout */
+      });
     }
   }
 });
+
+// ---------- Global toast / popup helper ----------
+(function () {
+  var timeoutId = null;
+
+  function ensureToast() {
+    var existing = document.getElementById('app-toast');
+    if (existing) return existing;
+
+    var toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.className = 'app-toast';
+    toast.dataset.type = 'info';
+
+    var icon = document.createElement('span');
+    icon.className = 'app-toast-icon';
+    icon.textContent = '•';
+
+    var msg = document.createElement('span');
+    msg.id = 'app-toast-message';
+
+    toast.appendChild(icon);
+    toast.appendChild(msg);
+    document.body.appendChild(toast);
+    return toast;
+  }
+
+  function show(message, type) {
+    var toast = ensureToast();
+    var msgEl = document.getElementById('app-toast-message') || toast;
+    msgEl.textContent = message;
+
+    type = type || 'info';
+    toast.dataset.type = type;
+
+    // icon per type
+    var iconEl = toast.querySelector('.app-toast-icon');
+    if (iconEl) {
+      if (type === 'error') iconEl.textContent = '⚠️';
+      else if (type === 'success') iconEl.textContent = '✅';
+      else iconEl.textContent = 'ℹ️';
+    }
+
+    toast.classList.add('visible');
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function () {
+      toast.classList.remove('visible');
+    }, 2400);
+  }
+
+  // make it globally available
+  window.showToast = function (message, type) {
+    show(message, type);
+  };
+})();

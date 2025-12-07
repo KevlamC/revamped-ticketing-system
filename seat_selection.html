@@ -1,417 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seat Selection - THEATRUM</title>
-    <link rel="stylesheet" href="styles/index_styles.css">
-    <style>
-        .seat-layout {
-        /* quick theme */
-        --panel: #1a1d20;
-        --panel-border: #2b2f34;
-        --seat-bg: #2b2f34;
-        --seat-border: #3a3f46;
-        --seat-hover: #343a41;
-        --seat-text: #a6adbb;
-        --booked: #e11d48;
-        --selected: #facc15;
-
-        /* sizing – slightly smaller than before */
-        --seat: clamp(20px, 2vw, 32px);
-        --gap: clamp(4px, 0.7vw, 8px);
-        --rowgap: clamp(6px, 0.8vw, 12px);
-
-        max-width: min(900px, 90vw);
-        margin: 40px auto 30px;
-        padding: clamp(16px, 2vw, 28px);
-        background: var(--panel);
-        border: 1px solid var(--panel-border);
-        border-radius: 12px;
-        text-align: center;
-        color: #e7eaf0;
-        }
-
-        /* Title */
-        .seat-title{
-        margin: 0 auto clamp(12px, 2vw, 20px);
-        font-size: clamp(22px, 2.1vw, 30px);
-        font-weight: 800;
-        color: #e5e7eb;
-        }
-        .seat-title::after{
-        content:"";
-        display:block;
-        width: clamp(80px, 12vw, 160px);
-        height: 3px;
-        margin: 8px auto 0;
-        border-radius: 999px;
-        background: linear-gradient(90deg,#e11d48,#f87171);
-        }
-
-        /* Screen */
-        .screen{
-        width: 90%;
-        height: clamp(20px, 1.9vw, 30px);
-        margin: 0 auto clamp(14px, 2vw, 24px);
-        background: linear-gradient(90deg,#e11d48,#f87171);
-        color:#fff; font-weight:700; letter-spacing:.25em;
-        border-radius: 10px;
-        display:flex; align-items:center; justify-content:center;
-        box-shadow: 0 6px 16px rgba(225,29,72,.25);
-        }
-
-        /* Grid */
-        .rows{ display:flex; flex-direction:column; align-items:center; gap:var(--rowgap); margin-bottom: 18px; }
-        .row{ display:flex; align-items:center; justify-content:center; gap:var(--gap); }
-        .row-label{ width: calc(var(--seat)*0.9); text-align:right; color:#9aa3b2; font-weight:600; user-select:none; }
-
-        /* Seat */
-        .seat{
-        width:var(--seat); height:var(--seat);
-        border-radius:7px; border:1px solid var(--seat-border);
-        background:var(--seat-bg); color:var(--seat-text);
-        font-size: clamp(11px, .9vw, 14px);
-        display:inline-flex; align-items:center; justify-content:center;
-        cursor:pointer; transition:.15s ease;
-        }
-        .seat:hover{ background:var(--seat-hover); transform: translateY(-1px); }
-        .seat:active{ transform:none; }
-        .seat.aisle{ visibility:hidden; pointer-events:none; border:none; background:transparent; }
-        .seat.booked{ background:var(--booked); border-color:var(--booked); color:#fff; cursor:not-allowed; }
-        .seat.booked:hover{ transform:none; }
-        .seat.selected{
-        background:var(--selected); border-color:var(--selected); color:#111; font-weight:800;
-        box-shadow: 0 6px 14px rgba(250,204,21,.22);
-        }
-        /* ===== Seat page actions ===== */
-        .seat-actions{
-        display:flex;
-        justify-content:center;           /* center on page */
-        gap: clamp(12px, 1.6vw, 20px);
-        margin: clamp(18px, 3vh, 32px) 0 0;
-        }
-
-        .btn{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        min-width: clamp(120px, 16vw, 220px);
-        height: clamp(40px, 5.2vh, 54px);
-        padding: 0 clamp(18px, 2.2vw, 28px);
-        border-radius: 10px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
-        user-select:none;
-        }
-
-        /* Outline (Back) */
-        .btn-outline{
-        color:#fff;
-        background: var(--accent-red, #e11d48);
-        border: 2px solid transparent;
-        box-shadow: 0 8px 16px rgba(225,29,72,.25);
-        }
-        .btn-outline:hover{ transform: translateY(-1px); box-shadow: 0 10px 18px rgba(225,29,72,.32); }
-        .btn-outline:active{ transform:none; }
-        .btn-outline:focus{ outline: 2px solid #7dd3fc; outline-offset: 3px; }
-
-        /* Solid red (Next) */
-        .btn-primary{
-        color:#fff;
-        background: var(--accent-red, #e11d48);
-        border: 2px solid transparent;
-        box-shadow: 0 8px 16px rgba(225,29,72,.25);
-        }
-        .btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 10px 18px rgba(225,29,72,.32); }
-        .btn-primary:active{ transform:none; }
-        .btn-primary:focus{ outline: 2px solid #7dd3fc; outline-offset: 3px; }
-
-        /* Optional: right-align on large screens */
-        @media (min-width: 1024px){
-        .seat-actions{ justify-content: flex-end; }
-        }
-        /* Legend */
-        .legend{ display:flex; justify-content:center; gap: clamp(12px, 2vw, 24px); padding-top: 16px; border-top:1px solid var(--panel-border); }
-        .legend-item{ display:flex; align-items:center; gap:8px; color:#cbd1db; font-size: clamp(12px, 1vw, 15px); }
-        .legend-color{ width:18px; height:18px; border-radius:4px; border:1px solid var(--seat-border); }
-        .legend-available{ background:var(--seat-bg); }
-        .legend-booked{ background:var(--booked); border-color:var(--booked); }
-        .legend-yours{ background:var(--selected); border-color:var(--selected); }
-    </style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theatrum — Select Your Seats</title>
+  <link rel="stylesheet" href="styles/index_styles.css" />
+  <style>
+    .checkout-shell {
+      max-width: 1200px;
+      margin: 120px auto 64px;
+      padding: 0 32px;
+    }
+    .seat-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(260px, 1.1fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .seat-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .card h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .muted {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0 20px;
+    }
+    .screen {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(248, 250, 252, 0.2), rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.2));
+      margin: 8px 0 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .screen-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .seats-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .seat-row {
+      display: grid;
+      grid-template-columns: auto repeat(8, minmax(0, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+    .seat-row-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: right;
+      padding-right: 4px;
+    }
+    .seat {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-elevated);
+      padding: 6px 0;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.16s ease, border-color 0.16s ease, transform 0.1s ease;
+      min-height: 32px;
+    }
+    .seat:hover:not(.seat-occupied) {
+      border-color: rgba(248, 113, 113, 0.6);
+      transform: translateY(-1px);
+    }
+    .seat-selected {
+      background: rgba(248, 113, 113, 0.16);
+      border-color: rgba(248, 113, 113, 0.9);
+    }
+    .seat-occupied {
+      background: rgba(15, 23, 42, 0.6);
+      border-color: rgba(15, 23, 42, 0.9);
+      color: rgba(148, 163, 184, 0.6);
+      cursor: not-allowed;
+    }
+    .seat-legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .seat-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .seat-legend-seat {
+      width: 18px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+    }
+    .seat-legend-seat.selected {
+      background: rgba(248, 113, 113, 0.25);
+      border-color: rgba(248, 113, 113, 0.9);
+    }
+    .seat-legend-seat.occupied {
+      background: rgba(15, 23, 42, 0.6);
+      border-color: rgba(15, 23, 42, 0.9);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .pill.step-pill {
+      background: rgba(251, 191, 36, 0.08);
+      border-color: rgba(251, 191, 36, 0.28);
+      color: #facc15;
+    }
+    .selection-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .selection-meta strong {
+      color: var(--text-primary);
+    }
+    .sidebar-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .summary-row strong {
+      color: var(--text-primary);
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html#now-playing">Now Playing</a></li>
-                <li><a href="index.html#coming-soon">Coming Soon</a></li>
-                <li><a href="food_selection.html">Food & Drinks</a></li>
-                <li><a href="index.html#offers">Offers</a></li>
-                <li><a href="index.html#locations">Locations</a></li>
-
-            </ul>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <input type="text" placeholder="Search movies...">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </div>
-                <button class="btn-secondary" style="background-color: var(--accent-red); color: white; border: none;">Alex</button>
-            </div>
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo" id="logo">
+        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#now-playing">Now Playing</a></li>
+        <li><a href="#coming-soon">Coming Soon</a></li>
+        <li><a href="#concessions">Food & Drinks</a></li>
+        <li><a href="#offers">Offers</a></li>
+        <li><a href="#locations">Locations</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="search-box">
+          <input id="globalSearch" type="text" placeholder="Search movies..." />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
         </div>
-    </nav>
+        <button id="userButton" class="btn-primary">Alex</button>
+      </div>
+    </div>
+  </nav>
 
-    <main class="container" style="padding-top:60px;padding-bottom:60px;">
-        <!-- Seat Layout -->
-        <div class="seat-layout">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-                <button onclick="window.history.back()" style="display:flex;align-items:center;gap:6px;background:var(--accent-red);border:none;color:white;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">
-                    ← Back
-                </button>
-            </div>
-            <h2 class="seat-title">Select Your Seats</h2>
-            <div class="screen">SCREEN</div>
+  <main class="checkout-shell">
+    <div class="row" style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px;">
+      <span class="pill step-pill">Step 2 — Select Seats</span>
+      <span class="muted" id="seat-step-helper">Choose your seats</span>
+    </div>
 
-      <div class="rows">
-        <!-- Row A -->
-        <div class="row">
-          <span class="row-label">A</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+    <div class="seat-layout">
+      <!-- Left: Seat map -->
+      <section class="card">
+        <h2>Select your seats</h2>
+        <p class="muted">
+          Pick seats for your booking. You can choose up to
+          <span id="seat-ticket-count-label">0</span> seats.
+        </p>
+        <div class="divider"></div>
+
+        <div class="screen-label">Screen this way</div>
+        <div class="screen"></div>
+
+        <div class="seats-grid" id="seats-grid">
+          <!-- Row A -->
+          <div class="seat-row" data-row="A">
+            <div class="seat-row-label">A</div>
+            <button class="seat" data-seat-id="A1">A1</button>
+            <button class="seat" data-seat-id="A2">A2</button>
+            <button class="seat" data-seat-id="A3">A3</button>
+            <button class="seat" data-seat-id="A4">A4</button>
+            <button class="seat" data-seat-id="A5">A5</button>
+            <button class="seat" data-seat-id="A6">A6</button>
+            <button class="seat" data-seat-id="A7">A7</button>
+            <button class="seat" data-seat-id="A8">A8</button>
+          </div>
+          <!-- Row B -->
+          <div class="seat-row" data-row="B">
+            <div class="seat-row-label">B</div>
+            <button class="seat" data-seat-id="B1">B1</button>
+            <button class="seat" data-seat-id="B2">B2</button>
+            <button class="seat" data-seat-id="B3">B3</button>
+            <button class="seat" data-seat-id="B4">B4</button>
+            <button class="seat" data-seat-id="B5">B5</button>
+            <button class="seat" data-seat-id="B6">B6</button>
+            <button class="seat seat-occupied" data-seat-id="B7" aria-label="B7 occupied">X</button>
+            <button class="seat seat-occupied" data-seat-id="B8" aria-label="B8 occupied">X</button>
+          </div>
+          <!-- Row C -->
+          <div class="seat-row" data-row="C">
+            <div class="seat-row-label">C</div>
+            <button class="seat" data-seat-id="C1">C1</button>
+            <button class="seat" data-seat-id="C2">C2</button>
+            <button class="seat" data-seat-id="C3">C3</button>
+            <button class="seat" data-seat-id="C4">C4</button>
+            <button class="seat" data-seat-id="C5">C5</button>
+            <button class="seat" data-seat-id="C6">C6</button>
+            <button class="seat" data-seat-id="C7">C7</button>
+            <button class="seat" data-seat-id="C8">C8</button>
+          </div>
+          <!-- Row D -->
+          <div class="seat-row" data-row="D">
+            <div class="seat-row-label">D</div>
+            <button class="seat" data-seat-id="D1">D1</button>
+            <button class="seat" data-seat-id="D2">D2</button>
+            <button class="seat" data-seat-id="D3">D3</button>
+            <button class="seat" data-seat-id="D4">D4</button>
+            <button class="seat" data-seat-id="D5">D5</button>
+            <button class="seat" data-seat-id="D6">D6</button>
+            <button class="seat" data-seat-id="D7">D7</button>
+            <button class="seat" data-seat-id="D8">D8</button>
+          </div>
+          <!-- Row E -->
+          <div class="seat-row" data-row="E">
+            <div class="seat-row-label">E</div>
+            <button class="seat" data-seat-id="E1">E1</button>
+            <button class="seat" data-seat-id="E2">E2</button>
+            <button class="seat" data-seat-id="E3">E3</button>
+            <button class="seat" data-seat-id="E4">E4</button>
+            <button class="seat" data-seat-id="E5">E5</button>
+            <button class="seat" data-seat-id="E6">E6</button>
+            <button class="seat" data-seat-id="E7">E7</button>
+            <button class="seat" data-seat-id="E8">E8</button>
+          </div>
         </div>
 
-        <!-- Row B -->
-        <div class="row">
-          <span class="row-label">B</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+        <div class="seat-legend">
+          <div class="seat-legend-item">
+            <span class="seat-legend-seat"></span> <span>Available</span>
+          </div>
+          <div class="seat-legend-item">
+            <span class="seat-legend-seat selected"></span> <span>Selected</span>
+          </div>
+          <div class="seat-legend-item">
+            <span class="seat-legend-seat occupied"></span> <span>Unavailable</span>
+          </div>
         </div>
 
-        <!-- Row C -->
-        <div class="row">
-          <span class="row-label">C</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+        <div class="selection-meta">
+          <div>
+            <span class="muted">Selected seats:</span>
+            <strong id="selected-seats-label">None</strong>
+          </div>
+          <div>
+            <span class="muted">Seats remaining:</span>
+            <strong id="seats-remaining-label">0</strong>
+          </div>
         </div>
 
-        <!-- Row D -->
-        <div class="row">
-          <span class="row-label">D</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+        <div class="actions">
+          <button class="btn-secondary" onclick="window.location.href='ticket_quantity.html'">
+            Back
+          </button>
+          <button class="btn-secondary" id="seats-skip-snacks">
+            Skip snacks, go to payment
+          </button>
+          <button class="btn-primary" id="seats-next-snacks">
+            Continue to snacks
+          </button>
         </div>
+      </section>
 
-        <!-- Row E -->
-        <div class="row">
-          <span class="row-label">E</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+      <!-- Right: Small summary sidebar -->
+      <aside class="card">
+        <h3 class="sidebar-title">Your Selection</h3>
+        <p class="muted">You can adjust this later before paying.</p>
+        <div class="divider"></div>
+
+        <div class="summary-row">
+          <span>Tickets</span>
+          <span><strong id="sidebar-ticket-count">0</strong></span>
         </div>
-
-        <!-- Row F (Your seats) -->
-        <div class="row">
-        <span class="row-label">F</span>
-        <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-        <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-        <div class="seat">7</div><div class="seat">8</div>
+        <div class="summary-row">
+          <span>Seats</span>
+          <span id="sidebar-seats">None</span>
         </div>
-
-        <!-- Row G -->
-        <div class="row">
-        <span class="row-label">G</span>
-        <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-        <div class="seat">4</div><div class="seat">5</div><div class="seat">6</div><div class="seat aisle"></div>
-        <div class="seat">7</div><div class="seat">8</div>
+        <div class="summary-row">
+          <span>Format</span>
+          <span id="sidebar-format">Standard</span>
         </div>
+        <p class="muted" style="margin-top: 12px; font-size: 12px;">
+          Tip: Sit closer to the middle for the best experience.
+        </p>
+      </aside>
+    </div>
+  </main>
 
-
-        <!-- Row H -->
-        <div class="row">
-          <span class="row-label">H</span>
-          <div class="seat">1</div><div class="seat">2</div><div class="seat">3</div><div class="seat aisle"></div>
-          <div class="seat">4</div><div class="seat booked">5</div><div class="seat booked">6</div><div class="seat aisle"></div>
-          <div class="seat">7</div><div class="seat">8</div>
+  <!-- Footer (same as other pages) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+          </div>
+          <p>Experience cinema the way it was meant to be seen.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Customer Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Newsletter</h4>
+          <p>Get the latest movies and exclusive offers</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email" />
+            <button class="btn-primary">Subscribe</button>
+          </div>
         </div>
       </div>
-
-      <!-- Legend -->
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-color legend-available"></div>
-          <span>Available</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color legend-booked"></div>
-          <span>Unavailable</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color legend-yours"></div>
-          <span>Your Seats</span>
+      <div class="footer-bottom">
+        <p>&copy; 2025 THEATRUM. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Settings</a>
         </div>
       </div>
-            <div class="seat-actions">
-                <button id="btn-snacks" class="btn btn-outline">Select Snacks</button>
-                <button id="btn-payment" class="btn btn-outline">Skip Snacks</button>
-            </div>
-        </div>
-    </main>
+    </div>
+  </footer>
 
+  <script src="scripts/booking.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      function parseIntSafe(v) {
+        var n = parseInt(v, 10);
+        return isNaN(n) ? 0 : n;
+      }
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-                    </div>
-                    <p>Experience cinema the way it was meant to be seen.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Twitter">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417a9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Instagram">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+      var ticketQty = parseIntSafe(localStorage.getItem('ticketQty'));
+      var ticketType = localStorage.getItem('ticketType') || 'standard';
+      var formatLabel = ticketType === '3d' ? '3D' : 'Standard';
 
-                <div class="footer-section">
-                    <h4>Movies</h4>
-                    <ul>
-                        <li><a href="#now-playing">Now Playing</a></li>
-                        <li><a href="#coming-soon">Coming Soon</a></li>
-                        <li><a href="#">Movie Formats</a></li>
-                        <li><a href="#">Private Events</a></li>
-                    </ul>
-                </div>
+      var seatCountLabel = document.getElementById('seat-ticket-count-label');
+      var stepHelper = document.getElementById('seat-step-helper');
+      var selectedSeatsLabel = document.getElementById('selected-seats-label');
+      var seatsRemainingLabel = document.getElementById('seats-remaining-label');
+      var sidebarTicketCount = document.getElementById('sidebar-ticket-count');
+      var sidebarSeats = document.getElementById('sidebar-seats');
+      var sidebarFormat = document.getElementById('sidebar-format');
 
-                <div class="footer-section">
-                    <h4>Membership</h4>
-                    <ul>
-                        <li><a href="#">Premium Pass</a></li>
-                        <li><a href="#">Rewards Program</a></li>
-                        <li><a href="#">Gift Cards</a></li>
-                        <li><a href="#">Corporate Sales</a></li>
-                    </ul>
-                </div>
+      if (seatCountLabel) seatCountLabel.textContent = ticketQty || 0;
+      if (sidebarTicketCount) sidebarTicketCount.textContent = ticketQty || 0;
+      if (sidebarFormat) sidebarFormat.textContent = formatLabel;
 
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Accessibility</a></li>
-                        <li><a href="#">Careers</a></li>
-                    </ul>
-                </div>
-            </div>
+      if (ticketQty <= 0 && typeof showToast === 'function') {
+        showToast('Please pick your tickets first.', 'info');
+      }
 
-            <div class="footer-bottom">
-                <p>&copy; 2025 THEATRUM. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Cookie Settings</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+      // 🔥 Always start fresh on this page
+      localStorage.removeItem('selectedSeats');
+      var selected = new Set();
 
-    <script>
-      (function() {
-        const rows = Array.from(document.querySelectorAll('.rows .row'));
-        const ticketQty = parseInt(localStorage.getItem('ticketQty') || '1', 10);
-        let selected = [];
-    
-        // Clear any hard-coded "selected" seats from HTML
-        document.querySelectorAll('.seat.selected').forEach(seat => {
-          seat.classList.remove('selected');
-        });
-    
-        function getSeatId(seatEl) {
-          const rowEl = seatEl.closest('.row');
-          const rowLabelEl = rowEl ? rowEl.querySelector('.row-label') : null;
-          const rowLetter = rowLabelEl ? rowLabelEl.textContent.trim() : '';
-          const seatNumber = seatEl.textContent.trim();
-          return rowLetter + seatNumber; // e.g., "A7"
+      var seatButtons = Array.prototype.slice.call(document.querySelectorAll('.seat'));
+
+      function refreshUI() {
+        var arr = Array.from(selected);
+        if (selectedSeatsLabel) {
+          selectedSeatsLabel.textContent = arr.length ? arr.join(', ') : 'None';
         }
-    
-        // Attach click handlers to each seat
-        rows.forEach(row => {
-          row.querySelectorAll('.seat').forEach(seat => {
-            if (seat.classList.contains('aisle') || seat.classList.contains('booked')) return;
-    
-            seat.addEventListener('click', () => {
-              const id = getSeatId(seat);
-              const idx = selected.indexOf(id);
-    
-              if (idx >= 0) {
-                // Unselect
-                selected.splice(idx, 1);
-                seat.classList.remove('selected');
-              } else {
-                // Enforce max equal to ticketQty
-                if (selected.length >= ticketQty) {
-                  alert(`You can only select ${ticketQty} seat(s).`);
-                  return;
-                }
-                selected.push(id);
-                seat.classList.add('selected');
-              }
-            });
+        if (seatsRemainingLabel) {
+          var remaining = Math.max(ticketQty - arr.length, 0);
+          seatsRemainingLabel.textContent = remaining;
+        }
+        if (sidebarSeats) {
+          sidebarSeats.textContent = arr.length ? arr.join(', ') : 'None';
+        }
+        if (stepHelper && ticketQty > 0) {
+          var remaining2 = Math.max(ticketQty - arr.length, 0);
+          if (remaining2 === 0) {
+            stepHelper.textContent = 'Looks good — continue when you’re ready.';
+          } else {
+            stepHelper.textContent = 'Select ' + remaining2 + ' more seat' + (remaining2 === 1 ? '' : 's') + '.';
+          }
+        }
+      }
+
+      // initial UI (no pre-selected seats)
+      refreshUI();
+
+      function notify(message, type) {
+        if (typeof showToast === 'function') {
+          showToast(message, type || 'info');
+        } else {
+          alert(message);
+        }
+      }
+
+      seatButtons.forEach(function (btn) {
+        var id = String(btn.dataset.seatId || '');
+        if (!id) return;
+
+        if (btn.classList.contains('seat-occupied')) {
+          btn.addEventListener('click', function () {
+            notify('That seat is already taken.', 'error');
           });
+          return;
+        }
+
+        btn.addEventListener('click', function () {
+          if (selected.has(id)) {
+            selected.delete(id);
+            btn.classList.remove('seat-selected');
+          } else {
+            if (ticketQty && selected.size >= ticketQty) {
+              notify(
+                'You can only select ' +
+                  ticketQty +
+                  ' seat' +
+                  (ticketQty === 1 ? '' : 's') +
+                  ' for this booking.',
+                'error'
+              );
+              return;
+            }
+            selected.add(id);
+            btn.classList.add('seat-selected');
+          }
+
+          localStorage.setItem('selectedSeats', JSON.stringify(Array.from(selected)));
+          refreshUI();
         });
-    
-        function goNext(targetPage) {
-          if (selected.length !== ticketQty) {
-            alert(`Please select ${ticketQty} seat(s) before continuing.`);
-            return;
-          }
-          try {
-            localStorage.setItem('selectedSeats', JSON.stringify(selected));
-          } catch (e) {
-            console.warn('Could not save selected seats', e);
-          }
-          window.location.href = targetPage;
+      });
+
+      function ensureValidSelectionOrWarn() {
+        if (!ticketQty) {
+          notify('Please select your ticket quantity first.', 'error');
+          return false;
         }
-    
-        const snacksBtn = document.getElementById('btn-snacks');
-        const paymentBtn = document.getElementById('btn-payment');
-    
-        if (snacksBtn) {
-          // Snacks flow → food_selection.html
-          snacksBtn.addEventListener('click', () => goNext('food_selection.html'));
+        if (selected.size !== ticketQty) {
+          notify(
+            'Please select exactly ' +
+              ticketQty +
+              ' seat' +
+              (ticketQty === 1 ? '' : 's') +
+              ' to continue.',
+            'error'
+          );
+          return false;
         }
-        if (paymentBtn) {
-          // Skip snacks → go to the old payment summary
-          paymentBtn.addEventListener('click', () => goNext('payment-summary.html'));
+        if (!selected.size) {
+          notify('Please pick at least one seat.', 'error');
+          return false;
         }
-      })();
-    </script>
-    
-    <script src="scripts/booking.js"></script>
-    </body>
-    </html>
-    
+        // save again just in case
+        localStorage.setItem('selectedSeats', JSON.stringify(Array.from(selected)));
+        return true;
+      }
+
+      var btnNextSnacks = document.getElementById('seats-next-snacks');
+      var btnSkipSnacks = document.getElementById('seats-skip-snacks');
+
+      if (btnNextSnacks) {
+        btnNextSnacks.addEventListener('click', function () {
+          if (!ensureValidSelectionOrWarn()) return;
+          window.location.href = 'food_selection.html';
+        });
+      }
+
+      if (btnSkipSnacks) {
+        btnSkipSnacks.addEventListener('click', function () {
+          if (!ensureValidSelectionOrWarn()) return;
+          window.location.href = 'payment-summary.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
