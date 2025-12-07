@@ -41,17 +41,17 @@
                     <h2>Select Ticket Quantity</h2>
                     <p class="section-subtitle" style="margin-bottom:16px;">Choose how many tickets you'd like to purchase</p>
                     <button onclick="window.history.back()" style="display:flex;align-items:center;gap:6px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">
-                        ← Back
+                        < Back
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Movie Title -->
-        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:24px;flex-wrap:wrap;max-width:1000px;margin-left:auto;margin-right:auto;">
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;max-width:1000px;margin-left:auto;margin-right:auto;">
             <h3 id="selected-title" style="font-size:28px;font-weight:800;margin:0;color:var(--text-primary);">Selected Movie</h3>
-            <p id="selected-info" style="margin:0;font-size:13px;color:var(--text-secondary);">Select a showtime to see details</p>
         </div>
+        <p id="selected-info" style="margin:0 0 24px 0;font-size:13px;color:var(--text-secondary);max-width:1000px;margin-left:auto;margin-right:auto;">Select a showtime to see details</p>
 
         <div style="display:grid;grid-template-columns:0.8fr 1.2fr;gap:32px;align-items:center;max-width:1000px;margin:0 auto;">
             <!-- Movie Poster Section -->
@@ -64,37 +64,66 @@
             <!-- Selection Section -->
             <div style="padding:0;">
 
-                <!-- Ticket Type Selection -->
+                <!-- Ticket Type Summary (pulled from homepage selection) -->
                 <div style="margin-bottom:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:14px;">
-                    <label style="display:block;margin-bottom:8px;font-size:12px;color:var(--text-secondary);font-weight:700;">Ticket Type</label>
-                    <select class="size-select ticket-type-select" id="ticket-type" style="width:100%;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;">
-                        <option value="standard" data-price="12">Standard — $12.00</option>
-                        <option value="3d" data-price="15">3D — $15.00</option>
-                        <option value="imax" data-price="18">IMAX — $18.00</option>
-                        <option value="dolby" data-price="16">Dolby — $16.00</option>
-                    </select>
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+                        <div>
+                            <div style="font-size:12px;color:var(--text-secondary);font-weight:700;">Screen Format</div>
+                            <div id="screen-format" style="font-size:16px;font-weight:800;color:var(--text-primary);">Standard</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span style="font-size:12px;color:var(--text-secondary);font-weight:700;">Base Price</span>
+                            <span id="base-price" style="font-size:18px;font-weight:800;color:var(--accent-red);">$12.00</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Quantity Selection -->
                 <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:20px;">
-                    <label style="display:block;margin-bottom:10px;font-size:12px;color:var(--text-secondary);font-weight:700;">Number of Tickets</label>
-                    <div style="display:flex;align-items:center;gap:16px;">
-                        <button id="decrement" class="btn-secondary" aria-label="Decrease quantity" style="width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:16px;font-weight:700;">−</button>
-                        <div style="font-size:36px;font-weight:900;min-width:60px;text-align:center;color:var(--accent-red);" id="ticket-count">1</div>
-                        <button id="increment" class="btn-secondary" aria-label="Increase quantity" style="width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:16px;font-weight:700;">+</button>
+                    <label style="display:block;margin-bottom:12px;font-size:12px;color:var(--text-secondary);font-weight:700;">Select Tickets</label>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+                        <div style="padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg-tertiary);display:flex;flex-direction:column;gap:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div>
+                                    <div style="font-weight:800;color:var(--text-primary);">Adult</div>
+                                    <div style="font-size:12px;color:var(--text-secondary);">Ages 13+</div>
+                                </div>
+                                <div id="adult-price" style="font-weight:800;color:var(--accent-red);">$12.00</div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <button id="adult-decrement" class="btn-secondary" aria-label="Decrease adult tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">−</button>
+                                <div id="adult-count" style="font-size:24px;font-weight:900;min-width:40px;text-align:center;color:var(--text-primary);">0</div>
+                                <button id="adult-increment" class="btn-secondary" aria-label="Increase adult tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">+</button>
+                            </div>
+                        </div>
+
+                        <div style="padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg-tertiary);display:flex;flex-direction:column;gap:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div>
+                                    <div style="font-weight:800;color:var(--text-primary);">Child</div>
+                                    <div style="font-size:12px;color:var(--text-secondary);">Ages 3-12</div>
+                                </div>
+                                <div id="child-price" style="font-weight:800;color:var(--accent-red);">$7.00</div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <button id="child-decrement" class="btn-secondary" aria-label="Decrease child tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">−</button>
+                                <div id="child-count" style="font-size:24px;font-weight:900;min-width:40px;text-align:center;color:var(--text-primary);">0</div>
+                                <button id="child-increment" class="btn-secondary" aria-label="Increase child tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">+</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Price Summary -->
-                <div style="background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.05));border:1px solid rgba(220,38,38,0.3);border-radius:10px;padding:12px;margin-bottom:20px;text-align:center;">
-                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px;">Price per ticket</div>
-                    <div style="font-size:22px;font-weight:800;color:var(--accent-red);" id="ticket-price">$12.00</div>
-                </div>
-
-                <!-- Total Price -->
-                <div style="background:linear-gradient(135deg,rgba(220,38,38,0.15),rgba(220,38,38,0.08));border:1px solid rgba(220,38,38,0.4);border-radius:10px;padding:12px;margin-bottom:20px;text-align:center;">
-                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px;">Total</div>
-                    <div style="font-size:28px;font-weight:900;color:var(--accent-red);" id="total-price">$12.00</div>
+                <!-- Totals -->
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:16px;">
+                    <div style="background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.05));border:1px solid rgba(220,38,38,0.3);border-radius:10px;padding:12px;text-align:center;">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Tickets Selected</div>
+                        <div id="ticket-count" style="font-size:22px;font-weight:900;color:var(--text-primary);">1</div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,rgba(220,38,38,0.15),rgba(220,38,38,0.08));border:1px solid rgba(220,38,38,0.4);border-radius:10px;padding:12px;text-align:center;">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Total</div>
+                        <div id="total-price" style="font-size:26px;font-weight:900;color:var(--accent-red);">$12.00</div>
+                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -184,18 +213,31 @@
     </footer>
 
     <script>
-  // Update price display when ticket type changes
-  const ticketTypeSelect = document.getElementById('ticket-type');
-  const ticketCountEl = document.getElementById('ticket-count');
-  const ticketPriceEl = document.getElementById('ticket-price');
-  const totalPriceEl = document.getElementById('total-price');
-  const decrementBtn = document.getElementById('decrement');
-  const incrementBtn = document.getElementById('increment');
+      const screenTextEl = document.getElementById('screen-format');
+      const basePriceEl = document.getElementById('base-price');
+      const adultPriceEl = document.getElementById('adult-price');
+      const childPriceEl = document.getElementById('child-price');
+      const adultCountEl = document.getElementById('adult-count');
+      const childCountEl = document.getElementById('child-count');
+      const ticketCountEl = document.getElementById('ticket-count');
+      const totalPriceEl = document.getElementById('total-price');
+      const adultDec = document.getElementById('adult-decrement');
+      const adultInc = document.getElementById('adult-increment');
+      const childDec = document.getElementById('child-decrement');
+      const childInc = document.getElementById('child-increment');
 
-  // Populate movie details from saved selection
-  try {
-    const rawShow = localStorage.getItem('currentShow');
-    if (rawShow) {
+      // Price presets based on screen type selection from the homepage
+      const screenPriceMap = {
+        standard: 17,
+        '3d': 18,
+        imax: 18,
+        dolby: 16
+      };
+
+      // Populate movie details from saved selection
+      try {
+        const rawShow = localStorage.getItem('currentShow');
+        if (rawShow) {
       const show = JSON.parse(rawShow);
       const titleEl = document.getElementById('selected-title');
       const infoEl = document.getElementById('selected-info');
@@ -216,37 +258,65 @@
       }
     }
   } catch (e) {
-    console.warn('Could not load previous show selection', e);
-  }
-  
-  let ticketCount = 1;
-  
-  function updatePrices() {
-      const pricePerTicket = parseFloat(ticketTypeSelect.options[ticketTypeSelect.selectedIndex].dataset.price);
-      const total = pricePerTicket * ticketCount;
-      
-      ticketPriceEl.textContent = `$${pricePerTicket.toFixed(2)}`;
-      totalPriceEl.textContent = `$${total.toFixed(2)}`;
-  }
-  
-  ticketTypeSelect.addEventListener('change', updatePrices);
-  
-  decrementBtn.addEventListener('click', () => {
-      if (ticketCount > 1) {
-          ticketCount--;
-          ticketCountEl.textContent = ticketCount;
-          updatePrices();
+        console.warn('Could not load previous show selection', e);
       }
-  });
-  
-  incrementBtn.addEventListener('click', () => {
-      ticketCount++;
-      ticketCountEl.textContent = ticketCount;
-      updatePrices();
-  });
 
-  // Initialize totals on load
-  updatePrices();
+      // Determine base price from saved screen selection (falls back to standard)
+      const savedScreenType = (localStorage.getItem('ticketType') || 'standard').toLowerCase();
+      const basePrice = screenPriceMap[savedScreenType] || screenPriceMap.standard;
+      const adultPrice = basePrice;
+      const childPrice = Math.max(0, basePrice - 5);
+
+      // Show chosen screen/price
+      if (screenTextEl) screenTextEl.textContent = savedScreenType.toUpperCase();
+      if (basePriceEl) basePriceEl.textContent = `$${basePrice.toFixed(2)}`;
+      if (adultPriceEl) adultPriceEl.textContent = `$${adultPrice.toFixed(2)}`;
+      if (childPriceEl) childPriceEl.textContent = `$${childPrice.toFixed(2)}`;
+
+      // Initialize counts
+      let adultCount = Math.max(0, parseInt(localStorage.getItem('adultQty') || '0', 10));
+      let childCount = Math.max(0, parseInt(localStorage.getItem('childQty') || '0', 10));
+
+      const updateTotals = () => {
+        const totalTickets = adultCount + childCount;
+        const total = adultCount * adultPrice + childCount * childPrice;
+        if (adultCountEl) adultCountEl.textContent = adultCount;
+        if (childCountEl) childCountEl.textContent = childCount;
+        if (ticketCountEl) ticketCountEl.textContent = totalTickets;
+        if (totalPriceEl) totalPriceEl.textContent = `$${total.toFixed(2)}`;
+        // Persist for seat selection and checkout compatibility
+        localStorage.setItem('adultQty', adultCount);
+        localStorage.setItem('childQty', childCount);
+        localStorage.setItem('ticketQty', totalTickets);
+        // Use blended unit price to keep downstream totals consistent
+        const unit = totalTickets > 0 ? total / totalTickets : adultPrice;
+        localStorage.setItem('ticketUnitPrice', String(unit));
+        localStorage.setItem('ticketType', savedScreenType);
+      };
+
+      adultInc &&
+        adultInc.addEventListener('click', () => {
+          adultCount = Math.min(10, adultCount + 1);
+          updateTotals();
+        });
+      adultDec &&
+        adultDec.addEventListener('click', () => {
+          adultCount = Math.max(0, adultCount - 1);
+          updateTotals();
+        });
+      childInc &&
+        childInc.addEventListener('click', () => {
+          childCount = Math.min(10, childCount + 1);
+          updateTotals();
+        });
+      childDec &&
+        childDec.addEventListener('click', () => {
+          childCount = Math.max(0, childCount - 1);
+          updateTotals();
+        });
+
+      // Initialize totals on load
+      updateTotals();
 </script>
 <script src="scripts/booking.js"></script>
 </body>
