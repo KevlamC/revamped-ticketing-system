@@ -773,30 +773,87 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
     background: var(--bg-secondary);
 }
 
+.coming-soon-carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.coming-soon-carousel {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
 .coming-soon-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 32px;
+    display: flex;
+    gap: 20px;
+    scroll-behavior: smooth;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 8px 0;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+}
+
+.coming-soon-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-nav {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.carousel-nav:hover:not(:disabled) {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    color: white;
+    transform: scale(1.1);
+}
+
+.carousel-nav:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 .coming-card {
+    flex: 0 0 280px;
     background: var(--bg-card);
     border-radius: 16px;
     overflow: hidden;
     border: 1px solid var(--border);
     transition: all 0.3s ease;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
 }
 
 .coming-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 16px 48px rgba(245, 158, 11, 0.2);
-    border-color: var(--accent-amber);
+    box-shadow: 0 16px 48px rgba(220, 38, 38, 0.3);
+    border-color: var(--accent-red);
 }
 
 .coming-poster {
     position: relative;
-    aspect-ratio: 16/9;
+    aspect-ratio: 3/4;
     overflow: hidden;
+    background: var(--bg-secondary);
 }
 
 .coming-poster img {
@@ -807,49 +864,142 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
 }
 
 .coming-card:hover .coming-poster img {
-    transform: scale(1.05);
+    transform: scale(1.08);
+}
+
+.coming-soon-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--accent-red);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+.release-countdown {
+    position: absolute;
+    bottom: 60px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--accent-red);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+    z-index: 2;
 }
 
 .coming-date {
     position: absolute;
-    top: 16px;
-    left: 16px;
-    background: var(--accent-amber);
-    color: var(--bg-primary);
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, var(--accent-red), rgba(220, 38, 38, 0.8));
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-weight: 700;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    z-index: 2;
 }
 
 .date-month {
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 1px;
 }
 
 .date-day {
-    font-size: 24px;
+    font-size: 22px;
     line-height: 1;
 }
 
+.poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    z-index: 3;
+}
+
+.coming-card:hover .poster-overlay {
+    display: flex;
+}
+
 .coming-info {
-    padding: 24px;
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .coming-info h3 {
-    font-size: 22px;
+    font-size: 16px;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    line-height: 1.2;
 }
 
-.coming-info p {
+.coming-description {
     color: var(--text-secondary);
-    margin-bottom: 20px;
-    line-height: 1.6;
+    font-size: 13px;
+    margin-bottom: 12px;
+    flex: 1;
+    line-height: 1.4;
+}
+
+.coming-meta {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.genre-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.genre-badge.action {
+    background: rgba(220, 38, 38, 0.2);
+    color: var(--accent-red);
+}
+
+.genre-badge.comedy {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent-amber);
+}
+
+.genre-badge.drama {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--accent-blue);
+}
+
+.genre-badge.fantasy {
+    background: rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+}
+
+.genre-badge.musical {
+    background: rgba(236, 72, 153, 0.2);
+    color: #ec4899;
 }
 
 .btn-notify {
@@ -876,75 +1026,156 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
 
 .offers-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
 }
 
 .offer-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     transition: all 0.3s ease;
     position: relative;
+    overflow: hidden;
+}
+
+.offer-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(220, 38, 38, 0.03) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .offer-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 48px rgba(220, 38, 38, 0.15);
-    border-color: var(--accent-red);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(220, 38, 38, 0.12);
+    border-color: rgba(220, 38, 38, 0.3);
 }
 
-.offer-card.featured {
-    background: linear-gradient(135deg, var(--accent-red) 0%, #b91c1c 100%);
-    border-color: var(--accent-red);
+.offer-card:hover::before {
+    opacity: 1;
 }
 
-.offer-badge {
-    position: absolute;
-    top: -12px;
-    right: 24px;
-    background: var(--accent-amber);
-    color: var(--bg-primary);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
+.offer-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .offer-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--accent-red);
+    flex-shrink: 0;
+}
+
+.offer-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 2;
+}
+
+.offer-badge {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.flash-badge {
+    background: rgba(220, 38, 38, 0.2);
+    color: var(--accent-red);
+}
+
+.premium-badge {
+    background: rgba(251, 191, 36, 0.2);
+    color: #f59e0b;
+}
+
+.bundle-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.member-badge {
+    background: rgba(139, 92, 246, 0.2);
+    color: #8b5cf6;
 }
 
 .offer-card h3 {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
-    margin-bottom: 12px;
+    color: var(--text-primary);
+    margin: 0;
 }
 
-.offer-card p {
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-    line-height: 1.6;
+.offer-discount {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent-red);
+    margin: 0;
+    line-height: 1;
 }
 
-.offer-card.featured p {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.offer-code {
-    display: inline-block;
-    background: var(--bg-secondary);
-    border: 1px dashed var(--accent-amber);
-    color: var(--accent-amber);
-    padding: 8px 16px;
-    border-radius: 8px;
+.offer-description {
     font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.offer-validity {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0;
+    font-weight: 500;
+}
+
+.btn-offer {
+    background: transparent;
+    border: 1.5px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 700;
-    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: auto;
+    letter-spacing: 0.3px;
+}
+
+.btn-offer:hover {
+    background: rgba(220, 38, 38, 0.1);
+    transform: translateY(-2px);
+}
+
+.btn-offer-primary {
+    background: var(--accent-red);
+    color: white;
+    border-color: var(--accent-red);
+}
+
+.btn-offer-primary:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
 }
 
 .experience {
@@ -953,41 +1184,121 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
 
 .experience-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
 }
 
 .experience-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px 32px;
-    text-align: center;
+    border-radius: 12px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.experience-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.04) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .experience-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 16px 48px rgba(59, 130, 246, 0.15);
-    border-color: var(--accent-blue);
+    border-color: currentColor;
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.15);
+}
+
+.experience-card:hover::before {
+    opacity: 1;
+}
+
+.exp-visual { --accent-color: #ef4444; }
+.exp-visual:hover { border-color: #ef4444; box-shadow: 0 12px 32px rgba(239, 68, 68, 0.15); }
+
+.exp-audio { --accent-color: #3b82f6; }
+.exp-audio:hover { border-color: #3b82f6; box-shadow: 0 12px 32px rgba(59, 130, 246, 0.15); }
+
+.exp-comfort { --accent-color: #f59e0b; }
+.exp-comfort:hover { border-color: #f59e0b; box-shadow: 0 12px 32px rgba(245, 158, 11, 0.15); }
+
+.exp-culinary { --accent-color: #10b981; }
+.exp-culinary:hover { border-color: #10b981; box-shadow: 0 12px 32px rgba(16, 185, 129, 0.15); }
+
+.exp-category {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    margin-bottom: 4px;
 }
 
 .experience-icon {
-    color: var(--accent-blue);
-    margin-bottom: 24px;
+    width: 56px;
+    height: 56px;
     display: flex;
+    align-items: center;
     justify-content: center;
+    border-radius: 10px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-color);
+    transition: all 0.3s ease;
+    margin: 0;
+}
+
+.experience-card svg {
+    width: 32px;
+    height: 32px;
+    stroke-width: 2;
+}
+
+.experience-card:hover .experience-icon {
+    transform: scale(1.1);
+    background: rgba(59, 130, 246, 0.15);
 }
 
 .experience-card h3 {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
-    margin-bottom: 12px;
+    color: var(--text-primary);
+    margin: 0;
 }
 
-.experience-card p {
+.exp-spec {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.exp-description {
+    font-size: 14px;
     color: var(--text-secondary);
-    line-height: 1.6;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.exp-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-color);
+    margin-top: auto;
+    width: fit-content;
 }
 
 .locations {
@@ -1326,3 +1637,1428 @@ select.ticket-type-select::-webkit-listbox { background-color: var(--bg-secondar
   }
   
 /* End of cleaned stylesheet */
+/* ... existing code ... */
+
+/* --- Peak UX: Movie Card Enhancements --- */
+
+/* Meta Row (Rating + Duration) */
+.movie-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.meta-item.rating {
+    color: var(--accent-amber);
+    font-weight: 700;
+}
+
+.meta-item.duration {
+    color: var(--text-muted);
+}
+
+.meta-separator {
+    width: 3px;
+    height: 3px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+/* Trailer Button (Overlay) */
+.btn-trailer {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-trailer:hover {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    transform: scale(1.1);
+}
+
+.btn-trailer svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    margin-left: 2px; /* Visual centering adjustment for play triangle */
+}
+
+/* Trailer Modal (Lightbox) */
+.trailer-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    display: none; /* Flex when active */
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.trailer-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.trailer-container {
+    width: min(90%, 1000px);
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--border);
+}
+
+.trailer-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: #fff;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.trailer-close:hover { opacity: 1; }
+
+.trailer-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+/* --- PEAK UX REVISION: Clarity & Usability --- */
+
+/* 1. POSTER OVERLAY - Focused solely on the Trailer (Preview) */
+.movie-overlay {
+    background: rgba(0, 0, 0, 0.4); /* Lighter overlay to see the poster */
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.movie-card:hover .movie-overlay {
+    opacity: 1;
+}
+
+/* Big Central Play Button */
+.btn-play-big {
+    background: rgba(220, 38, 38, 0.9);
+    color: white;
+    border: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.btn-play-big svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    margin-left: 4px; /* Optical center */
+}
+
+.btn-play-big:hover {
+    transform: scale(1.15);
+    background: #ef4444;
+}
+
+.play-label {
+    position: absolute;
+    bottom: 20%;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.movie-card:hover .play-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* 2. CARD CONTENT - Structured for readability */
+.movie-info {
+    padding: 16px 20px 20px; /* More padding at bottom */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.movie-info h3 {
+    font-size: 18px; /* Slightly larger title */
+    margin-bottom: 2px;
+}
+
+/* Meta Row (Keep the good parts) */
+.movie-meta-row {
+    margin-bottom: 4px;
+}
+
+/* Genres Block */
+.genres-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.genre-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.genres-list {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* 3. SHOWTIMES - Clearer Context */
+
+.showtimes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* 4. ACTION ROW - The "Words" the user wanted */
+.card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.btn-card-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+/* Primary: Book */
+.btn-card-primary {
+    background: var(--text-primary); /* White/Light */
+    color: var(--bg-primary); /* Dark Text */
+    border: none;
+}
+
+.btn-card-primary:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+}
+
+/* Secondary: Details */
+.btn-card-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.btn-card-secondary:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.05);
+}
+/* --- PEAK UX REVISION: Compact Layout --- */
+
+/* 1. Compact Card Body */
+.movie-info {
+    padding: 14px 16px 16px; /* Tighter padding */
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Manage gaps explicitly */
+}
+
+.movie-info h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 2. Inline Meta */
+.movie-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.meta-separator {
+    width: 2px;
+    height: 2px;
+    opacity: 0.4;
+}
+
+/* 3. Compact Showtimes (Column Layout) */
+.showtimes-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+.showtimes-block .time-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: none !important;
+    padding: 0 !important;
+}
+
+.time-label::before { display: none; } /* Remove dot */
+
+.showtimes {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.showtimes::-webkit-scrollbar { display: none; }
+
+.showtime-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* 4. Compact Action Row */
+.card-actions {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr; /* Bias towards "Book" */
+    gap: 8px;
+    margin-top: 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.btn-card-action {
+    padding: 8px 0;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* Adjust "Book" to be solid white/text-color */
+.btn-card-primary {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border: none;
+}
+
+/* Adjust "Details" to be subtle outline */
+.btn-card-secondary {
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+/* --- AESTHETIC TRAILER BUTTON (Glass Pill) --- */
+
+.movie-overlay {
+    /* Ensure perfect centering of the single pill button */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6); /* Slightly darker for contrast */
+    backdrop-filter: blur(4px); /* Premium blur effect */
+}
+
+.btn-trailer-pill {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 100px; /* Full capsule shape */
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-trailer-pill:hover {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+}
+
+/* Icon container */
+.btn-trailer-pill .icon-zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border-radius: 50%;
+    color: #000; /* Icon color */
+    transition: transform 0.3s ease;
+}
+
+.btn-trailer-pill:hover .icon-zone {
+    transform: scale(1.1);
+    color: var(--accent-red); /* Icon becomes red on white circle */
+}
+
+.btn-trailer-pill svg {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+    margin-left: 2px; /* Optical centering for play triangle */
+}
+
+/* Text styling */
+.btn-trailer-pill .label {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+/* --- High Visibility Format Badges (Universal Contrast) --- */
+
+.format-badges {
+    gap: 6px;
+    padding: 4px; /* Prevent clipped shadows */
+}
+
+.format-badge {
+    /* 1. Ensure readability on ANY background (Dark overlay) */
+    background: rgba(13, 13, 18, 0.94); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    
+    /* 2. Typography pop */
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    font-size: 10px;
+    
+    /* 3. Definition */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); /* Strong drop shadow */
+    
+    border-radius: 6px;
+    padding: 5px 10px;
+    
+    /* Prevent layout shifts */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Brand Specific Styling (Glows + Colors) */
+
+.format-badge.imax {
+    color: #60a5fa; /* Bright Blue */
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); /* Blue Glow */
+}
+
+.format-badge.dolby {
+    color: #f87171; /* Bright Red */
+    border-color: rgba(239, 68, 68, 0.5);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3); /* Red Glow */
+}
+
+.format-badge.premium, 
+.format-badge.vip,
+.format-badge.xc {
+    color: #fbbf24; /* Bright Amber */
+    border-color: rgba(245, 158, 11, 0.5);
+    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3); /* Gold Glow */
+}
+
+.format-badge.std {
+    color: #e4e4e7; /* Zinc-200 */
+    border-color: rgba(161, 161, 170, 0.3);
+}
+/* --- MAX VISIBILITY BADGES (Contrast First) --- */
+
+.format-badge {
+    /* 1. Solid Background (No transparency) */
+    background: #000000;
+    
+    /* 2. Pure White Text */
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); /* Extra legibility */
+    
+    /* 3. Structure */
+    border: 1px solid rgba(255,255,255,0.3); /* Base border */
+    border-left-width: 4px; /* Color indicator on left */
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    
+    /* 4. Lift off the poster */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9); 
+    z-index: 10;
+}
+
+/* Brand Indicators (Left Border + Subtle Tint) */
+
+.format-badge.imax {
+    border-left-color: #3b82f6; /* Bright Blue */
+    /* Subtle gradient hint */
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), #000000 40%);
+}
+
+.format-badge.dolby {
+    border-left-color: #ef4444; /* Bright Red */
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), #000000 40%);
+}
+
+.format-badge.premium, 
+.format-badge.vip {
+    border-left-color: #f59e0b; /* Amber */
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.15), #000000 40%);
+}
+
+.format-badge.std {
+    border-left-color: #a1a1aa;
+    background: #000000;
+}
+/* --- AESTHETIC & VISIBLE BADGES (The "Premium Glass" Look) --- */
+
+.format-badge {
+    /* Glassy Dark Background - High Opacity for Readability */
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    /* Typography - Pure White for contrast */
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    
+    /* Border - Defines the shape and Brand Color */
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 5px 10px;
+    
+    /* Lift */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    
+    /* Reset gradient/stripes from previous attempt */
+    border-left-width: 1.5px; 
+    background-image: none;
+}
+
+/* Brand Specific Borders (The "Pop") */
+
+.format-badge.imax {
+    border-color: #3b82f6; /* Bright Blue Border */
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.25); /* Subtle Blue Glow */
+}
+
+.format-badge.dolby {
+    border-color: #ef4444; /* Bright Red Border */
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.25); /* Subtle Red Glow */
+}
+
+.format-badge.premium, 
+.format-badge.vip {
+    border-color: #f59e0b; /* Amber Border */
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.25); /* Subtle Gold Glow */
+}
+
+.format-badge.std {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+/* --- Peak UX Filters (Modern Chip System) --- */
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto; /* Horizontal scroll on mobile */
+    padding: 4px 4px 12px 4px; /* Space for shadows/focus rings */
+    
+    /* Hide Scrollbar */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    
+    /* Glassy container background (optional, subtle) */
+    /* border-bottom: 1px solid var(--border); */
+}
+
+.filter-controls::-webkit-scrollbar { 
+    display: none; 
+}
+
+/* Filter Chips */
+.filter-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    
+    /* Pill Shape */
+    padding: 10px 20px;
+    border-radius: 100px;
+    
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Hover State */
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+/* Active/Selected State */
+.filter-btn.active {
+    background: var(--text-primary); /* Pure White Pop */
+    color: var(--bg-primary); /* Dark Text */
+    border-color: var(--text-primary);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+/* Sort Dropdown - styled to match chips */
+.sort-select {
+    appearance: none;
+    -webkit-appearance: none;
+    
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    
+    padding: 10px 38px 10px 18px; /* Extra right padding for arrow */
+    border-radius: 100px;
+    
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    
+    /* Custom Arrow Icon (SVG) */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    
+    margin-left: auto; /* Pushes sort to the far right */
+    transition: all 0.2s ease;
+}
+
+.sort-select:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-secondary);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: var(--accent-red);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .filter-controls {
+        /* Ensure chips don't get cut off on edges */
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+    
+    .sort-select {
+        /* On mobile, sort might wrap or stay. Let's keep it inline but manageable */
+        margin-left: 12px; 
+        padding-right: 32px; /* Slightly tighter */
+    }
+}
+/* --- FACETED FILTER BAR (Organized & Scalable) --- */
+
+/* Main Bar Container */
+.filter-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 0 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+}
+
+/* 1. Date Group (Quick Chips) */
+.filter-group-date {
+    display: flex;
+    gap: 8px;
+}
+
+/* 2. Dropdowns (Scalable Categories) */
+.filter-dropdown {
+    position: relative;
+}
+
+.dropdown-trigger {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dropdown-trigger:hover,
+.dropdown-trigger.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.dropdown-trigger svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+}
+
+/* The Menu (Hidden by default) */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 220px;
+    background: #1a1a24; /* Solid dark fallback */
+    background: rgba(20, 20, 28, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    padding: 8px;
+    z-index: 100;
+    
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Show State */
+.filter-dropdown.is-open .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Menu Items */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+/* Checkbox Style */
+.dropdown-item input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--text-muted);
+    border-radius: 4px;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-item input[type="checkbox"]:checked {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+}
+
+.dropdown-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* Divider */
+.v-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 4px;
+}
+
+/* Sort (Push to right) */
+.sort-group {
+    margin-left: auto;
+}
+/* Adjust Section Header Spacing since we added a toolbar */
+.section-header {
+    margin-bottom: 16px; /* Reduced from 32px */
+}
+
+/* Refine Toolbar Styling */
+.filter-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 0 16px;
+    margin-bottom: 24px; /* Space before Grid */
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    width: 100%; /* Ensure full width */
+}
+/* --- CALENDAR & DATE RANGE PICKER MODAL --- */
+
+/* The Modal Overlay */
+.calendar-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(12px);
+    display: none; /* Flex when active */
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.calendar-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal Card */
+.calendar-sheet {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: min(400px, 90vw);
+    padding: 24px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    animation: modal-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.calendar-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Standard Date Input (Styled) */
+.date-picker-container label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.styled-date-input {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+
+.styled-date-input:focus {
+    border-color: var(--accent-red);
+}
+
+/* Range Selection (Chips) */
+.range-options {
+    margin-top: 20px;
+}
+
+.range-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.range-chip {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.range-chip:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.range-chip.selected {
+    background: rgba(220, 38, 38, 0.15);
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+    font-weight: 700;
+}
+
+/* Actions */
+.calendar-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-confirm {
+    flex: 1;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    padding: 12px 16px;
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-cancel:hover { color: var(--text-primary); }
+/* --- CALENDAR & DATE RANGE PICKER MODAL --- */
+
+/* The Modal Overlay */
+.calendar-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(12px);
+    display: none; /* Flex when active */
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.calendar-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal Card */
+.calendar-sheet {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: min(400px, 90vw);
+    padding: 24px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    animation: modal-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.calendar-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Standard Date Input (Styled) */
+.date-picker-container label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.styled-date-input {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+
+.styled-date-input:focus {
+    border-color: var(--accent-red);
+}
+
+/* Time Range Inputs */
+.range-options {
+    margin-top: 20px;
+}
+
+.range-options label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.time-range-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.time-select {
+    flex: 1;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    
+    /* Bigger box, normal text */
+    padding: 16px 40px 16px 20px; /* Right padding for arrow */
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    
+    outline: none;
+    cursor: pointer;
+    
+    /* Custom Arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.time-select:hover {
+    background-color: var(--bg-tertiary);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.time-select:focus {
+    border-color: var(--accent-red);
+}
+
+.range-sep {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Actions */
+.calendar-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-confirm {
+    flex: 1;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    padding: 12px 16px;
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-cancel:hover { color: var(--text-primary); }
+
+/* ========== CALENDAR IN DROPDOWN ========== */
+.calendar-in-dropdown {
+    padding: 12px 8px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.calendar-nav-mini {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-nav-mini:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.calendar-month-year {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+    text-align: center;
+}
+
+.calendar-day-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.calendar-day-headers div {
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-grid-day {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0;
+}
+
+.calendar-grid-day:hover:not(.empty):not(.unavailable) {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.calendar-grid-day.today {
+    background: rgba(220, 38, 38, 0.2);
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+.calendar-grid-day.selected {
+    background: var(--accent-red);
+    color: white;
+    border-color: var(--accent-red);
+    font-weight: 800;
+}
+
+.calendar-grid-day.empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+}
+
+.calendar-grid-day:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ========== TIME RANGE FILTER ========== */
+.time-range-filter {
+    position: relative;
+}
+
+.time-range-trigger {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.time-range-trigger:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.time-range-trigger svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+}
+
+.time-range-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: rgba(20, 20, 28, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    padding: 12px;
+    z-index: 100;
+    min-width: 360px;
+    
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.time-range-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.time-range-options {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+.time-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 4px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+}
+
+.time-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    background: rgba(20, 20, 28, 0.95);
+    padding: 8px 0;
+    z-index: 1;
+}
+
+.time-option {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.time-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+.time-option.selected {
+    background: var(--accent-red);
+    color: white;
+    border-color: var(--accent-red);
+}
+
+.time-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-weight: 700;
+    padding-top: 28px;
+    min-width: 20px;
+}
+
+.btn-apply-time {
+    width: 100%;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-apply-time:hover {
+    background: var(--accent-red-hover);
+}
+

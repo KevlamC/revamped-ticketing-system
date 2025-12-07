@@ -335,9 +335,11 @@
   <div class="nav-container">
     <!-- Left Group -->
     <div style="display:flex; align-items:center;">
-      <div class="logo" id="logo">
-        <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
-      </div>
+      <a href="index.html" style="text-decoration: none; color: inherit;">
+        <div class="logo" id="logo">
+          <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+        </div>
+      </a>
 
       <div class="location-container">
         <div class="location-picker" id="locationPicker" title="Change Theater">
@@ -347,6 +349,7 @@
         </div>
         
         <div class="location-dropdown" id="locationDropdown">
+          <div class="location-option" data-value="All Locations">All Locations</div>
           <div class="location-option selected" data-value="Downtown Premiere">Downtown Premiere</div>
           <div class="location-option" data-value="Riverside Cinema">Riverside Cinema</div>
           <div class="location-option" data-value="Westside Multiplex">Westside Multiplex</div>
@@ -447,8 +450,8 @@
           locationDropdown.classList.remove('show');
           locationPicker.classList.remove('active');
           
-          // Optional: Reload page or filter content here
-          // window.location.reload(); 
+          // Dispatch Event for Main Page
+          window.dispatchEvent(new CustomEvent('location-changed', { detail: { location: val } }));
       });
   });
 
@@ -574,9 +577,7 @@
 
   if (logo) {
     logo.addEventListener('click', () => {
-       const modal = document.querySelector('#choiceModal');
-       if (modal && typeof show === 'function') show(modal); 
-       else window.location.href = 'index.html';
+       window.location.href = 'index.html';
     });
   }
   

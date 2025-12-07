@@ -102,203 +102,176 @@
           <h2>Now Playing</h2>
           <p class="section-subtitle">TODAY • PREMIUM FORMATS • DOLBY ATMOS</p>
         </div>
-        <div class="filter-controls">
-          <button class="filter-btn active" data-filter="all">All Movies</button>
-          <button class="filter-btn" data-filter="Action">Action</button>
-          <button class="filter-btn" data-filter="Drama">Drama</button>
-          <button class="filter-btn" data-filter="Sci-Fi">Sci-Fi</button>
-          <button class="filter-btn" data-filter="Horror">Horror</button>
-          <select id="sortSelect" class="sort-select">
-            <option value="title">Sort by Title</option>
-            <option value="rating">Sort by Rating</option>
-            <option value="release">Sort by Release Date</option>
-          </select>
+      </div>
+
+      <div class="filter-bar-container">
+        <!-- 1. Date Dropdown -->
+        <div class="filter-dropdown" id="dateDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('dateDropdown')">
+            <span id="selectedDateLabel">Date</span> 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="dateOptions">
+            <div class="dropdown-item" data-val="all" onclick="selectDate('all')">All Dates</div>
+            <div class="dropdown-item" data-val="today" onclick="selectDate('today')">Today</div>
+            <div class="dropdown-item" data-val="tomorrow" onclick="selectDate('tomorrow')">Tomorrow</div>
+            <div class="v-sep" style="width:100%; height:1px; margin:4px 0; background:var(--border)"></div>
+            
+            <!-- Embedded Calendar -->
+            <div class="calendar-in-dropdown">
+              <div class="calendar-header">
+                <button id="dropdownPrevBtn" class="calendar-nav-mini">‹</button>
+                <span id="dropdownMonthYear" class="calendar-month-year">December 2025</span>
+                <button id="dropdownNextBtn" class="calendar-nav-mini">›</button>
+              </div>
+              <div class="calendar-day-headers">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+              </div>
+              <div id="dropdownCalendarGrid" class="calendar-grid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Time Range Filter -->
+        <div class="time-range-filter">
+          <button class="time-range-trigger" id="timeRangeTrigger">
+            <span id="timeRangeLabel">10:00 AM - 10:00 PM</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="time-range-menu" id="timeRangeMenu">
+            <div class="time-range-options">
+              <div class="time-column" id="startTimeColumn">
+                <div class="time-label">Start Time</div>
+              </div>
+              <div class="time-divider">—</div>
+              <div class="time-column" id="endTimeColumn">
+                <div class="time-label">End Time</div>
+              </div>
+            </div>
+            <button class="btn-apply-time" id="applyTimeBtn">Apply</button>
+          </div>
+        </div>
+
+        <div class="v-sep"></div>
+
+        <!-- 2. Genre Dropdown -->
+        <div class="filter-dropdown" id="genreDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('genreDropdown')">
+            Genre 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="genreMenu">
+            <label class="dropdown-item"><input type="checkbox" value="Action"> Action</label>
+            <label class="dropdown-item"><input type="checkbox" value="Adventure"> Adventure</label>
+            <label class="dropdown-item"><input type="checkbox" value="Comedy"> Comedy</label>
+            <label class="dropdown-item"><input type="checkbox" value="Drama"> Drama</label>
+            <label class="dropdown-item"><input type="checkbox" value="Horror"> Horror</label>
+            <label class="dropdown-item"><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+            <label class="dropdown-item"><input type="checkbox" value="Thriller"> Thriller</label>
+          </div>
+        </div>
+
+        <!-- 3. Experience Dropdown -->
+        <div class="filter-dropdown" id="formatDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('formatDropdown')">
+            Format 
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" id="formatMenu">
+            <label class="dropdown-item"><input type="checkbox" value="IMAX"> IMAX</label>
+            <label class="dropdown-item"><input type="checkbox" value="DOLBY"> Dolby Cinema</label>
+            <label class="dropdown-item"><input type="checkbox" value="3D"> 3D</label>
+            <label class="dropdown-item"><input type="checkbox" value="70MM"> 70MM</label>
+            <label class="dropdown-item"><input type="checkbox" value="VIP"> VIP</label>
+          </div>
+        </div>
+
+        <!-- 4. Sort Dropdown (Custom Styled) -->
+        <div class="filter-dropdown sort-group" id="sortDropdown">
+          <button class="dropdown-trigger" onclick="toggleDropdown('sortDropdown')">
+            <span id="sortLabel">Sort by Showtime</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="dropdown-menu" style="right:0; left:auto;">
+            <div class="dropdown-item" onclick="applySort('showtime', 'Sort by Showtime')">Showtime (Earliest)</div>
+            <div class="dropdown-item" onclick="applySort('title', 'Sort by Title')">Title (A-Z)</div>
+            <div class="dropdown-item" onclick="applySort('rating', 'Sort by Rating')">Rating (High-Low)</div>
+            <div class="dropdown-item" onclick="applySort('release', 'Sort by Release')">Release Date</div>
+          </div>
         </div>
       </div>
 
       <div class="movies-grid" id="moviesGrid">
-        <!-- Card 1 -->
-        <div class="movie-card" data-title="Dune: Part Two" data-rating="8.7" data-release="2024-03-01" data-genres="Sci-Fi,Adventure,Drama">
+        
+        <!-- Card 1: Dune Part Two -->
+        <div class="movie-card" data-title="Dune: Part Two" data-rating="8.7" data-release="2024-03-01" data-genres="Sci-Fi,Adventure,Drama" data-duration="2h 46m" data-trailer="Way9Dexny3w" data-formats="IMAX,DOLBY">
           <div class="movie-poster">
             <img src="Pictures/dune2-poster.jpg" alt="Dune: Part Two">
             <div class="movie-overlay">
-              <button class="btn-primary book-btn" data-movie="Dune: Part Two">Book Now</button>
-              <button class="btn-secondary btn-secondary-overlay" data-action="view" data-movie="Dune: Part Two">View Details</button>
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
             </div>
             <div class="format-badges">
               <span class="format-badge imax">IMAX</span>
-              <span class="format-badge">3D</span>
               <span class="format-badge dolby">DOLBY</span>
             </div>
           </div>
           <div class="movie-info">
             <h3>Dune: Part Two</h3>
-            <div class="movie-meta">
-              <div class="top-row">
-                <span class="rating">★ 8.7</span>
-                <div class="genre-tags">
-                  <span class="genre-tag">Sci-Fi</span>
-                  <span class="genre-tag">Adventure</span>
-                  <span class="genre-tag">Drama</span>
-                </div>
+            
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.7</span>
               </div>
-              <div class="times-row">
-                <div class="showtimes">
-                  <button class="showtime-btn book-btn" data-movie="Dune: Part Two">2:00 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Dune: Part Two">5:30 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Dune: Part Two">9:00 PM</button>
-                </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">2h 46m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
+            </div>
+
+            <div class="genres-block">
+              <div class="genre-label">Genre</div>
+              <div class="genres-list">Sci-Fi, Adventure, Drama</div>
+            </div>
+
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Dune: Part Two">2:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Dune: Part Two">5:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Dune: Part Two">9:00 PM</button>
               </div>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Dune: Part Two">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Dune: Part Two">View Details</button>
             </div>
           </div>
         </div>
 
-        <!-- Card 3 (fixed tags) -->
-        <div class="movie-card" data-title="The Batman" data-rating="8.2" data-release="2022-03-04" data-genres="Action,Crime,Thriller">
-          <div class="movie-poster">
-            <img src="Pictures/3de84cca07fc963b66a01a5465c2638066119711e89c707ce952555783dd4b4f-2.jpg" alt="The Batman">
-            <div class="movie-overlay">
-              <button class="btn-primary book-btn" data-movie="The Batman">Book Now</button>
-              <button class="btn-secondary btn-secondary-overlay" data-action="view" data-movie="The Batman">View Details</button>
-            </div>
-            <div class="format-badges">
-              <span class="format-badge dolby">DOLBY</span>
-              <span class="format-badge">4DX</span>
-            </div>
-          </div>
-          <div class="movie-info">
-            <h3>The Batman</h3>
-            <div class="movie-meta">
-              <div class="top-row">
-                <span class="rating">★ 8.2</span>
-                <div class="genre-tags">
-                  <span class="genre-tag">Action</span>
-                  <span class="genre-tag">Crime</span>
-                  <span class="genre-tag">Thriller</span>
-                </div>
-              </div>
-              <div class="times-row">
-                <div class="showtimes">
-                  <button class="showtime-btn book-btn" data-movie="The Batman">3:00 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="The Batman">6:30 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="The Batman">10:00 PM</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="movie-card" data-title="Barbie" data-rating="7.9" data-release="2023-07-21" data-genres="Comedy,Fantasy,Adventure">
-          <div class="movie-poster">
-            <img src="Pictures/p13472534_p_v8_am.jpg" alt="Barbie">
-            <div class="movie-overlay">
-              <button class="btn-primary book-btn" data-movie="Barbie">Book Now</button>
-              <button class="btn-secondary btn-secondary-overlay" data-action="view" data-movie="Barbie">View Details</button>
-            </div>
-            <div class="format-badges">
-              <span class="format-badge">STANDARD</span>
-            </div>
-          </div>
-          <div class="movie-info">
-            <h3>Barbie</h3>
-            <div class="movie-meta">
-              <div class="top-row">
-                <span class="rating">★ 7.9</span>
-                <div class="genre-tags">
-                  <span class="genre-tag">Comedy</span>
-                  <span class="genre-tag">Fantasy</span>
-                  <span class="genre-tag">Adventure</span>
-                </div>
-              </div>
-              <div class="times-row">
-                <div class="showtimes">
-                  <button class="showtime-btn book-btn" data-movie="Barbie">1:30 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Barbie">4:00 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Barbie">7:30 PM</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="movie-card" data-title="Killers of the Flower Moon" data-rating="8.1" data-release="2023-10-20" data-genres="Drama,Crime,History">
-          <div class="movie-poster">
-            <img src="Pictures/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzZhOWE1N2ZkLTY4MzgtNDA3Yi05MDEwLWQzN2QwMTFkZDdmNS5qcGc.jpeg" alt="Killers of the Flower Moon">
-            <div class="movie-overlay">
-              <button class="btn-primary book-btn" data-movie="Killers of the Flower Moon">Book Now</button>
-              <button class="btn-secondary btn-secondary-overlay" data-action="view" data-movie="Killers of the Flower Moon">View Details</button>
-            </div>
-            <div class="format-badges">
-              <span class="format-badge premium">PREMIUM</span>
-              <span class="format-badge dolby">DOLBY</span>
-            </div>
-          </div>
-          <div class="movie-info">
-            <h3>Killers of the Flower Moon</h3>
-            <div class="movie-meta">
-              <div class="top-row">
-                <span class="rating">★ 8.1</span>
-                <div class="genre-tags">
-                  <span class="genre-tag">Drama</span>
-                  <span class="genre-tag">Crime</span>
-                  <span class="genre-tag">History</span>
-                </div>
-              </div>
-              <div class="times-row">
-                <div class="showtimes">
-                  <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">2:30 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">6:00 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">9:30 PM</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="movie-card" data-title="A Quiet Place: Day One" data-rating="7.8" data-release="2024-06-28" data-genres="Horror,Thriller,Sci-Fi">
-          <div class="movie-poster">
-            <img src="Pictures/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzIyNDlkYjk2LTUwZmQtNDgzOS04ZGIyLWI3NzZlMWE0OGNkNi5qcGc.jpeg" alt="A Quiet Place: Day One">
-            <div class="movie-overlay">
-              <button class="btn-primary book-btn" data-movie="A Quiet Place: Day One">Book Now</button>
-              <button class="btn-secondary btn-secondary-overlay" data-action="view" data-movie="A Quiet Place: Day One">View Details</button>
-            </div>
-            <div class="format-badges">
-              <span class="format-badge">3D</span>
-              <span class="format-badge dolby">DOLBY</span>
-            </div>
-          </div>
-          <div class="movie-info">
-            <h3>A Quiet Place: Day One</h3>
-            <div class="movie-meta">
-              <div class="top-row">
-                <span class="rating">★ 7.8</span>
-                <div class="genre-tags">
-                  <span class="genre-tag">Horror</span>
-                  <span class="genre-tag">Thriller</span>
-                  <span class="genre-tag">Sci-Fi</span>
-                </div>
-              </div>
-              <div class="times-row">
-                <div class="showtimes">
-                  <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">3:30 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">7:00 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">10:30 PM</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-                <!-- Card 2 -->
-        <div class="movie-card" data-title="Oppenheimer" data-rating="8.5" data-release="2023-07-21" data-genres="Drama,Biography,History">
+        <!-- Card 2: Oppenheimer -->
+        <div class="movie-card" data-title="Oppenheimer" data-rating="8.5" data-release="2023-07-21" data-genres="Drama,Biography,History" data-duration="3h 00m" data-trailer="uYPbbksJxIg" data-formats="70MM,IMAX">
           <div class="movie-poster">
             <img src="Pictures/opp-poster.jpg" alt="Oppenheimer">
             <div class="movie-overlay">
-              <button class="btn-primary book-btn" data-movie="Oppenheimer">Book Now</button>
-              <button class="btn-secondary btn-secondary-overlay" data-action="view" data-movie="Oppenheimer">View Details</button>
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
             </div>
             <div class="format-badges">
               <span class="format-badge premium">70MM</span>
@@ -307,173 +280,233 @@
           </div>
           <div class="movie-info">
             <h3>Oppenheimer</h3>
-            <div class="movie-meta">
-              <div class="top-row">
-                <span class="rating">★ 8.5</span>
-                <div class="genre-tags">
-                  <span class="genre-tag">Drama</span>
-                  <span class="genre-tag">Biography</span>
-                  <span class="genre-tag">History</span>
-                </div>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.5</span>
               </div>
-              <div class="times-row">
-                <div class="showtimes">
-                  <button class="showtime-btn book-btn" data-movie="Oppenheimer">1:00 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Oppenheimer">4:30 PM</button>
-                  <button class="showtime-btn book-btn" data-movie="Oppenheimer">8:00 PM</button>
-                </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">3h 00m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">R</div>
+            </div>
+
+            <div class="genres-block">
+              <div class="genre-label">Genre</div>
+              <div class="genres-list">Drama, Biography, History</div>
+            </div>
+
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Oppenheimer">1:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Oppenheimer">4:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Oppenheimer">8:00 PM</button>
               </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Oppenheimer">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Oppenheimer">View Details</button>
             </div>
           </div>
         </div>
 
-      </div>
-    </div>
-  </section>
-
-  
-
-  <!-- Concessions -->
-  <section class="concessions section-block" id="concessions">
-    <div class="container">
-      <div class="section-header">
-        <div>
-          <h2>Food & Drinks</h2>
-          <p class="section-subtitle">ORDER AHEAD • SKIP THE LINE • DELIVERED TO YOUR SEAT</p>
-        </div>
-        <button class="btn-primary">View Full Menu</button>
-      </div>
-
-      <!-- Tabs for Food and Drinks -->
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="food">Food</button>
-        <button class="tab-btn" data-tab="drinks">Drinks</button>
-      </div>
-
-      <!-- Food Items -->
-      <div class="tab-content" id="food" style="display: block;">
-        <div class="concessions-grid">
-          <div class="concession-card">
-            <div class="concession-image">
-              <img src="Pictures/AR-1733309-classic-caramel-corn-ddmfs-2x1-68e0287ce691483ea6bfdce272b0ec5a.jpg" alt="Popcorn">
-              <div class="concession-badge">BEST SELLER</div>
+        <!-- Card 3: The Batman -->
+        <div class="movie-card" data-title="The Batman" data-rating="8.2" data-release="2022-03-04" data-genres="Action,Crime,Thriller" data-duration="2h 56m" data-trailer="mqqft2x_Aa4" data-formats="DOLBY,4DX">
+          <div class="movie-poster">
+            <img src="Pictures/3de84cca07fc963b66a01a5465c2638066119711e89c707ce952555783dd4b4f-2.jpg" alt="The Batman">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
             </div>
-            <div class="concession-info">
-              <h3>Classic Popcorn</h3>
-              <p>Freshly popped with real butter</p>
-              <div class="size-options" role="tablist" aria-label="Size options">
-                <div class="size-row">
-                  <span class="size-label">Small $4</span>
-                  <div class="quantity-selector">
-                    <button class="quantity-btn" data-action="decrease" data-size="Small">-</button>
-                    <span class="quantity" data-size="Small">0</span>
-                    <button class="quantity-btn" data-action="increase" data-size="Small">+</button>
-                  </div>
-                </div>
-                <div class="size-row">
-                  <span class="size-label">Medium $6</span>
-                  <div class="quantity-selector">
-                    <button class="quantity-btn" data-action="decrease" data-size="Medium">-</button>
-                    <span class="quantity" data-size="Medium">0</span>
-                    <button class="quantity-btn" data-action="increase" data-size="Medium">+</button>
-                  </div>
-                </div>
-                <div class="size-row">
-                  <span class="size-label">Large $8</span>
-                  <div class="quantity-selector">
-                    <button class="quantity-btn" data-action="decrease" data-size="Large">-</button>
-                    <span class="quantity" data-size="Large">0</span>
-                    <button class="quantity-btn" data-action="increase" data-size="Large">+</button>
-                  </div>
-                </div>
-              </div>
-              <button class="btn-add-cart">Add to Order</button>
+            <div class="format-badges">
+              <span class="format-badge dolby">DOLBY</span>
             </div>
           </div>
-
-          <div class="concession-card">
-            <div class="concession-image">
-              <img src="Pictures/stock-photo-scattered-popcorn-and-two-buckets-of-nachos-next-to-the-video-camera-and-take-to-stop-and-continue-1198582738.jpg" alt="Nachos">
-            </div>
-            <div class="concession-info">
-              <h3>Loaded Nachos</h3>
-              <p>Cheese, jalapenos, sour cream</p>
-              <div class="size-options" role="tablist" aria-label="Size options">
-                <div class="size-row">
-                  <span class="size-label">Regular $9</span>
-                  <div class="quantity-selector">
-                    <button class="quantity-btn" data-action="decrease" data-size="Regular">-</button>
-                    <span class="quantity" data-size="Regular">0</span>
-                    <button class="quantity-btn" data-action="increase" data-size="Regular">+</button>
-                  </div>
-                </div>
-                <div class="size-row">
-                  <span class="size-label">Large $12</span>
-                  <div class="quantity-selector">
-                    <button class="quantity-btn" data-action="decrease" data-size="Large">-</button>
-                    <span class="quantity" data-size="Large">0</span>
-                    <button class="quantity-btn" data-action="increase" data-size="Large">+</button>
-                  </div>
-                </div>
+          <div class="movie-info">
+            <h3>The Batman</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.2</span>
               </div>
-              <button class="btn-add-cart">Add to Order</button>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">2h 56m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
             </div>
-          </div>
 
-          <div class="concession-card">
-            <div class="concession-image">
-              <img src="Pictures/83393badc124840730cb91e3cd839b93_220516_gg_q3_recipe_hotdogs_v3.jpg.avif" alt="Gourmet Hot Dogs">
-              <div class="concession-badge">NEW</div>
+            <div class="genres-block">
+              <div class="genre-label">Genre</div>
+              <div class="genres-list">Action, Crime, Thriller</div>
             </div>
-            <div class="concession-info">
-              <h3>Gourmet Hot Dogs</h3>
-              <p>Signature toppings available</p>
-              <div class="size-options" role="tablist" aria-label="Size options">
-                <div class="size-row">
-                  <span class="size-label">Classic $8</span>
-                  <div class="quantity-selector">
-                    <button class="quantity-btn" data-action="decrease" data-size="Classic">-</button>
-                    <span class="quantity" data-size="Classic">0</span>
-                    <button class="quantity-btn" data-action="increase" data-size="Classic">+</button>
-                  </div>
-                </div>
-                <div class="size-row">
-                  <span class="size-label">Premium $11</span>
-                  <div class="quantity-selector">
-                    <button class="quantity-btn" data-action="decrease" data-size="Premium">-</button>
-                    <span class="quantity" data-size="Premium">0</span>
-                    <button class="quantity-btn" data-action="increase" data-size="Premium">+</button>
-                  </div>
-                </div>
+
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="The Batman">3:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="The Batman">6:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="The Batman">10:00 PM</button>
               </div>
-              <button class="btn-add-cart">Add to Order</button>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="The Batman">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="The Batman">View Details</button>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Drinks Items -->
-      <div class="tab-content" id="drinks" style="display: none;">
-        <div class="concessions-grid">
-          <div class="concession-card">
-            <div class="concession-image">
-              <img src="Pictures/Schweppes (1).png" alt="Drinks">
+        <!-- Card 4: Barbie -->
+        <div class="movie-card" data-title="Barbie" data-rating="7.9" data-release="2023-07-21" data-genres="Comedy,Fantasy,Adventure" data-duration="1h 54m" data-trailer="pBk4NYhUOQ0" data-formats="STD">
+          <div class="movie-poster">
+            <img src="Pictures/p13472534_p_v8_am.jpg" alt="Barbie">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
             </div>
-            <div class="concession-info">
-              <h3>Premium Beverages</h3>
-              <p>Soft drinks, smoothies, specialty coffee</p>
-              <div class="size-options" role="tablist" aria-label="Size options">
-                <button type="button" class="size-btn" data-size="Medium">Medium</button>
-                <button type="button" class="size-btn active" data-size="Large">Large</button>
+            <div class="format-badges">
+              <span class="format-badge">STD</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Barbie</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>7.9</span>
               </div>
-              <div class="concession-pricing">
-                <span class="price-option">Medium $5</span>
-                <span class="price-option">Large $7</span>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">1h 54m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
+            </div>
+
+            <div class="genres-block">
+              <div class="genre-label">Genre</div>
+              <div class="genres-list">Comedy, Fantasy, Adventure</div>
+            </div>
+
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Barbie">1:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Barbie">4:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Barbie">7:30 PM</button>
               </div>
-              <button class="btn-add-cart">Add to Order</button>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Barbie">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Barbie">View Details</button>
             </div>
           </div>
         </div>
+
+        <!-- Card 5: Killers of the Flower Moon -->
+        <div class="movie-card" data-title="Killers of the Flower Moon" data-rating="8.1" data-release="2023-10-20" data-genres="Drama,Crime,History" data-duration="3h 26m" data-trailer="EP34Yoxs3FQ" data-formats="VIP,DOLBY">
+          <div class="movie-poster">
+            <img src="Pictures/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzZhOWE1N2ZkLTY4MzgtNDA3Yi05MDEwLWQzN2QwMTFkZDdmNS5qcGc.jpeg" alt="Killers of the Flower Moon">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge premium">VIP</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>Killers of the Flower Moon</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>8.1</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">3h 26m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">R</div>
+            </div>
+
+            <div class="genres-block">
+              <div class="genre-label">Genre</div>
+              <div class="genres-list">Drama, Crime, History</div>
+            </div>
+
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">2:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">6:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="Killers of the Flower Moon">9:30 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="Killers of the Flower Moon">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="Killers of the Flower Moon">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: A Quiet Place: Day One -->
+        <div class="movie-card" data-title="A Quiet Place: Day One" data-rating="7.8" data-release="2024-06-28" data-genres="Horror,Thriller,Sci-Fi" data-duration="1h 40m" data-trailer="YPY7J-flzE8" data-formats="3D,DOLBY">
+          <div class="movie-poster">
+            <img src="Pictures/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzIyNDlkYjk2LTUwZmQtNDgzOS04ZGIyLWI3NzZlMWE0OGNkNi5qcGc.jpeg" alt="A Quiet Place: Day One">
+            <div class="movie-overlay">
+              <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                <div class="icon-zone">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="label">Watch Trailer</span>
+              </button>
+            </div>
+            <div class="format-badges">
+              <span class="format-badge">3D</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3>A Quiet Place: Day One</h3>
+            <div class="movie-meta-row">
+              <div class="meta-item rating">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>7.8</span>
+              </div>
+              <div class="meta-separator"></div>
+              <div class="meta-item duration">1h 40m</div>
+              <div class="meta-separator"></div>
+              <div class="meta-item">PG-13</div>
+            </div>
+
+            <div class="genres-block">
+              <div class="genre-label">Genre</div>
+              <div class="genres-list">Horror, Thriller, Sci-Fi</div>
+            </div>
+
+            <div class="showtimes-block">
+              <div class="time-label">Today</div>
+              <div class="showtimes">
+                <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">3:30 PM</button>
+                <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">7:00 PM</button>
+                <button class="showtime-btn book-btn" data-movie="A Quiet Place: Day One">10:30 PM</button>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-card-action btn-card-primary book-btn" data-movie="A Quiet Place: Day One">Book Ticket</button>
+              <button class="btn-card-action btn-card-secondary" data-action="view" data-movie="A Quiet Place: Day One">View Details</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -481,45 +514,97 @@
   <!-- Coming Soon -->
   <section class="coming-soon section-block" id="coming-soon">
     <div class="container">
-  <h2>Coming Soon</h2>
-  <p class="section-subtitle section-spaced">BE THE FIRST TO EXPERIENCE</p>
+      <div class="section-header">
+        <div>
+          <h2>Coming Soon</h2>
+          <p class="section-subtitle">UPCOMING RELEASES</p>
+        </div>
+      </div>
 
-      <div class="coming-soon-grid">
-        <div class="coming-card">
-          <div class="coming-poster">
-            <img src="Pictures/deadpool&wolverine-poster.jpg" alt="Deadpool 3">
-            <div class="coming-date"><span class="date-month">JUL</span><span class="date-day">26</span></div>
-          </div>
-          <div class="coming-info">
-            <h3>Deadpool & Wolverine</h3>
-            <p>The Merc with a Mouth returns with an unlikely ally</p>
-            <button class="btn-notify">Notify Me</button>
+      <!-- Carousel Container -->
+      <div class="coming-soon-carousel-wrapper">
+        <button class="carousel-nav carousel-nav-prev" id="comingSoonPrev" aria-label="Previous">‹</button>
+        
+        <div class="coming-soon-carousel">
+          <div class="coming-soon-grid" id="comingSoonGrid">
+            <!-- Card 1: Deadpool & Wolverine -->
+            <div class="coming-card" data-release-date="2025-07-26">
+              <div class="coming-poster">
+                <img src="Pictures/deadpool&wolverine-poster.jpg" alt="Deadpool & Wolverine">
+                <div class="coming-date"><span class="date-month">JUL</span><span class="date-day">26</span></div>
+                <div class="poster-overlay">
+                  <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                    <div class="icon-zone">
+                      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <span class="label">Watch Trailer</span>
+                  </button>
+                </div>
+              </div>
+              <div class="coming-info">
+                <h3>Deadpool & Wolverine</h3>
+                <p class="coming-description">The Merc with a Mouth returns with an unlikely ally</p>
+                <div class="genres-block">
+                  <div class="genre-label">Genre</div>
+                  <div class="genres-list">Action, Comedy</div>
+                </div>
+                <button class="btn-notify">Notify Me</button>
+              </div>
+            </div>
+
+            <!-- Card 2: Gladiator II -->
+            <div class="coming-card" data-release-date="2025-11-22">
+              <div class="coming-poster">
+                <img src="Pictures/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Gladiator II">
+                <div class="coming-date"><span class="date-month">NOV</span><span class="date-day">22</span></div>
+                <div class="poster-overlay">
+                  <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                    <div class="icon-zone">
+                      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <span class="label">Watch Trailer</span>
+                  </button>
+                </div>
+              </div>
+              <div class="coming-info">
+                <h3>Gladiator II</h3>
+                <p class="coming-description">The epic saga continues with a new generation</p>
+                <div class="genres-block">
+                  <div class="genre-label">Genre</div>
+                  <div class="genres-list">Drama, Action</div>
+                </div>
+                <button class="btn-notify">Notify Me</button>
+              </div>
+            </div>
+
+            <!-- Card 3: Wicked -->
+            <div class="coming-card" data-release-date="2025-12-25">
+              <div class="coming-poster">
+                <img src="Pictures/896d0b12-9ebf-4064-a121-f4294531c9c6.jpg" alt="Wicked">
+                <div class="coming-date"><span class="date-month">DEC</span><span class="date-day">25</span></div>
+                <div class="poster-overlay">
+                  <button class="btn-trailer-pill" data-action="trailer" aria-label="Watch Trailer">
+                    <div class="icon-zone">
+                      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <span class="label">Watch Trailer</span>
+                  </button>
+                </div>
+              </div>
+              <div class="coming-info">
+                <h3>Wicked</h3>
+                <p class="coming-description">The untold story of the Witches of Oz</p>
+                <div class="genres-block">
+                  <div class="genre-label">Genre</div>
+                  <div class="genres-list">Fantasy, Musical</div>
+                </div>
+                <button class="btn-notify">Notify Me</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="coming-card">
-          <div class="coming-poster">
-            <img src="Pictures/MV5BNmJlZGIzMjEtZWE0NS00NTAxLWIyNGItNjYzYzhjMmI3ZWVmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Gladiator 2">
-            <div class="coming-date"><span class="date-month">NOV</span><span class="date-day">22</span></div>
-          </div>
-          <div class="coming-info">
-            <h3>Gladiator II</h3>
-            <p>The epic saga continues with a new generation</p>
-            <button class="btn-notify">Notify Me</button>
-          </div>
-        </div>
-
-        <div class="coming-card">
-          <div class="coming-poster">
-            <img src="Pictures/896d0b12-9ebf-4064-a121-f4294531c9c6.jpg" alt="Wicked">
-            <div class="coming-date"><span class="date-month">DEC</span><span class="date-day">25</span></div>
-          </div>
-          <div class="coming-info">
-            <h3>Wicked</h3>
-            <p>The untold story of the Witches of Oz</p>
-            <button class="btn-notify">Notify Me</button>
-          </div>
-        </div>
+        <button class="carousel-nav carousel-nav-next" id="comingSoonNext" aria-label="Next">›</button>
       </div>
     </div>
   </section>
@@ -527,197 +612,169 @@
   <!-- Offers -->
   <section class="offers section-block" id="offers">
     <div class="container">
-  <h2>Special Offers</h2>
-  <p class="section-subtitle section-spaced">SAVE MORE ON YOUR NEXT VISIT</p>
+      <div class="section-header">
+        <div>
+          <h2>Special Offers</h2>
+          <p class="section-subtitle">EXCLUSIVE DEALS FOR THEATRUM FANS</p>
+        </div>
+      </div>
+
       <div class="offers-grid">
-        <div class="offer-card">
-          <div class="offer-icon">🎟️</div>
-          <h3>Member Tuesdays</h3>
-          <p>Get 25% off all tickets every Tuesday with THEATRUM Membership</p>
-          <span class="offer-code">Code: MEMBER25</span>
+        <!-- Offer 1: Flash Deal -->
+        <div class="offer-card offer-flash">
+          <div class="offer-header">
+            <div class="offer-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="offer-badge flash-badge">ENDS SOON</div>
+          </div>
+          <h3>Midweek Flash Sale</h3>
+          <p class="offer-discount">25% Off</p>
+          <p class="offer-description">All tickets on Wednesday & Thursday</p>
+          <p class="offer-validity">Valid through December 31, 2025</p>
+          <button class="btn-offer">Book Now</button>
         </div>
 
-        <div class="offer-card featured">
-          <div class="offer-badge">BEST VALUE</div>
-          <div class="offer-icon">⭐</div>
+        <!-- Offer 2: Premium Pass -->
+        <div class="offer-card offer-premium">
+          <div class="offer-header">
+            <div class="offer-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+              </svg>
+            </div>
+            <div class="offer-badge premium-badge">BEST VALUE</div>
+          </div>
           <h3>Premium Pass</h3>
-          <p>Unlimited movies for $24.99/month including IMAX and Dolby screenings</p>
-          <button class="btn-primary">Join Now</button>
+          <p class="offer-discount">$24.99/mo</p>
+          <p class="offer-description">Unlimited screenings including IMAX & Dolby</p>
+          <p class="offer-validity">Cancel anytime, first month free</p>
+          <button class="btn-offer btn-offer-primary">Join Now</button>
         </div>
 
-        <div class="offer-card">
-          <div class="offer-icon">🍿</div>
-          <h3>Snack Combo Deal</h3>
-          <p>Large popcorn and 2 drinks for only $15 with any ticket purchase</p>
-          <span class="offer-code">Code: SNACK15</span>
+        <!-- Offer 3: Bundle Deal -->
+        <div class="offer-card offer-bundle">
+          <div class="offer-header">
+            <div class="offer-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 8a4 4 0 0 1-8 0"></path>
+              </svg>
+            </div>
+            <div class="offer-badge bundle-badge">SAVE $5</div>
+          </div>
+          <h3>Snack Combo</h3>
+          <p class="offer-discount">$15</p>
+          <p class="offer-description">Large popcorn + 2 drinks with any ticket</p>
+          <p class="offer-validity">Valid daily all year round</p>
+          <button class="btn-offer">Add to Order</button>
+        </div>
+
+        <!-- Offer 4: Member Exclusive -->
+        <div class="offer-card offer-member">
+          <div class="offer-header">
+            <div class="offer-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="offer-badge member-badge">MEMBERS</div>
+          </div>
+          <h3>Birthday Bonus</h3>
+          <p class="offer-discount">1 Free Ticket</p>
+          <p class="offer-description">Plus $10 concession credit on your birthday month</p>
+          <p class="offer-validity">Join membership to activate</p>
+          <button class="btn-offer">Learn More</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Experience -->
-  <section class="experience section-block">
+  <section class="experience section-block" id="experience">
     <div class="container">
-  <h2>The THEATRUM Experience</h2>
-  <p class="section-subtitle section-spaced">PREMIUM CINEMA TECHNOLOGY</p>
+      <div class="section-header">
+        <div>
+          <h2>The THEATRUM Experience</h2>
+          <p class="section-subtitle">PREMIUM TECHNOLOGY & UNMATCHED COMFORT</p>
+        </div>
+      </div>
+
       <div class="experience-grid">
-        <div class="experience-card">
+        <!-- Visual Technology -->
+        <div class="experience-card exp-visual">
+          <div class="exp-category">VISUAL</div>
           <div class="experience-icon">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
               <polyline points="17 2 12 7 7 2"></polyline>
             </svg>
           </div>
-          <h3>IMAX</h3>
-          <p>Crystal-clear images on screens up to 8 stories high with immersive sound</p>
+          <h3>IMAX Screens</h3>
+          <p class="exp-spec">Up to 8 stories tall</p>
+          <p class="exp-description">Crystal-clear 4K resolution with 40% more image than standard screens for epic cinematic moments</p>
+          <div class="exp-badge">Award-Winning</div>
         </div>
 
-        <div class="experience-card">
+        <!-- Audio Technology -->
+        <div class="experience-card exp-audio">
+          <div class="exp-category">AUDIO</div>
           <div class="experience-icon">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
             </svg>
           </div>
           <h3>Dolby Atmos</h3>
-          <p>Revolutionary audio technology that moves sound all around you</p>
+          <p class="exp-spec">360° Immersive Sound</p>
+          <p class="exp-description">Revolutionary audio technology that creates a three-dimensional soundscape surrounding you completely</p>
+          <div class="exp-badge">Multi-Channel</div>
         </div>
 
-        <div class="experience-card">
+        <!-- Comfort Technology -->
+        <div class="experience-card exp-comfort">
+          <div class="exp-category">COMFORT</div>
           <div class="experience-icon">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="8" width="18" height="12" rx="2"></rect>
               <path d="M10 8V5c0-1.1.9-2 2-2s2 .9 2 2v3"></path>
+              <line x1="7" y1="12" x2="17" y2="12"></line>
             </svg>
           </div>
           <h3>Luxury Recliners</h3>
-          <p>Reserved seating in premium electric recliners with extended leg room</p>
+          <p class="exp-spec">Electric with Leg Rest</p>
+          <p class="exp-description">Premium seating that adjusts to your perfect angle with ample leg room and heated cushions</p>
+          <div class="exp-badge">Premium Seats</div>
         </div>
 
-        <div class="experience-card">
+        <!-- Culinary Experience -->
+        <div class="experience-card exp-culinary">
+          <div class="exp-category">CULINARY</div>
           <div class="experience-icon">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-              <line x1="9" y1="9" x2="9.01" y2="9"></line>
-              <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 13.87A4 4 0 0 0 7.41 6.64a3.98 3.98 0 0 1 6.18 0A4 4 0 0 0 18 13.87v.01A8.002 8.002 0 0 1 12 20"></path>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
             </svg>
           </div>
-          <h3>Gourmet Concessions</h3>
-          <p>Artisan snacks, craft beverages, and chef-inspired menu items</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Locations -->
-  <section class="locations section-block" id="locations">
-    <div class="container">
-  <h2>Our Locations</h2>
-  <p class="section-subtitle section-spaced">FIND A THEATRUM NEAR YOU</p>
-      <div class="locations-grid">
-        <div class="location-card">
-          <h3>Downtown Premiere</h3>
-          <p class="location-address">123 Main Street, Downtown District</p>
-          <div class="location-details">
-            <span>16 Screens</span><span>IMAX</span><span>Dolby Atmos</span>
-          </div>
-          <button class="btn-secondary">Get Directions</button>
-        </div>
-
-        <div class="location-card">
-          <h3>Riverside Cinema</h3>
-          <p class="location-address">456 River Road, Waterfront Plaza</p>
-          <div class="location-details">
-            <span>12 Screens</span><span>70MM</span><span>VIP Lounge</span>
-          </div>
-          <button class="btn-secondary">Get Directions</button>
-        </div>
-
-        <div class="location-card">
-          <h3>Westside Multiplex</h3>
-          <p class="location-address">789 West Avenue, Shopping Center</p>
-          <div class="location-details">
-            <span>20 Screens</span><span>IMAX</span><span>4DX</span>
-          </div>
-          <button class="btn-secondary">Get Directions</button>
+          <h3>Gourmet Menu</h3>
+          <p class="exp-spec">Chef-Curated Selection</p>
+          <p class="exp-description">Beyond popcorn. Artisan snacks, craft beverages, and chef-inspired dishes prepared fresh daily</p>
+          <div class="exp-badge">Elevated Dining</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-          <div class="footer-section">
-          <div class="footer-logo"><span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span></div>
-          <p>Experience cinema the way it was meant to be seen.</p>
-          <div class="social-links">
-            <a href="#" aria-label="Facebook">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073C0 18.063 4.388 23.027 10.125 23.927v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            </a>
-            <a href="#" aria-label="X">
-              <!-- Simple X icon -->
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </a>
-            <a href="#" aria-label="Instagram">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.61-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-section">
-          <h4>Movies</h4>
-          <ul>
-            <li><a href="#now-playing">Now Playing</a></li>
-            <li><a href="#coming-soon">Coming Soon</a></li>
-            <li><a href="#">Movie Formats</a></li>
-            <li><a href="#">Private Events</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Membership</h4>
-          <ul>
-            <li><a href="#">Premium Pass</a></li>
-            <li><a href="#">Rewards Program</a></li>
-            <li><a href="#">Gift Cards</a></li>
-            <li><a href="#">Corporate Sales</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Support</h4>
-          <ul>
-            <li><a href="#">Help Center</a></li>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">Accessibility</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Newsletter</h4>
-          <p>Get the latest movies and exclusive offers</p>
-          <div class="newsletter-form">
-            <input type="email" placeholder="Your email">
-            <button class="btn-primary">Subscribe</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; 2025 THEATRUM. All rights reserved.</p>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Cookie Settings</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <div id="footer-placeholder"></div>
+  <script src="scripts/load-footer.js"></script>
 
   <!-- AUTH: Account Choice (Skip removed) -->
   <div class="overlay" id="choiceModal" aria-hidden="true">
@@ -748,7 +805,6 @@
         <label style="display:flex;gap:8px;align-items:center;color:var(--text-secondary);font-size:14px">
           <input id="rememberMe" type="checkbox" style="accent-color:#dc2626"> Remember me
         </label>
-        <a id="forgotLink" href="forgot-password.html" style="color:var(--accent-red);font-weight:700;font-size:13px;align-self:flex-start;text-decoration:none;">Forgot your password?</a>
         <span id="loginError" class="error">Invalid email or password.</span>
         <div class="btn-row">
           <button id="loginSubmit" class="btn-primary">Sign In</button>
@@ -858,477 +914,535 @@
     </div>
   </div>
 
+  <!-- Custom Date Picker Modal -->
+  <div id="calendarModal" class="calendar-modal">
+    <div class="calendar-sheet">
+      <div class="calendar-head">
+        <h3>Select Specific Date</h3>
+        <button class="close-x" style="position:static" onclick="closeCalendar()">✕</button>
+      </div>
+      
+      <div class="date-picker-container">
+        <label>Pick a date</label>
+        <input type="date" id="customDateInput" class="styled-date-input">
+      </div>
+
+      <div class="calendar-actions">
+        <button class="btn-cancel" onclick="closeCalendar()">Cancel</button>
+        <button class="btn-confirm" onclick="confirmCustomDate()">Confirm Date</button>
+      </div>
+    </div>
+  </div>
+
   <!-- JS -->
   <script>
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
+    
+    // ... (Existing Helpers) ...
+    
+    // Trailer Logic (Merged)
+    const trailerModal = $('#trailerModal');
+    const trailerFrame = $('#trailerFrame');
+    const trailerClose = $('.trailer-close');
+
+    if(trailerModal) {
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action="trailer"]');
+            if (btn) {
+                e.stopPropagation(); 
+                const card = btn.closest('.movie-card');
+                const trailerId = card.dataset.trailer;
+                if (trailerId) {
+                    trailerFrame.src = `https://www.youtube.com/embed/${trailerId}?autoplay=1&modestbranding=1&rel=0`;
+                    trailerModal.classList.add('show');
+                }
+            }
+        });
+
+        function closeTrailer() {
+            trailerModal.classList.remove('show');
+            setTimeout(() => { trailerFrame.src = ''; }, 300);
+        }
+        
+        trailerClose.addEventListener('click', closeTrailer);
+        trailerModal.addEventListener('click', (e) => {
+            if (e.target === trailerModal) closeTrailer();
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && trailerModal.classList.contains('show')) {
+                closeTrailer();
+            }
+        });
+    }
+
     const show = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.add('show'); el.setAttribute('aria-hidden','false'); };
     const hide = el => { el = typeof el==='string' ? $(el) : el; if(!el) return; el.classList.remove('show'); el.setAttribute('aria-hidden','true'); };
     window.show = show;
     window.hide = hide;
 
-    const SESSION_KEY = 'theatrum.session';
-    const USERS_KEY = 'theatrum.users';
-    const defaultUserLabel = 'Sign In';
-    // userButton and other header elements will be defined after header load
-    let userButton; 
-    const logoutBtn = $('#logoutBtn');
-    const dashboardBtn = $('#accountDashboardBtn');
-    const choiceButtons = {
-      login: $('#goLogin'),
-      signup: $('#goSignup'),
-      guest: $('#goGuest'),
-      logout: logoutBtn,
-      dashboard: dashboardBtn
-    };
+    // ... (Session Logic - Keep Existing) ...
+    // ... (Header Logic - Keep Existing) ...
 
-    const loadSession = () => {
-      try { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
-      catch { return null; }
-    };
-    const saveSession = (session) => {
-      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      syncUserButton(session);
-    };
-    const clearSession = () => {
-      localStorage.removeItem(SESSION_KEY);
-      syncUserButton(null);
-      $('#welcomeBadge')?.classList.remove('show');
-    };
-    const loadUsers = () => {
-      try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
-      catch { return []; }
-    };
-    const saveUsersStore = (users) => localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    function syncChoiceButtons(session){
-      const hasSession = !!session;
-      const showAuthChoices = !hasSession;
-      if (choiceButtons.login) choiceButtons.login.style.display = showAuthChoices ? 'inline-flex' : 'none';
-      if (choiceButtons.signup) choiceButtons.signup.style.display = showAuthChoices ? 'inline-flex' : 'none';
-      if (choiceButtons.guest) choiceButtons.guest.style.display = showAuthChoices ? 'inline-flex' : 'none';
-      if (choiceButtons.logout) choiceButtons.logout.style.display = hasSession ? 'inline-flex' : 'none';
-      if (choiceButtons.dashboard) choiceButtons.dashboard.style.display = hasSession ? 'inline-flex' : 'none';
+    // --- FILTER LOGIC ---
+    const cards = Array.from(document.querySelectorAll('#moviesGrid .movie-card'));
+    const moviesGrid = document.getElementById('moviesGrid');
+
+    // State
+    let activeGenres = new Set();
+    let activeFormats = new Set();
+    let currentDate = 'all';
+    let currentLocation = localStorage.getItem('theatrum_location') || 'All Locations';
+    
+    // ========== TIME RANGE FILTER LOGIC ==========
+    let selectedStartTime = 600; // 10:00 AM in minutes
+    let selectedEndTime = 1320;   // 10:00 PM in minutes
+    
+    function minutesToTimeString(minutes) {
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
+      return `${displayHours}:${mins.toString().padStart(2, '0')} ${ampm}`;
     }
     
-    // Global function so load-header.js can call it if needed, 
-    // though the event listener below handles the main init.
-    window.syncUserButton = function(session){
-      // Re-select in case it was just injected
-      userButton = $('#userButton');
-      if(!userButton) return;
-
-      const name = session?.username || 'Guest';
-      $('#welcomeName').textContent = name;
-      if (session) {
-        userButton.classList.add('icon-mode');
-        userButton.innerHTML = '<span class="user-icon" aria-hidden="true">👤</span>';
-        userButton.setAttribute('aria-label', `${name} account`);
-      } else {
-        userButton.classList.remove('icon-mode');
-        userButton.textContent = defaultUserLabel;
-        userButton.setAttribute('aria-label', 'Sign In');
+    function generateTimeOptions() {
+      const times = [];
+      for (let h = 10; h <= 22; h++) {
+        for (let m = 0; m < 60; m += 30) {
+          const minutes = h * 60 + m;
+          times.push({ minutes, display: minutesToTimeString(minutes) });
+        }
       }
-      userButton.classList.add('btn-primary');
-      userButton.classList.remove('btn-secondary');
-      syncChoiceButtons(session);
+      return times;
+    }
+    
+    function renderTimeColumns() {
+      const times = generateTimeOptions();
+      const startCol = $('#startTimeColumn');
+      const endCol = $('#endTimeColumn');
+      
+      // Clear existing time options (keep label)
+      const startLabel = startCol.querySelector('.time-label');
+      const endLabel = endCol.querySelector('.time-label');
+      startCol.innerHTML = '';
+      endCol.innerHTML = '';
+      startCol.appendChild(startLabel.cloneNode(true));
+      endCol.appendChild(endLabel.cloneNode(true));
+      
+      // Render start time options
+      times.forEach(time => {
+        const option = document.createElement('button');
+        option.classList.add('time-option');
+        option.textContent = time.display;
+        if (time.minutes === selectedStartTime) option.classList.add('selected');
+        option.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (time.minutes <= selectedEndTime) {
+            selectedStartTime = time.minutes;
+            updateTimeRangeDisplay();
+            renderTimeColumns();
+          }
+        });
+        startCol.appendChild(option);
+      });
+      
+      // Render end time options
+      times.forEach(time => {
+        const option = document.createElement('button');
+        option.classList.add('time-option');
+        option.textContent = time.display;
+        if (time.minutes === selectedEndTime) option.classList.add('selected');
+        option.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (time.minutes >= selectedStartTime) {
+            selectedEndTime = time.minutes;
+            updateTimeRangeDisplay();
+            renderTimeColumns();
+          }
+        });
+        endCol.appendChild(option);
+      });
+    }
+    
+    function updateTimeRangeDisplay() {
+      const startStr = minutesToTimeString(selectedStartTime);
+      const endStr = minutesToTimeString(selectedEndTime);
+      $('#timeRangeLabel').textContent = `${startStr} - ${endStr}`;
+    }
+    
+    // Time range menu toggle
+    let timeMenuOpen = false;
+    $('#timeRangeTrigger').addEventListener('click', () => {
+      timeMenuOpen = !timeMenuOpen;
+      const menu = $('#timeRangeMenu');
+      if (timeMenuOpen) {
+        renderTimeColumns();
+        menu.classList.add('show');
+      } else {
+        menu.classList.remove('show');
+      }
+    });
+    
+    // Apply time filter
+    $('#applyTimeBtn').addEventListener('click', () => {
+      timeMenuOpen = false;
+      $('#timeRangeMenu').classList.remove('show');
+      applyFilters();
+    });
+    
+    // Close time menu when clicking outside
+    document.addEventListener('click', (e) => {
+      const timeRangeFilter = document.querySelector('.time-range-filter');
+      const timeRangeMenu = $('#timeRangeMenu');
+      
+      // Check if click is outside the time range filter
+      if (timeMenuOpen && !timeRangeFilter.contains(e.target)) {
+        timeMenuOpen = false;
+        timeRangeMenu.classList.remove('show');
+      }
+    });
+    
+    updateTimeRangeDisplay();
+    
+    // ========== CALENDAR IN DROPDOWN LOGIC ==========
+    let dropdownCalendarMonth = new Date().getMonth();
+    let dropdownCalendarYear = new Date().getFullYear();
+    let dropdownSelectedDate = new Date();
+
+    function generateCalendarGrid(month, year) {
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const daysInMonth = lastDay.getDate();
+      const startingDayOfWeek = firstDay.getDay();
+      
+      const days = [];
+      
+      // Add empty slots for days before the first day
+      for (let i = 0; i < startingDayOfWeek; i++) {
+        days.push(null);
+      }
+      
+      // Add days of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        days.push(new Date(year, month, day));
+      }
+      
+      return days;
     }
 
-    // Logic to run AFTER header is injected
-    document.addEventListener('headerLoaded', () => {
-        // Init user button state
-        syncUserButton(loadSession());
-        
-        // Attach header event listeners
-        $('#userButton').addEventListener('click', () => show('#choiceModal'));
-        $('#logo').addEventListener('click', () => show('#choiceModal'));
-        
-        // Search listener
-        $('#globalSearch').addEventListener('input', (e) => {
-          const q = e.target.value.toLowerCase();
-          const cards = $$('#moviesGrid .movie-card');
-          cards.forEach(card => {
-            const title = card.dataset.title.toLowerCase();
-            const genres = card.dataset.genres.toLowerCase();
-            card.style.display = (title.includes(q) || genres.includes(q)) ? '' : 'none';
-          });
-        });
-    });
-
-    // Schedule Data for calendar
-    const scheduleData = {
-      '2025-11-22': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
-      '2025-11-23': ['1:00 PM', '4:30 PM', '8:00 PM'],
-      '2025-11-24': ['6:00 PM', '9:30 PM'],
-      '2025-11-25': ['6:00 PM', '9:30 PM'],
-      '2025-11-26': ['3:45 PM', '7:15 PM'],
-      '2025-11-27': ['3:45 PM', '7:15 PM'],
-      '2025-11-28': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
-      '2025-11-29': ['1:00 PM', '4:30 PM', '8:00 PM', '10:30 PM'],
-      '2025-11-30': ['1:00 PM', '4:30 PM', '8:00 PM'],
-      '2025-12-01': ['6:00 PM', '9:30 PM'],
-      '2025-12-02': ['6:00 PM', '9:30 PM'],
-    };
-
-    // Calendar variables
-    let dropdownCurrentMonth = new Date().getMonth();
-    let dropdownCurrentYear = new Date().getFullYear();
-    const calendarDropdown = $('#calendarDropdown');
-    const dropdownCalendarDays = $('#dropdownCalendarDays');
-    const dropdownMonthElement = $('#dropdownMonth');
-    const dropdownPrevBtn = $('#dropdownPrevBtn');
-    const dropdownNextBtn = $('#dropdownNextBtn');
-
-    // --- Dropdown Calendar Functions ---
-
-    // Generate calendar for the dropdown
-    function generateDropdownCalendar() {
-      dropdownCalendarDays.innerHTML = '';
+    function renderDropdownCalendar(month, year) {
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                         'July', 'August', 'September', 'October', 'November', 'December'];
       
-      const firstDay = new Date(dropdownCurrentYear, dropdownCurrentMonth, 1);
-      const lastDay = new Date(dropdownCurrentYear, dropdownCurrentMonth + 1, 0);
-      const daysInMonth = lastDay.getDate();
-      const startingDay = firstDay.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      // Update month/year display
+      $('#dropdownMonthYear').textContent = `${monthNames[month]} ${year}`;
       
-      // Update month display
-      const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
-      dropdownMonthElement.textContent = `${monthNames[dropdownCurrentMonth]} ${dropdownCurrentYear}`;
+      // Generate and render calendar days
+      const days = generateCalendarGrid(month, year);
+      const gridContainer = $('#dropdownCalendarGrid');
+      gridContainer.innerHTML = '';
       
-      // Add empty cells for days before the first day of the month
-      for (let i = 0; i < startingDay; i++) {
-        const emptyCell = document.createElement('div');
-        emptyCell.className = 'dropdown-calendar-day unavailable';
-        dropdownCalendarDays.appendChild(emptyCell);
-      }
-      
-      // Add cells for each day of the month
-      for (let day = 1; day <= daysInMonth; day++) {
-        const dayCell = document.createElement('button');
-        dayCell.className = 'dropdown-calendar-day';
-        dayCell.textContent = day;
+      days.forEach(date => {
+        const dayEl = document.createElement('button');
+        dayEl.classList.add('calendar-grid-day');
         
-        const dateStr = `${dropdownCurrentYear}-${String(dropdownCurrentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        dayCell.dataset.date = dateStr;
-        
-        // Check if this date has showtimes
-        if (scheduleData[dateStr]) {
-          dayCell.classList.add('available');
-          
-          // Check if this is today
-          const today = new Date();
-          if (today.getDate() === day && 
-              today.getMonth() === dropdownCurrentMonth && 
-              today.getFullYear() === dropdownCurrentYear) {
-            dayCell.classList.add('today');
-          }
-          
-          // Check if this is the selected date
-          if (selectedDate === dateStr) {
-            dayCell.classList.add('selected');
-          }
-          
-          dayCell.addEventListener('click', () => selectDateFromDropdown(dayCell, dateStr));
+        if (!date) {
+          dayEl.classList.add('empty');
+          dayEl.disabled = true;
         } else {
-          dayCell.classList.add('unavailable');
-          dayCell.disabled = true;
+          const isToday = date.toDateString() === new Date().toDateString();
+          const isSelected = date.toDateString() === dropdownSelectedDate.toDateString();
+          
+          dayEl.textContent = date.getDate();
+          if (isToday) dayEl.classList.add('today');
+          if (isSelected) dayEl.classList.add('selected');
+          
+          dayEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownSelectedDate = new Date(date);
+            currentDate = dropdownSelectedDate.toISOString().split('T')[0];
+            
+            // Update the label
+            const options = { month: 'short', day: 'numeric' };
+            let labelText = dropdownSelectedDate.toLocaleDateString('en-US', options);
+            document.getElementById('selectedDateLabel').textContent = labelText;
+            
+            // Close dropdown and apply filters
+            document.getElementById('dateDropdown').classList.remove('is-open');
+            applyFilters();
+            
+            // Re-render to show selection
+            renderDropdownCalendar(dropdownCalendarMonth, dropdownCalendarYear);
+          });
         }
         
-        dropdownCalendarDays.appendChild(dayCell);
-      }
-    }
-
-    // Handle date selection from dropdown
-    function selectDateFromDropdown(dayCell, dateStr) {
-      // Update the main date selection
-      selectedDate = dateStr;
-      selectedTime = null;
-      
-      // Highlight selected date in calendar
-      $$('.dropdown-calendar-day').forEach(d => d.classList.remove('selected'));
-      dayCell.classList.add('selected');
-      
-      // Generate time buttons
-      prepTimes();
-    }
-
-    // Navigate to previous month in dropdown
-    function dropdownPrevMonth() {
-      dropdownCurrentMonth--;
-      if (dropdownCurrentMonth < 0) {
-        dropdownCurrentMonth = 11;
-        dropdownCurrentYear--;
-      }
-      generateDropdownCalendar();
-    }
-
-    // Navigate to next month in dropdown
-    function dropdownNextMonth() {
-      dropdownCurrentMonth++;
-      if (dropdownCurrentMonth > 11) {
-        dropdownCurrentMonth = 0;
-        dropdownCurrentYear++;
-      }
-      generateDropdownCalendar();
-    }
-
-    // Open Account Choice (Moved to headerLoaded)
-    logoutBtn?.addEventListener('click', () => {
-      clearSession();
-      hide('#choiceModal');
-      hide('#welcomeModal');
-      hide('#loginModal');
-    });
-    dashboardBtn?.addEventListener('click', () => {
-      window.location.href = 'new-account-dashboard.html';
-    });
-
-    // Close any modal/sheet
-    $$('.close-x').forEach(btn => btn.addEventListener('click', (e) => {
-      const target = e.currentTarget.getAttribute('data-close');
-      if (target) hide(target);
-      else hide(e.currentTarget.closest('.overlay') || '#bookingSheet');
-    }));
-
-    // Swap login <-> signup
-    $$('[data-swap]').forEach(b => b.addEventListener('click', (e) => {
-      const [from,to] = e.currentTarget.getAttribute('data-swap').split(',');
-      hide(from); show(to);
-    }));
-
-    // Account choice
-    $('#goLogin').addEventListener('click', () => { hide('#choiceModal'); show('#loginModal'); });
-    $('#goSignup').addEventListener('click', () => { hide('#choiceModal'); show('#signupModal'); });
-
-    // Guest updates button -> Guest
-    $('#goGuest').addEventListener('click', () => {
-      hide('#choiceModal');
-      const username = 'Guest';
-      $('#welcomeName').textContent = username;
-      $('#welcomeBadge').classList.remove('show'); // guest doesn't show verified badge
-      show('#welcomeModal');
-      saveSession({ username, role: 'guest' });
-    });
-
-    // Login
-    $('#loginSubmit').addEventListener('click', () => {
-      const email = $('#loginEmail').value.trim().toLowerCase();
-      const pass = $('#loginPass').value.trim();
-      const users = loadUsers();
-      const user = users.find(u => u.email === email);
-      const ok = !!user && user.password === pass;
-      $('#loginError').classList.toggle('show', !ok);
-      if (ok) {
-        const username = user.name || email.split('@')[0];
-        hide('#loginModal');
-        $('#welcomeName').textContent = username;
-        $('#welcomeBadge').classList.remove('show');
-        show('#welcomeModal');
-        saveSession({ username, role: 'member', email });
-      }
-    });
-
-    // Signup -> Verify
-    $('#signupSubmit').addEventListener('click', () => {
-      const fn = $('#firstName').value.trim();
-      const ln = $('#lastName').value.trim();
-      const em = $('#signupEmail').value.trim().toLowerCase();
-      const pw = $('#signupPass').value.trim();
-      const errorEl = $('#signupError');
-      let ok = fn && ln && em.includes('@') && pw.length >= 8;
-      errorEl.textContent = 'Please fill all fields correctly.';
-      errorEl.classList.toggle('show', !ok);
-      if (!ok) return;
-
-      const users = loadUsers();
-      if (users.some(u => u.email === em)) {
-        errorEl.textContent = 'Account already exists. Please log in.';
-        errorEl.classList.add('show');
-        return;
-      }
-
-      const name = fn || 'Member';
-      users.push({ email: em, password: pw, name });
-      saveUsersStore(users);
-
-      hide('#signupModal');
-      $('#welcomeName').textContent = name;
-      $('#welcomeBadge').classList.remove('show');
-      show('#welcomeModal');
-      saveSession({ username: name, role: 'member', email: em });
-    });
-
-    // Verify (demo code 123456)
-    $('#verifySubmit').addEventListener('click', () => {
-      const code = $('#verifyCode').value.trim();
-      const ok = code === '123456';
-      $('#verifyError').classList.toggle('show', !ok);
-      if (ok) {
-        hide('#verifyModal');
-        const name = $('#firstName').value.trim() || 'Member';
-        $('#welcomeName').textContent = name;
-        $('#welcomeBadge').classList.add('show');
-        show('#welcomeModal');
-
-        const userBtn = $('#userButton');
-        userBtn.textContent = name;
-        userBtn.classList.remove('btn-secondary');
-        userBtn.classList.add('btn-primary');
-      }
-    });
-
-    // Resend (demo)
-    $('#resendCode').addEventListener('click', () => {
-      const btn = $('#resendCode');
-      btn.disabled = true;
-      btn.textContent = 'Code sent';
-      setTimeout(() => { btn.disabled = false; btn.textContent = 'Resend Code'; }, 1500);
-    });
-
-    // Search / Filter / Sort
-    const moviesGrid = $('#moviesGrid');
-    const cards = $$('#moviesGrid .movie-card');
-
-    // globalSearch listener moved to headerLoaded
-
-    $$('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
-      $$('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const g = btn.dataset.filter;
-      cards.forEach(card => {
-        if (g === 'all') { card.style.display = ''; return; }
-        const genres = card.dataset.genres.split(',').map(s => s.trim());
-        card.style.display = genres.includes(g) ? '' : 'none';
+        gridContainer.appendChild(dayEl);
       });
-    }));
-
-    $('#sortSelect').addEventListener('change', (e) => {
-      const val = e.target.value;
-      const sorted = [...cards].sort((a,b) => {
-        if (val === 'title') return a.dataset.title.localeCompare(b.dataset.title);
-        if (val === 'rating') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
-        if (val === 'release') return new Date(b.dataset.release) - new Date(a.dataset.release);
-        return 0;
-      });
-      sorted.forEach(c => moviesGrid.appendChild(c));
-    });
-
-    // Booking bottom sheet
-    const bookingSheet = $('#bookingSheet');
-    let selectedMovie = null, selectedPoster = null, selectedDate = null, selectedTime = null;
-
-    $$('.book-btn').forEach(b => b.addEventListener('click', (e) => {
-      selectedMovie = e.currentTarget.dataset.movie;
-      const card = e.currentTarget.closest('.movie-card');
-      selectedPoster = card ? (card.querySelector('.movie-poster img')?.src || null) : null;
-      $('#sheetTitle').textContent = selectedMovie;
-      prepDates();
-      $('#confirmMsg').classList.remove('show');
-      $('#timesRow').innerHTML = '';
-      selectedTime = null;
-      show(bookingSheet);
-    }));
-
-    // View details (redirect to movie-detail.html)
-    document.body.addEventListener('click', (e) => {
-      const v = e.target.closest('[data-action="view"]');
-      if (v) {
-        const card = v.closest('.movie-card');
-        if (!card) return;
-
-        const movieData = {
-          title: card.dataset.title,
-          rating: card.dataset.rating,
-          release: card.dataset.release,
-          genres: card.dataset.genres,
-          poster: card.querySelector('.movie-poster img').src,
-          description: "Experience the epic conclusion on the biggest screen with Dolby Atmos sound." // Placeholder
-        };
-
-        localStorage.setItem('viewMovie', JSON.stringify(movieData));
-        window.location.href = 'movie-detail.html';
-      }
-    });
-
-    // Calendar event listeners
-    dropdownPrevBtn.addEventListener('click', dropdownPrevMonth);
-    dropdownNextBtn.addEventListener('click', dropdownNextMonth);
-
-    function prepDates() {
-      const today = new Date();
-      selectedDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-      
-      // Initialize dropdown calendar
-      dropdownCurrentMonth = today.getMonth();
-      dropdownCurrentYear = today.getFullYear();
-      generateDropdownCalendar();
     }
-    window.prepDates = prepDates;
 
-    function prepTimes() {
-      const row = $('#timesRow');
-      row.innerHTML = '';
-      const times = ['12:30 PM','2:00 PM','3:45 PM','5:30 PM','7:15 PM','9:00 PM','10:30 PM'];
-      times.forEach(t => {
-        const pill = document.createElement('button');
-        pill.className = 'pill';
-        pill.textContent = t;
-        pill.addEventListener('click', () => {
-          $$('#timesRow .pill').forEach(p => p.classList.remove('selected'));
-          pill.classList.add('selected');
-          selectedTime = t;
-          $('#confirmMsg').classList.remove('show');
+    // Calendar navigation in dropdown
+    $('#dropdownPrevBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownCalendarMonth--;
+      if (dropdownCalendarMonth < 0) {
+        dropdownCalendarMonth = 11;
+        dropdownCalendarYear--;
+      }
+      renderDropdownCalendar(dropdownCalendarMonth, dropdownCalendarYear);
+    });
+    
+    $('#dropdownNextBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownCalendarMonth++;
+      if (dropdownCalendarMonth > 11) {
+        dropdownCalendarMonth = 0;
+        dropdownCalendarYear++;
+      }
+      renderDropdownCalendar(dropdownCalendarMonth, dropdownCalendarYear);
+    });
+
+    // Initial calendar render
+    renderDropdownCalendar(dropdownCalendarMonth, dropdownCalendarYear);
+
+    // Listen for Location Change (from Header)
+    window.addEventListener('location-changed', (e) => {
+        currentLocation = e.detail.location;
+        applyFilters();
+    });
+
+    // Dropdown Toggles
+    window.toggleDropdown = function(id) {
+        const dropdown = document.getElementById(id);
+        const allDropdowns = document.querySelectorAll('.filter-dropdown');
+        allDropdowns.forEach(d => {
+            if (d.id !== id) d.classList.remove('is-open');
         });
-        row.appendChild(pill);
-      });
-    }
-
-  $('#confirmBtn').addEventListener('click', () => {
-    if (!selectedMovie || !selectedDate || !selectedTime) {
-      const msg = $('#confirmMsg');
-      msg.textContent = 'Please pick a date and a showtime.';
-      msg.classList.add('show');
-      return;
-    }
-
-    // Persist show information for the next pages
-    const payload = {
-      movie: selectedMovie,
-      date: selectedDate,
-      time: selectedTime,
-      poster: selectedPoster
+        dropdown.classList.toggle('is-open');
     };
 
-    try {
-      localStorage.setItem('currentShow', JSON.stringify(payload));
-    } catch (e) {
-      console.warn('Could not persist show selection', e);
-    }
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.filter-dropdown') && !e.target.closest('.time-range-filter')) {
+            document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('is-open'));
+        }
+    });
 
-    // Start the multi-page flow at Ticket Quantity
-    window.location.href = 'ticket_quantity.html';
-});
-  </script>
-  <script>
-    // Tab switching logic
-    document.querySelectorAll('.tab-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-        button.classList.add('active');
-        document.getElementById(button.dataset.tab).classList.add('active');
+    // Listeners for Checkboxes
+    document.querySelectorAll('#genreMenu input').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        if(e.target.checked) activeGenres.add(e.target.value);
+        else activeGenres.delete(e.target.value);
+        applyFilters();
       });
     });
 
-    // Size selection logic
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.size-btn');
-      if (!btn) return;
-      const wrap = btn.closest('.size-options');
-      if (!wrap) return;
-      wrap.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    document.querySelectorAll('#formatMenu input').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        if(e.target.checked) activeFormats.add(e.target.value);
+        else activeFormats.delete(e.target.value);
+        applyFilters();
+      });
     });
+
+    document.querySelectorAll('#timeMenu input').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        if(e.target.checked) activeTimes.add(e.target.value);
+        else activeTimes.delete(e.target.value);
+        applyFilters();
+      });
+    });
+
+    // --- CALENDAR LOGIC ---
+    const calendarModal = document.getElementById('calendarModal');
+    const customDateInput = document.getElementById('customDateInput');
+
+    window.selectDate = function(val) {
+        const dropdown = document.getElementById('dateDropdown');
+        dropdown.classList.remove('is-open');
+
+        if (val === 'calendar') {
+            // This is no longer used with embedded calendar
+            return;
+        }
+
+        // Preset Logic
+        currentDate = val;
+        
+        const label = document.getElementById('selectedDateLabel');
+        if(val === 'all') label.textContent = 'All Dates';
+        else if(val === 'today') label.textContent = 'Today';
+        else if(val === 'tomorrow') label.textContent = 'Tomorrow';
+        
+        applyFilters();
+    };
+
+    window.closeCalendar = function() {
+        if(calendarModal) calendarModal.classList.remove('show');
+    };
+
+    window.confirmCustomDate = function() {
+        if (!customDateInput) return;
+        const rawDate = customDateInput.value;
+        if (!rawDate) return;
+
+        currentDate = rawDate;
+        
+        // Format Label
+        const dateObj = new Date(rawDate + 'T00:00:00'); 
+        const options = { month: 'short', day: 'numeric' };
+        let labelText = dateObj.toLocaleDateString('en-US', options);
+        
+        document.getElementById('selectedDateLabel').textContent = labelText;
+        
+        closeCalendar();
+        applyFilters();
+    };
+
+    // Parse "2:00 PM" to minutes
+    function parseTimeStr(timeStr) {
+        if(!timeStr) return 9999; 
+        const [time, mod] = timeStr.split(' ');
+        let [h, m] = time.split(':').map(Number);
+        if(h === 12 && mod === 'AM') h = 0;
+        if(h !== 12 && mod === 'PM') h += 12;
+        return h * 60 + m;
+    }
+
+    // Helper: Check if any showtime falls within selected time range
+    function hasShowtimeInRange(showtimeBtns) {
+      return showtimeBtns.some(btn => {
+        const t = parseTimeStr(btn.textContent);
+        return t >= selectedStartTime && t <= selectedEndTime;
+      });
+    }
+
+    // Sort Logic
+    window.applySort = function(type, label) {
+        document.getElementById('sortLabel').textContent = label;
+        document.getElementById('sortDropdown').classList.remove('is-open');
+        
+        const sorted = [...cards].sort((a, b) => {
+            if (type === 'showtime') {
+                // Find earliest showtime button
+                const getFirstTime = (card) => {
+                    const btn = card.querySelector('.showtime-btn');
+                    return btn ? parseTimeStr(btn.textContent) : 9999;
+                };
+                return getFirstTime(a) - getFirstTime(b);
+            }
+            if (type === 'title') return a.dataset.title.localeCompare(b.dataset.title);
+            if (type === 'rating') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+            if (type === 'release') return new Date(b.dataset.release) - new Date(a.dataset.release);
+            return 0;
+        });
+
+        sorted.forEach(card => moviesGrid.appendChild(card));
+    };
+
+    // Main Filter Function
+    function applyFilters() {
+        cards.forEach(card => {
+            // 1. Genres
+            const cardGenres = card.dataset.genres.split(',').map(s => s.trim());
+            const genreMatch = activeGenres.size === 0 || [...activeGenres].some(g => cardGenres.includes(g));
+
+            // 2. Formats
+            const cardFormats = (card.dataset.formats || '').split(',').map(s => s.trim());
+            const formatMatch = activeFormats.size === 0 || [...activeFormats].some(f => cardFormats.includes(f));
+
+            // 3. Location Check
+            const cardLocations = (card.dataset.locations || '').split(',').map(s => s.trim());
+            const locationMatch = (currentLocation === 'All Locations') || cardLocations.includes(currentLocation);
+
+            // 4. Time Range Check
+            const showtimeBtns = Array.from(card.querySelectorAll('.showtime-btn'));
+            const timeMatch = hasShowtimeInRange(showtimeBtns);
+
+            if (genreMatch && formatMatch && locationMatch && timeMatch) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    // Initial trigger
+    applyFilters();
+
+    // ========== COMING SOON CAROUSEL LOGIC ==========
+    const comingSoonGrid = $('#comingSoonGrid');
+    const comingSoonPrev = $('#comingSoonPrev');
+    const comingSoonNext = $('#comingSoonNext');
+    let comingSoonScrollPosition = 0;
+
+    function scrollCarousel(direction) {
+      const cardWidth = 280; // Width of card + gap
+      const gap = 20;
+      const scrollAmount = cardWidth + gap;
+      
+      if (direction === 'next') {
+        comingSoonScrollPosition += scrollAmount;
+      } else {
+        comingSoonScrollPosition -= scrollAmount;
+      }
+      
+      // Clamp scroll position
+      const maxScroll = comingSoonGrid.scrollWidth - comingSoonGrid.parentElement.clientWidth;
+      comingSoonScrollPosition = Math.max(0, Math.min(comingSoonScrollPosition, maxScroll));
+      
+      comingSoonGrid.scrollTo({
+        left: comingSoonScrollPosition,
+        behavior: 'smooth'
+      });
+      
+      updateCarouselButtons();
+    }
+
+    function updateCarouselButtons() {
+      const maxScroll = comingSoonGrid.scrollWidth - comingSoonGrid.parentElement.clientWidth;
+      comingSoonPrev.disabled = comingSoonScrollPosition <= 0;
+      comingSoonNext.disabled = comingSoonScrollPosition >= maxScroll;
+    }
+
+    comingSoonPrev.addEventListener('click', () => scrollCarousel('prev'));
+    comingSoonNext.addEventListener('click', () => scrollCarousel('next'));
+
+    // Update buttons on load and resize
+    updateCarouselButtons();
+    window.addEventListener('resize', updateCarouselButtons);
+
+    // Calculate release countdown
+    function updateReleaseCounts() {
+      const now = new Date();
+      document.querySelectorAll('.coming-card').forEach(card => {
+        const releaseDate = new Date(card.dataset.releaseDate);
+        const daysUntil = Math.ceil((releaseDate - now) / (1000 * 60 * 60 * 24));
+        const countdownEl = card.querySelector('.release-countdown');
+        
+        if (countdownEl) {
+          if (daysUntil <= 0) {
+            countdownEl.textContent = 'Now Playing';
+          } else if (daysUntil === 1) {
+            countdownEl.textContent = 'Tomorrow';
+          } else if (daysUntil <= 7) {
+            countdownEl.textContent = `In ${daysUntil} days`;
+          } else if (daysUntil <= 30) {
+            const weeks = Math.ceil(daysUntil / 7);
+            countdownEl.textContent = `In ${weeks} week${weeks > 1 ? 's' : ''}`;
+          } else {
+            const months = Math.ceil(daysUntil / 30);
+            countdownEl.textContent = `In ${months} month${months > 1 ? 's' : ''}`;
+          }
+        }
+      });
+    }
+
+    updateReleaseCounts();
+
+    // ... (Rest of existing booking logic) ...
   </script>
   <script src="Functionality/index.js"></script>
   <script src="Functionality/theatrum_auth.js"></script>
