@@ -41,6 +41,7 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    padding-top: 80px; /* Compensation for fixed header */
 }
 
 /* Section spacing utility */
@@ -212,7 +213,7 @@ body {
 }
 
 .hero {
-    margin-top: 80px;
+    /* margin-top: 80px; Removed - handled by body padding */
     height: 600px;
     position: relative;
     background: linear-gradient(135deg, #d97706 0%, #dc2626 100%);
