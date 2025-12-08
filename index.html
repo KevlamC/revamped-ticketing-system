@@ -1432,6 +1432,20 @@
             '10:00 PM', '11:15 PM'
         ];
 
+        // Movie showtimes mapping - for today's showtimes
+        const movieShowtimes = {
+            'F1': ['10:00 AM', '3:45 PM', '7:15 PM'],
+            'The Family Plan 2': ['10:45 AM', '2:15 PM', '6:30 PM'],
+            'Dune: Part Two': ['2:00 PM', '5:30 PM', '9:00 PM'],
+            'Oppenheimer': ['1:00 PM', '4:30 PM', '8:00 PM'],
+            'The Batman': ['3:00 PM', '6:30 PM', '10:00 PM'],
+            'Barbie': ['1:30 PM', '4:00 PM', '7:30 PM'],
+            'Killers of the Flower Moon': ['2:30 PM', '6:00 PM', '9:30 PM'],
+            'A Quiet Place: Day One': ['3:30 PM', '7:00 PM', '10:30 PM'],
+            'Five Nights At Freddy\'s': ['5:00 PM', '7:45 PM', '10:15 PM'],
+            'Zootopia 2': ['11:00 AM', '2:15 PM', '5:45 PM']
+        };
+
         // Open booking modal from hero CTA
         if (heroCta) {
             heroCta.addEventListener('click', () => {
@@ -1741,7 +1755,10 @@
             const grid = $('#timeGrid');
             grid.innerHTML = '';
             
-            timeSlots.forEach(time => {
+            // Get showtimes for the selected movie, or use default if not found
+            const showtimes = movieShowtimes[movieTitle] || timeSlots;
+            
+            showtimes.forEach(time => {
                 const div = document.createElement('div');
                 div.className = 'time-option';
                 div.textContent = time;

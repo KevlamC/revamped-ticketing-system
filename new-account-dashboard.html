@@ -1382,6 +1382,39 @@
                 listEl.appendChild(card);
               });
             });
+            
+            // Check if we should scroll to bookings section
+            if (sessionStorage.getItem('scrollToBookings') === 'true') {
+              // Clear the flag
+              sessionStorage.removeItem('scrollToBookings');
+              
+              // Wait a moment for page to fully load, then scroll
+              setTimeout(() => {
+                const bookingsSection = document.getElementById('bookings');
+                if (bookingsSection) {
+                  bookingsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  
+                  // Also update the sidebar navigation to show bookings as active
+                  const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+                  sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#bookings') {
+                      link.classList.add('active');
+                    }
+                  });
+                }
+              }, 100);
+            } else {
+              // If no special scroll flag, ensure we stay at top and highlight Profile section
+              window.scrollTo(0, 0);
+              const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+              sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#profile') {
+                  link.classList.add('active');
+                }
+              });
+            }
             </script>
             
 

@@ -1003,11 +1003,11 @@
           </div>
         </div>
         <div class="dropdown-divider"></div>
-        <a href="new-account-dashboard.html" class="dropdown-item">
+        <a href="new-account-dashboard.html" id="myProfileLink" class="dropdown-item">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           My Profile
         </a>
-        <a href="new-booking-history.html" class="dropdown-item">
+        <a href="new-account-dashboard.html" class="dropdown-item">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           My Bookings
         </a>
@@ -1989,6 +1989,44 @@
   if (logo) {
     logo.addEventListener('click', () => {
        window.location.href = 'index.html';
+    });
+  }
+  
+  // My Bookings link - scroll to bookings section on new-account-dashboard
+  const myBookingsLink = document.querySelector('a[href="new-account-dashboard.html"][class*="dropdown-item"]');
+  if (myBookingsLink) {
+    myBookingsLink.addEventListener('click', (e) => {
+      const currentPage = window.location.pathname.split('/').pop();
+      
+      // If we're already on new-account-dashboard, just scroll to bookings
+      if (currentPage === 'new-account-dashboard.html' || currentPage.includes('new-account-dashboard')) {
+        e.preventDefault();
+        const bookingsSection = document.querySelector('[data-section="my-bookings"]') || document.getElementById('my-bookings');
+        if (bookingsSection) {
+          bookingsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else {
+        // Otherwise, navigate and store a flag to scroll on page load
+        sessionStorage.setItem('scrollToBookings', 'true');
+      }
+    });
+  }
+  
+  // My Profile link - navigate without scrolling
+  const myProfileLink = document.getElementById('myProfileLink');
+  if (myProfileLink) {
+    myProfileLink.addEventListener('click', (e) => {
+      // Clear any scroll flags to prevent automatic scrolling
+      sessionStorage.removeItem('scrollToBookings');
+      sessionStorage.removeItem('scrollToFood');
+      
+      const currentPage = window.location.pathname.split('/').pop();
+      
+      // If already on dashboard, just scroll to top
+      if (currentPage === 'new-account-dashboard.html' || currentPage.includes('new-account-dashboard')) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     });
   }
   
