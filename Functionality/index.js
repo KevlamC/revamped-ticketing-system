@@ -8,7 +8,7 @@ function openBookingModal(movieTitle, movieGenre) {
   const bookingModal = document.getElementById('ticketBookingModal');
   if (bookingModal) {
     document.getElementById('bookingMovieTitle').textContent = movieTitle;
-    document.getElementById('bookingMovieGenre').textContent = movieGenre + ' • Coming Soon';
+    document.getElementById('bookingMovieGenre').textContent = movieGenre;
     if (typeof resetBooking === 'function') resetBooking();
     bookingModal.classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -23,10 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
       image: "Pictures/Apple_TV_F1_key_art_graphic_header_4_1_show_home.jpg", 
       title: "F1",
       description: "Brad Pitt stars as a former Formula 1 driver who returns to the sport to race for APXGP, a fictional 11th team on the grid.",
-      rating: "NR",
-      duration: "Coming Soon",
+      rating: "PG-13",
+      duration: "2h 15m",
       genre: "Sport, Drama",
-      score: "Anticipated",
+      score: "★ 8.5/10",
       videoId: "TZGY2CWPXeU",
       ctaAction: () => openBookingModal("F1", "Sport, Drama")
     },
@@ -34,10 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
       image: "Pictures/maxresdefault.jpg", 
       title: "AVATAR: FIRE AND ASH",
       description: "Jake Sully and Neytiri encounter the Ash People, a volatile Na'vi clan, as the saga continues on Pandora.",
-      rating: "NR",
-      duration: "Coming Soon",
+      rating: "PG-13",
+      duration: "3h 10m",
       genre: "Sci-Fi, Adventure",
-      score: "Anticipated",
+      score: "★ 8.9/10",
       videoId: "nb_fFj_0rq8",
       ctaAction: () => openBookingModal("AVATAR: FIRE AND ASH", "Sci-Fi, Adventure")
     },
@@ -46,9 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
       title: "THE FAMILY PLAN 2",
       description: "Dan Morgan's past comes calling again in this action-packed sequel to the hit family comedy.",
       rating: "PG-13",
-      duration: "Coming Soon",
+      duration: "1h 58m",
       genre: "Action, Comedy",
-      score: "Anticipated",
+      score: "★ 7.8/10",
       videoId: "dqolYtJGuf4", 
       ctaAction: () => openBookingModal("THE FAMILY PLAN 2", "Action, Comedy")
     },
@@ -68,9 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
       title: "ZOOTOPIA 2",
       description: "Judy Hopps and Nick Wilde return for a new mystery that takes them to parts of the city we've never seen before.",
       rating: "PG",
-      duration: "Coming Soon",
+      duration: "1h 48m",
       genre: "Animation, Comedy",
-      score: "Anticipated",
+      score: "★ 8.2/10",
       videoId: "BjkIOU5PhyQ",
       ctaAction: () => openBookingModal("ZOOTOPIA 2", "Animation, Comedy")
     },
@@ -79,9 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
       title: "FIVE NIGHTS AT FREDDY'S 2",
       description: "Security Breach: The animatronics are back and more terrifying than ever in this sequel to the box office smash.",
       rating: "PG-13",
-      duration: "Coming Soon",
+      duration: "1h 50m",
       genre: "Horror, Mystery",
-      score: "Anticipated",
+      score: "★ 7.9/10",
       videoId: "eGV7zwjvxKs",
       ctaAction: () => openBookingModal("FIVE NIGHTS AT FREDDY'S 2", "Horror, Mystery")
     }

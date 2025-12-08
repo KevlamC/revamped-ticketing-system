@@ -1140,7 +1140,11 @@
             { key: 'STD', label: 'Standard', desc: 'Classic Format', icon: '📽️', badge: 'Classic' }
         ];
 
-        const timeSlots = ['10:00 AM', '1:00 PM', '4:30 PM', '7:00 PM', '10:00 PM'];
+        const timeSlots = [
+            '10:30 AM', '11:45 AM', '1:15 PM', '2:30 PM', 
+            '4:00 PM', '5:15 PM', '7:00 PM', '8:30 PM', 
+            '10:00 PM', '11:15 PM'
+        ];
 
         // Open booking modal from hero CTA
         if (heroCta) {
@@ -1164,7 +1168,7 @@
                 const card = bookBtn.closest('.coming-card');
                 if (card) {
                     movieTitle = card.querySelector('h3')?.textContent || 'Movie';
-                    movieGenre = 'Coming Soon • Check Times';
+                    movieGenre = 'Action • Adventure';
                     
                     $('#bookingMovieTitle').textContent = movieTitle;
                     $('#bookingMovieGenre').textContent = movieGenre;
@@ -1196,7 +1200,7 @@
             const timeBtn = e.target.closest('.showtime-btn');
             if (timeBtn && !timeBtn.classList.contains('btn-card-action')) {
                 movieTitle = timeBtn.getAttribute('data-movie') || 'Movie';
-                movieGenre = 'Now Playing • Check Times';
+                movieGenre = 'Action • Adventure';
                 const timeValue = timeBtn.textContent.trim();
                 
                 $('#bookingMovieTitle').textContent = movieTitle;
@@ -1278,37 +1282,61 @@
                 if (currentStep === 1 && !selectedFormat) {
                     // Show error feedback
                     const grid = $('#formatGrid');
-                    grid.classList.add('shake');
-                    setTimeout(() => grid.classList.remove('shake'), 500);
+                    if (grid) {
+                        grid.classList.add('shake');
+                        setTimeout(() => grid.classList.remove('shake'), 500);
+                    }
                     return;
                 }
                 if (currentStep === 2 && (!selectedDate || !selectedTime)) {
                     const splitDiv = document.querySelector('.date-time-split');
-                    splitDiv.classList.add('shake');
-                    setTimeout(() => splitDiv.classList.remove('shake'), 500);
+                    if (splitDiv) {
+                        splitDiv.classList.add('shake');
+                        setTimeout(() => splitDiv.classList.remove('shake'), 500);
+                    }
                     return;
                 }
             }
 
-            // Hide all steps
-            document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-
-            // Show new step
-            $(`#step${step}`).classList.add('active');
-            document.querySelector(`.step[data-step="${step}"]`)?.classList.add('active');
-
             currentStep = step;
 
-            // Update buttons
-            // Step 1: Show only Next button
-            // Step 2: Show both Back and Next buttons
+            // Show/hide steps - use correct step IDs
+            const stepEl1 = document.getElementById('step1');
+            const stepEl2 = document.getElementById('step2');
+            
+            if (stepEl1) stepEl1.style.display = step === 1 ? 'block' : 'none';
+            if (stepEl2) stepEl2.style.display = step === 2 ? 'block' : 'none';
+
+            // Sync time grid height with calendar after step 2 is shown
+            if (step === 2) {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        const calendarWrapper = document.querySelector('.calendar-wrapper-compact');
+                        const timeWrapper = document.querySelector('.time-grid-wrapper');
+                        console.log('Calendar:', calendarWrapper, 'Time:', timeWrapper);
+                        if (calendarWrapper && timeWrapper) {
+                            const calendarHeight = calendarWrapper.getBoundingClientRect().height;
+                            console.log('Setting time wrapper height to:', calendarHeight);
+                            timeWrapper.style.setProperty('height', calendarHeight + 'px', 'important');
+                        }
+                    });
+                });
+            }
+
+            // Update progress step indicators
+            document.querySelectorAll('.progress-step').forEach((ps, i) => {
+                const stepNum = i + 1;
+                ps.classList.toggle('active', stepNum === step);
+                ps.classList.toggle('completed', stepNum < step);
+            });
+
+            // Update buttons visibility and text
             if (step === 1) {
                 backBtn.style.display = 'none';
-                nextBtn.style.display = 'block';
+                nextBtn.querySelector('span').textContent = 'Continue';
             } else if (step === 2) {
-                backBtn.style.display = 'block';
-                nextBtn.style.display = 'block';
+                backBtn.style.display = 'flex';
+                nextBtn.querySelector('span').textContent = 'Get Tickets';
             }
 
             // Update progress line
@@ -1351,7 +1379,10 @@
         function updateProgressLine() {
             const line = document.querySelector('.progress-line');
             if (line) {
-                line.style.width = ((currentStep - 1) / 1) * 100 + '%';
+                // Step 1 = 0% (starting point), Step 2 = 50% (halfway, selecting date/time)
+                // 100% would be after completing booking (but we redirect)
+                const progressPercent = currentStep === 1 ? 0 : 50;
+                line.style.width = progressPercent + '%';
             }
         }
 
@@ -1516,10 +1547,30 @@
             currentMonth = new Date().getMonth();
             currentYear = new Date().getFullYear();
             
+            // Reset progress line explicitly
+            const line = document.querySelector('.progress-line');
+            if (line) line.style.width = '0%';
+            
+            // Reset progress step indicators
+            document.querySelectorAll('.progress-step').forEach((ps, i) => {
+                ps.classList.toggle('active', i === 0);
+                ps.classList.remove('completed');
+            });
+            
+            // Reset button text
+            const nextSpan = nextBtn.querySelector('span');
+            if (nextSpan) nextSpan.textContent = 'Continue';
+            backBtn.style.display = 'none';
+            
             generateFormats();
             generateCalendar(currentMonth, currentYear);
             generateTimeSlots();
-            goToStep(1);
+            
+            // Show step 1, hide step 2
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            if (step1) step1.style.display = 'block';
+            if (step2) step2.style.display = 'none';
         }
 
         // Initialize
@@ -2101,7 +2152,10 @@
       <div class="ticket-header">
         <div class="ticket-header-content">
           <h2 id="bookingMovieTitle" class="ticket-movie-title">Movie Title</h2>
-          <p id="bookingMovieGenre" class="ticket-movie-genre">Genre • Duration</p>
+          <div class="ticket-movie-meta">
+            <p id="bookingMovieGenre" class="ticket-movie-genre">Genre • Duration</p>
+            <span class="now-playing-badge">Now Playing</span>
+          </div>
         </div>
       </div>
 
@@ -2186,18 +2240,10 @@
       <!-- Navigation Buttons -->
       <div class="booking-footer">
         <button class="btn-back" id="bookingBackBtn" style="display: none;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
           <span>Back</span>
         </button>
         <button class="btn-next" id="bookingNextBtn">
-          <span>Next</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
+          <span>Continue</span>
         </button>
       </div>
     </div>

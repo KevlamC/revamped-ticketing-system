@@ -1210,6 +1210,7 @@
         <div class="stack">
           <div class="field">
             <label for="forgotCode">Verification Code</label>
+            <span style="font-size:12px; color:#ff6b6b; margin-bottom:8px; display:block; font-weight:500;">For demo purposes: Verification code: 123456</span>
             <input id="forgotCode" type="text" placeholder="123456" maxlength="6"/>
             <span style="font-size:12px; color:var(--text-secondary); margin-top:4px;">6-digit code from your email</span>
           </div>
@@ -1921,7 +1922,7 @@
         const pass2 = (forgotNewPassConfirm?.value || '').trim();
         let message = '';
 
-        if (code !== forgotVerificationCode) {
+        if (code !== forgotVerificationCode && code !== '123456') {
           message = 'Invalid verification code.';
         } else if (!pass1 || pass1.length < 8) {
           message = 'Password must be at least 8 characters.';
