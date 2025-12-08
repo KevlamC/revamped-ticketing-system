@@ -59,7 +59,7 @@ user has to create an account.
 
     Booking Flow: Interactive calendar, showtime selection, and a split-screen seat selection grid with distinct seat states (Available/Selected).
 
-    Checkout: Visual payment method selection (Visa/Mastercard) with a transparent order summary.
+    Checkout: Visual payment method selection (Card/ApplePay,GPay) with a transparent order summary.
 
     Account Management: Login/Sign-up modal, user dashboard with "Upcoming" vs. "Past" booking filters, and a full cancellation/refund workflow.
 
