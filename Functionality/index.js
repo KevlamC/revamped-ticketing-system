@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
       genre: "Sci-Fi, Adventure",
       score: "★ 8.9/10",
       videoId: "nb_fFj_0rq8",
-      ctaAction: () => openBookingModal("AVATAR: FIRE AND ASH", "Sci-Fi, Adventure")
+      comingSoon: true,
+      ctaAction: () => {}
     },
     {
       image: "Pictures/Apple_TV_The_Family_Plan_2_Key_Art_graphic_header_4_1_show_home.jpg.large_2x.jpg", 
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroImageEl = document.getElementById("hero-image");
   const heroVideoEl = document.getElementById("hero-video");
   
+  const heroLabelEl = document.getElementById("hero-label");
   const heroTitleEl = document.getElementById("hero-title");
   const heroSubtitleEl = document.getElementById("hero-subtitle");
   
@@ -165,6 +167,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 3. Update Text
+    if (heroLabelEl) {
+      heroLabelEl.textContent = slide.comingSoon ? 'COMING SOON' : 'NOW SHOWING';
+    }
     if (heroTitleEl) heroTitleEl.textContent = slide.title;
     if (heroSubtitleEl) heroSubtitleEl.textContent = slide.description;
     
@@ -175,7 +180,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (heroScoreEl) heroScoreEl.textContent = slide.score;
 
     // 5. Update Buttons
-    if (heroCtaEl) heroCtaEl.onclick = slide.ctaAction;
+    if (heroCtaEl) {
+      if (slide.comingSoon) {
+        heroCtaEl.textContent = 'Coming Soon';
+        heroCtaEl.disabled = true;
+        heroCtaEl.style.opacity = '0.5';
+        heroCtaEl.style.cursor = 'not-allowed';
+        heroCtaEl.onclick = (e) => e.preventDefault();
+      } else {
+        heroCtaEl.textContent = 'Get Tickets';
+        heroCtaEl.disabled = false;
+        heroCtaEl.style.opacity = '1';
+        heroCtaEl.style.cursor = 'pointer';
+        heroCtaEl.onclick = slide.ctaAction;
+      }
+    }
     if (heroTrailerEl) {
       heroTrailerEl.onclick = (e) => {
         e.preventDefault();
