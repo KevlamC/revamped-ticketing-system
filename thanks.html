@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Theatrum — Order Complete</title>
+
+  <!-- use the same main styles as the rest of the site -->
   <link rel="stylesheet" href="styles/index_styles.css" />
+
   <style>
     * {
       margin: 0;
@@ -12,33 +15,54 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --bg-primary: #020617;
-      --bg-card: #020617;
-      --bg-secondary: #030712;
-      --accent-red: #f97373;
-      --accent-green: #22c55e;
-      --accent-amber: #facc15;
-      --text-primary: #ffffff;
-      --text-secondary: #a1a1aa;
-      --border: #27272a;
-    }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
+      background-color: #020617; /* match dark site background */
+      color: #ffffff;
       line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     }
 
-    .checkout-shell { max-width: 1200px; margin: 120px auto 64px; padding: 0 32px; }
-    .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-    @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
+    .checkout-shell {
+      max-width: 1200px;
+      margin: 120px auto 64px;
+      padding: 0 32px;
+    }
 
-    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .card h2 { font-size: 28px; margin-bottom: 8px; color: var(--text-primary); }
-    .muted { color: var(--text-secondary); font-size: 14px; }
-    .divider { height:1px; background: var(--border); margin: 16px 0 20px; }
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: #020617;
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .card h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .muted {
+      color: #a1a1aa;
+      font-size: 14px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #27272a;
+      margin: 16px 0 20px;
+    }
 
     .pill {
       display:inline-block;
@@ -52,15 +76,36 @@
       letter-spacing:.08em;
     }
 
-    .row { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
     .success-icon {
-      width:84px; height:84px; border-radius:50%;
-      display:grid; place-items:center;
+      width:84px;
+      height:84px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
       background: rgba(34,197,94,.15);
       border:1px solid rgba(34,197,94,.35);
     }
-    .success-icon svg { width:42px; height:42px; color:#22c55e; }
-    .headline { font-size: 32px; font-weight: 800; margin: 4px 0 8px; color: var(--text-primary); }
+
+    .success-icon svg {
+      width:42px;
+      height:42px;
+      color:#22c55e;
+    }
+
+    .headline {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 4px 0 8px;
+      color: #ffffff;
+    }
 
     .ticket {
       display:grid;
@@ -72,63 +117,53 @@
       border:1px dashed rgba(148,163,184,.4);
       background: radial-gradient(circle at top left, rgba(248,113,113,.22), transparent 55%),
                   radial-gradient(circle at bottom right, rgba(56,189,248,.22), transparent 55%),
-                  var(--bg-secondary);
+                  #030712;
     }
+
     .qr {
-      width:120px; height:120px; border-radius:8px;
-      border:1px solid var(--border);
-      background: var(--bg-secondary);
-      display:grid; place-items:center;
+      width:120px;
+      height:120px;
+      border-radius:8px;
+      border:1px solid #27272a;
+      background:#030712;
+      display:grid;
+      place-items:center;
     }
-    .qr img { display:block; width:100%; height:100%; object-fit:contain; }
 
-    .meta { display:grid; gap:6px; color: var(--text-primary); }
-    .meta b { font-weight: 700; }
-
-    .actions { display:flex; gap:12px; margin-top: 16px; flex-wrap:wrap; }
-
-    .btn-primary {
-      background: var(--accent-red);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 12px 24px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 14px;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .qr img {
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:contain;
     }
-    .btn-primary:hover { background: #fb6363; transform: translateY(-1px); }
 
-    .btn-secondary {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 24px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 14px;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .meta {
+      display:grid;
+      gap:6px;
+      color:#ffffff;
     }
-    .btn-secondary:hover { background: var(--bg-card); border-color: var(--text-secondary); }
 
-    /* Right column summary */
+    .meta b {
+      font-weight:700;
+    }
+
+    .confirmation-actions {
+      display:flex;
+      gap:12px;
+      margin-top:16px;
+      flex-wrap:wrap;
+    }
+
+    /* Right column summary layout only (no colours) */
     .summary-row {
       display:flex;
       justify-content: space-between;
       margin: 10px 0;
-      color: var(--text-secondary);
+      color: #a1a1aa;
       font-size: 14px;
     }
     .summary-row.total {
-      color: var(--text-primary);
+      color: #ffffff;
       font-weight: 700;
       font-size: 18px;
     }
@@ -152,7 +187,9 @@
           </div>
           <div>
             <div class="headline" id="thankyou-name">Thank you!</div>
-            <div class="muted" id="thankyou-message">Your payment has been processed and your tickets are ready.</div>
+            <div class="muted" id="thankyou-message">
+              Your payment has been processed and your tickets are ready.
+            </div>
           </div>
         </div>
 
@@ -172,13 +209,10 @@
           </div>
         </div>
 
-        <div class="actions">
-          <button class="btn-primary" onclick="window.location.href='new-account-dashboard.html#bookings'">
-            View tickets
-          </button>
-          <button class="btn-secondary" onclick="window.location.href='index.html'">
-            Back to home
-          </button>
+        <div class="confirmation-actions">
+          <!-- now use the global themed buttons -->
+          <a href="index.html" class="btn-primary">Back to Home</a>
+          <a href="new-booking-history.html" class="btn-secondary">View all bookings</a>
         </div>
 
         <div class="divider"></div>
@@ -212,7 +246,8 @@
         </div>
 
         <div class="divider"></div>
-        <button class="btn-secondary" style="width:100%;" onclick="alert('In a real app this would re-send your email receipt.')">
+        <button class="btn-secondary" style="width:100%;"
+          onclick="alert('In a real app this would re-send your email receipt.')">
           Email again
         </button>
       </aside>
@@ -278,13 +313,11 @@
       var total = Number(data.total || 0);
       var snacksTotal = Number(data.snacksTotal || 0) + Number(data.upsellTotal || 0);
 
-      // Headline + message
       var thankNameEl = document.getElementById('thankyou-name');
       var thankMsgEl = document.getElementById('thankyou-message');
       if (thankNameEl) thankNameEl.textContent = 'Thank you, ' + name + '!';
       if (thankMsgEl) thankMsgEl.textContent = 'Your booking is confirmed and your tickets are ready.';
 
-      // Ticket section
       var seatsEl = document.getElementById('ticket-seats');
       var ticketCountLineEl = document.getElementById('ticket-count-line');
       var orderIdEl = document.getElementById('order-id');
@@ -298,14 +331,12 @@
       if (orderIdEl) orderIdEl.textContent = orderId;
       if (orderEmailEl) orderEmailEl.textContent = email;
 
-      // Simple QR using external service, based on orderId
       var qrImg = document.getElementById('qr-image');
       if (qrImg) {
         var qrData = encodeURIComponent('https://theatrum.example/booking/' + orderId);
         qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + qrData;
       }
 
-      // Right card
       var billingNameLine = document.getElementById('billing-name-line');
       var orderDateLine = document.getElementById('order-date-line');
       var orderConfirmLine = document.getElementById('order-confirm-line');
@@ -324,7 +355,6 @@
         orderConfirmLine.innerHTML = 'Confirmation: <b>' + orderId + '</b>';
       }
 
-      // Money summary
       function fmt(v) {
         return '$' + (Number(v) || 0).toFixed(2);
       }
@@ -333,7 +363,7 @@
       var summaryFees = document.getElementById('summary-fees');
       var summaryTotal = document.getElementById('summary-total');
 
-      if (summaryTickets) summaryTickets.textContent = fmt(subtotal - snacksTotal - fees + fees); // approximate tickets only
+      if (summaryTickets) summaryTickets.textContent = fmt(subtotal - snacksTotal - fees + fees); // approx
       if (summarySnacks) summarySnacks.textContent = fmt(snacksTotal);
       if (summaryFees) summaryFees.textContent = fmt(fees);
       if (summaryTotal) summaryTotal.textContent = fmt(total);
