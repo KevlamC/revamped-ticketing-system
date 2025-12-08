@@ -1243,71 +1243,218 @@
                     }
 
                                         // Render bookings for current user
-                                        (function renderBookings() {
+
+                                            (function renderBookings() {
                                             try {
                                                 const BOOKINGS_KEY = 'theatrum.bookings';
                                                 const bookingList = document.getElementById('bookingList');
                                                 if (!bookingList) return;
+
                                                 const session = tryParse(localStorage.getItem(SESSION_KEY)) || {};
                                                 const all = tryParse(localStorage.getItem(BOOKINGS_KEY)) || [];
                                                 const userEmail = session.email || session.username || null;
+
                                                 const my = all.filter(b => {
-                                                    if (!userEmail) return true;
-                                                    return (b.userEmail === userEmail) || (b.userName === session.username) || (b.userEmail === session.username);
+                                                if (!userEmail) return true;
+                                                return (
+                                                    b.userEmail === userEmail ||
+                                                    b.userName === session.username ||
+                                                    b.userEmail === session.username
+                                                );
                                                 });
 
                                                 if (my.length === 0) {
-                                                    bookingList.innerHTML = '<p class="muted">No bookings yet.</p>';
-                                                    return;
+                                                bookingList.innerHTML = '<p class="muted">No bookings yet.</p>';
+                                                return;
                                                 }
 
                                                 bookingList.innerHTML = '';
-                                                my.reverse().forEach(b => {
-                                                    const card = document.createElement('div');
-                                                    card.className = 'booking-card';
-                                                    // prefer date first (show date in the Time field), then several common showtime keys; fallback to extracting time from date
-                                                    const timeValue = (b.date || b.time || b.showtime || b.showTime || b.show_time || b.showtimeLabel || b.showtime_label || '').toString().trim() || (function () {
-                                                        const d = (b.date || '') + '';
-                                                        const m = d.match(/(\d{1,2}:\d{2}\s*(AM|PM|am|pm))/);
-                                                        return m ? m[0] : '';
+                                                my.slice().reverse().forEach(b => {
+                                                const card = document.createElement('div');
+                                                card.className = 'booking-card';
+
+                                                // prefer date first (show date in the Time field), then several common showtime keys;
+                                                // fallback to extracting time from date
+                                                const timeValue =
+                                                    (b.date ||
+                                                    b.time ||
+                                                    b.showtime ||
+                                                    b.showTime ||
+                                                    b.show_time ||
+                                                    b.showtimeLabel ||
+                                                    b.showtime_label ||
+                                                    ''
+                                                    )
+                                                    .toString()
+                                                    .trim() ||
+                                                    (function () {
+                                                    const d = (b.date || '') + '';
+                                                    const m = d.match(/(\d{1,2}:\d{2}\s*(AM|PM|am|pm))/);
+                                                    return m ? m[0] : '';
                                                     })();
 
-                                                    card.innerHTML = `
-                                                        <div class="booking-header">
-                                                            <div class="booking-movie">
-                                                                <h3>${escapeHtml(b.movie || 'Untitled')}</h3>
-                                                                
-                                                            </div>
-                                                            <span class="booking-status upcoming">${escapeHtml(b.status || 'UPCOMING')}</span>
-                                                        </div>
-                                                        <div class="booking-details">
-                                                            <div class="booking-detail">
-                                                                <span class="booking-detail-label">Time</span>
-                                                                <span class="booking-detail-value">${escapeHtml(timeValue || 'TBD')}</span>
-                                                            </div>
-                                                            <div class="booking-detail">
-                                                                <span class="booking-detail-label">Seats</span>
-                                                                <span class="booking-detail-value">${escapeHtml((b.seats || []).join(', '))}</span>
-                                                            </div>
-                                                            <div class="booking-detail">
-                                                                <span class="booking-detail-label">Booking ID</span>
-                                                                <span class="booking-detail-value">${escapeHtml(b.id || '')}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="booking-actions">
-                                                            <a class="btn-primary btn-small" href="new-booking-history.html">Booking Details</a>
-                                                            <button class="btn-secondary btn-small">Add to Calendar</button>
-                                                            <a class="btn-secondary btn-small" href="cancel-refund.html">Cancel Booking</a>
-                                                        </div>
-                                                    `;
-                                                    bookingList.appendChild(card);
+                                                card.innerHTML = `
+                                                    <div class="booking-header">
+                                                    <div class="booking-movie">
+                                                        <h3>${escapeHtml(b.movie || 'Untitled')}</h3>
+                                                    </div>
+                                                    <span class="booking-status upcoming">
+                                                        ${escapeHtml(b.status || 'UPCOMING')}
+                                                    </span>
+                                                    </div>
+
+                                                    <div class="booking-details">
+                                                    <div class="booking-detail">
+                                                        <span class="booking-detail-label">Time</span>
+                                                        <span class="booking-detail-value">
+                                                        ${escapeHtml(timeValue || 'TBD')}
+                                                        </span>
+                                                    </div>
+                                                    <div class="booking-detail">
+                                                        <span class="booking-detail-label">Seats</span>
+                                                        <span class="booking-detail-value">
+                                                        ${escapeHtml((b.seats || []).join(', '))}
+                                                        </span>
+                                                    </div>
+                                                    <div class="booking-detail">
+                                                        <span class="booking-detail-label">Booking ID</span>
+                                                        <span class="booking-detail-value">
+                                                        ${escapeHtml(b.id || '')}
+                                                        </span>
+                                                    </div>
+                                                    </div>
+
+                                                    <div class="booking-actions">
+                                                    <button type="button"
+                                                            class="btn-primary btn-small booking-details-btn">
+                                                        Booking Details
+                                                    </button>
+                                                    <button type="button"
+                                                            class="btn-secondary btn-small">
+                                                        Add to Calendar
+                                                    </button>
+                                                    <a class="btn-secondary btn-small" href="cancel-refund.html">
+                                                        Cancel Booking
+                                                    </a>
+                                                    </div>
+                                                `;
+
+                                                // 🔗 "Booking Details" -> save this booking & jump straight to new-booking-details.html
+                                                const detailsBtn = card.querySelector('.booking-details-btn');
+                                                if (detailsBtn) {
+                                                    detailsBtn.addEventListener('click', function () {
+                                                    // store the clicked booking so new-booking-details.html can read it
+                                                    localStorage.setItem('orderConfirmation', JSON.stringify(b));
+                                                    window.location.href = 'new-booking-details.html';
+                                                    });
+                                                }
+
+                                                bookingList.appendChild(card);
                                                 });
-                                            } catch (e) { console.warn('Render bookings failed', e); }
-                                        })();
+                                            } catch (e) {
+                                                console.warn('Render bookings failed', e);
+                                            }
+})();
+
 
                                         function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]; }); }
                 });
             })();
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              // --- load stored bookings (array) ---
+              var historyRaw = localStorage.getItem('bookingHistory') || '[]';
+              var bookings;
+              try {
+                bookings = JSON.parse(historyRaw);
+              } catch (e) {
+                bookings = [];
+              }
+            
+              var listEl = document.getElementById('my-bookings-list');
+              if (!listEl) return;
+            
+              // If no bookings yet
+              if (!Array.isArray(bookings) || bookings.length === 0) {
+                listEl.innerHTML = '<p class="muted">You have no bookings yet.</p>';
+                return;
+              }
+            
+              // Helper: small formatter
+              function fmtDate(dateStr) {
+                if (!dateStr) return '—';
+                var d = new Date(dateStr);
+                if (isNaN(d.getTime())) return dateStr;
+                return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+              }
+            
+              // Render cards
+              listEl.innerHTML = '';
+              bookings.forEach(function (b, index) {
+                var card = document.createElement('div');
+                card.className = 'booking-card';
+                card.style.border = '1px solid var(--border)';
+                card.style.borderRadius = '12px';
+                card.style.padding = '12px 14px';
+                card.style.marginBottom = '10px';
+                card.style.display = 'flex';
+                card.style.justifyContent = 'space-between';
+                card.style.alignItems = 'center';
+                card.style.gap = '12px';
+            
+                var left = document.createElement('div');
+                left.innerHTML =
+                  '<div style="font-weight:600;">' + (b.movie || 'Untitled movie') + '</div>' +
+                  '<div class="muted" style="font-size:12px;">' +
+                    (b.showDate || '—') + (b.showTime ? ' • ' + b.showTime : '') +
+                  '</div>' +
+                  '<div class="muted" style="font-size:12px; margin-top:2px;">' +
+                    'Format: ' + (b.formatLabel || b.ticketType || 'Standard') +
+                    ' • ' + (b.ticketQty || 0) + ' ticket' + ((b.ticketQty || 0) === 1 ? '' : 's') +
+                    (Array.isArray(b.seats) && b.seats.length
+                      ? ' • Seats: ' + b.seats.join(', ')
+                      : '') +
+                  '</div>';
+            
+                var right = document.createElement('div');
+                right.style.display = 'flex';
+                right.style.flexDirection = 'column';
+                right.style.alignItems = 'flex-end';
+                right.style.gap = '4px';
+            
+                var dateLine = document.createElement('div');
+                dateLine.className = 'muted';
+                dateLine.style.fontSize = '11px';
+                dateLine.textContent = 'Booked on ' + fmtDate(b.createdAt);
+            
+                var btn = document.createElement('button');
+                btn.className = 'btn-primary';
+                btn.textContent = 'View ticket';
+                btn.style.fontSize = '12px';
+                btn.dataset.bookingIndex = index;
+            
+                // When user clicks "View ticket" -> jump straight to new-booking-details
+                btn.addEventListener('click', function () {
+                  var idx = parseInt(this.dataset.bookingIndex, 10);
+                  if (isNaN(idx) || !bookings[idx]) return;
+            
+                  // Save this booking as the active order
+                  localStorage.setItem('orderConfirmation', JSON.stringify(bookings[idx]));
+            
+                  // Go straight to booking details page
+                  window.location.href = 'new-booking-details.html';
+                });
+            
+                right.appendChild(dateLine);
+                right.appendChild(btn);
+            
+                card.appendChild(left);
+                card.appendChild(right);
+                listEl.appendChild(card);
+              });
+            });
+            </script>
+            
 </body>
 </html>
