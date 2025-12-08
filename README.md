@@ -24,7 +24,7 @@ Group Members:
  Ali Hassanein
 
 
-The Final code is in the FinalBranch. Index.html is the main runnable file. 
+The Final code is in the Final branch. Index.html is the main runnable file. 
 
 Project Name: Theatrum Ticketing System Redesign Submission: Design Portfolio 2 – High-Fidelity Frontend Implementation
 
