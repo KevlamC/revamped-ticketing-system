@@ -848,43 +848,7 @@
       </div>
 
       <div class="offers-grid">
-        <!-- Offer 1: Flash Deal -->
-        <div class="offer-card offer-flash">
-          <div class="offer-header">
-            <div class="offer-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </div>
-            <div class="offer-badge flash-badge">ENDS SOON</div>
-          </div>
-          <h3>Midweek Flash Sale</h3>
-          <p class="offer-discount">25% Off</p>
-          <p class="offer-description">All tickets on Wednesday & Thursday</p>
-          <p class="offer-validity">Valid through December 31, 2025</p>
-          <button class="btn-offer">Book Now</button>
-        </div>
-
-        <!-- Offer 2: Premium Pass -->
-        <div class="offer-card offer-premium">
-          <div class="offer-header">
-            <div class="offer-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                <line x1="7" y1="7" x2="7.01" y2="7"></line>
-              </svg>
-            </div>
-            <div class="offer-badge premium-badge">BEST VALUE</div>
-          </div>
-          <h3>Premium Pass</h3>
-          <p class="offer-discount">$24.99/mo</p>
-          <p class="offer-description">Unlimited screenings including IMAX & Dolby</p>
-          <p class="offer-validity">Cancel anytime, first month free</p>
-          <button class="btn-offer btn-offer-primary">Join Now</button>
-        </div>
-
-        <!-- Offer 3: Bundle Deal -->
+        <!-- Offer: Snack Combo -->
         <div class="offer-card offer-bundle">
           <div class="offer-header">
             <div class="offer-icon">
@@ -900,25 +864,7 @@
           <p class="offer-discount">$15</p>
           <p class="offer-description">Large popcorn + 2 drinks with any ticket</p>
           <p class="offer-validity">Valid daily all year round</p>
-          <button class="btn-offer">Add to Order</button>
-        </div>
-
-        <!-- Offer 4: Member Exclusive -->
-        <div class="offer-card offer-member">
-          <div class="offer-header">
-            <div class="offer-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </div>
-            <div class="offer-badge member-badge">MEMBERS</div>
-          </div>
-          <h3>Birthday Bonus</h3>
-          <p class="offer-discount">1 Free Ticket</p>
-          <p class="offer-description">Plus $10 concession credit on your birthday month</p>
-          <p class="offer-validity">Join membership to activate</p>
-          <button class="btn-offer">Learn More</button>
+          <button class="btn-offer" id="snack-combo-btn">Add to Order</button>
         </div>
       </div>
     </div>
@@ -2362,6 +2308,48 @@
   <script src="Functionality/index.js"></script>
   <script src="Functionality/theatrum_auth.js"></script>
   <script src="Functionality/theatrum_booking.js"></script>
+
+  <!-- Snack Combo Handler -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const snackComboBtn = document.getElementById('snack-combo-btn');
+      
+      if (snackComboBtn) {
+        snackComboBtn.addEventListener('click', function() {
+          // Get existing food order from localStorage
+          let foodOrder = {};
+          try {
+            const existing = localStorage.getItem('foodOrder');
+            if (existing) {
+              foodOrder = JSON.parse(existing);
+            }
+          } catch (e) {
+            console.warn('Could not parse existing food order', e);
+            foodOrder = {};
+          }
+
+          // Add snack combo to order
+          const key = 'Snack Combo||Default';
+          if (!foodOrder[key]) {
+            foodOrder[key] = { 
+              name: 'Snack Combo', 
+              size: 'Default', 
+              qty: 0, 
+              price: 15 
+            };
+          }
+          foodOrder[key].qty += 1;
+          foodOrder[key].price = 15;
+
+          // Save updated order to localStorage
+          localStorage.setItem('foodOrder', JSON.stringify(foodOrder));
+          
+          // Redirect to food_selection.html
+          window.location.href = 'food_selection.html';
+        });
+      }
+    });
+  </script>
 
   <!-- Premium Trailer Modal -->
   <div id="trailerModal" class="trailer-modal-overlay">
