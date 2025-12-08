@@ -392,6 +392,22 @@
         background: transparent;
         border-radius: 20px;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .trailer-info-panel {
+        text-align: center;
+        color: var(--text-primary);
+    }
+    .trailer-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+    .trailer-description {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
     }
     .trailer-video-wrapper {
         aspect-ratio: 16 / 9;
@@ -537,11 +553,16 @@
     <div class="trailer-modal-container">
       <div class="trailer-video-wrapper">
         <iframe 
-          id="detailTrailerFrame"
+          id="trailerFrame"
           class="trailer-video-player"
           allow="autoplay; encrypted-media; fullscreen"
           allowfullscreen>
         </iframe>
+      </div>
+
+      <div class="trailer-info-panel">
+        <h2 id="trailerTitle" class="trailer-title">Movie Title</h2>
+        <p id="trailerDescription" class="trailer-description">Watch the official trailer in high quality</p>
       </div>
     </div>
   </div>
@@ -572,7 +593,12 @@
       'A Quiet Place: Day One': { youtubeId: 'YPY7J-flzE8' },
       'Deadpool & Wolverine': { youtubeId: 'xJ7L1TxYy6E' },
       'Gladiator II': { youtubeId: 'h1nwvCPL-hQ' },
-      'Wicked': { youtubeId: 'tSKvH7bkPvg' }
+      'Wicked': { youtubeId: 'tSKvH7bkPvg' },
+      'Five Nights At Freddy\'s': { youtubeId: 'eGV7zwjvxKs' },
+      'Zootopia 2': { youtubeId: 'BjkIOU5PhyQ' },
+      'Avatar: Fire and Ash': { youtubeId: '5ZbMTyYpxNU' },
+      'F1': { youtubeId: 'TZGY2CWPXeU' },
+      'The Family Plan 2': { youtubeId: 'dqolYtJGuf4' }
     };
 
     // --- Schedule Data ---
@@ -610,7 +636,7 @@
     const synopsisCol = document.querySelector('.synopsis-column');
     const trailerButton = document.getElementById('posterTrailerIcon');
     const trailerModal = document.getElementById('trailerModal');
-    const trailerFrame = document.getElementById('detailTrailerFrame');
+    const trailerFrame = document.getElementById('trailerFrame');
     const trailerCloseBtn = document.querySelector('#trailerModal .trailer-close-btn');
 
     function resolveTrailerInfo(title) {
@@ -636,6 +662,13 @@
       if (!trailerModal || !trailerFrame) return;
 
       trailerFrame.src = `https://www.youtube.com/embed/${info.youtubeId}?autoplay=1&controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
+      
+      // Set trailer title and description
+      const trailerTitle = document.getElementById('trailerTitle');
+      const trailerDescription = document.getElementById('trailerDescription');
+      if (trailerTitle) trailerTitle.textContent = movieData?.title || 'Trailer';
+      if (trailerDescription) trailerDescription.textContent = 'Watch the official trailer in high quality';
+      
       trailerFrame.onload = () => {
         try {
           const iframeDoc = trailerFrame.contentDocument || trailerFrame.contentWindow.document;
@@ -673,7 +706,24 @@
     }
 
     if (trailerButton) {
-      trailerButton.addEventListener('click', () => {
+      // Click handler for the play button itself
+      const playBtn = trailerButton.querySelector('.poster-play-icon');
+      if (playBtn) {
+        playBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const info = resolveTrailerInfo(movieData && movieData.title ? movieData.title : null);
+          if (!info) {
+            alert('Trailer not available for this title yet.');
+            return;
+          }
+          openTrailerModal(info);
+        });
+      }
+      
+      // Also handle click on container for backward compatibility
+      trailerButton.addEventListener('click', (e) => {
+        if (e.target.closest('.poster-play-icon')) return; // Already handled above
         const info = resolveTrailerInfo(movieData && movieData.title ? movieData.title : null);
         if (!info) {
           alert('Trailer not available for this title yet.');
