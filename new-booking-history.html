@@ -472,12 +472,14 @@
   <div id="header-placeholder"></div>
   <script src="scripts/load-header.js"></script>
 
-
   <section class="hero">
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1 class="hero-title">Booking History & Upcoming Shows</h1>
-      <p class="hero-description">View your past movie experiences and upcoming theater visits all in one place.</p>
+      <p class="hero-description">
+        Track your past visits and upcoming adventures on the big screen. Relive your favorite moments 
+        or get ready for your next night out at THEATRUM.
+      </p>
     </div>
   </section>
 
@@ -527,7 +529,7 @@
 
       <div class="movie-card">
         <div class="movie-poster">
-          <img src="assets\insideout2-poster.jpg" alt=" InsideOut2 Movie Poster">
+          <img src="insideout2-poster.jpg" alt=" InsideOut2 Movie Poster">
           <div class="format-badges">
             <span class="format-badge premium">3D</span>
           </div>
@@ -549,7 +551,7 @@
       
       <div class="movie-card">
         <div class="movie-poster">
-          <img src="assets\opp-poster.jpg" alt="Oppenheimer Movie Poster">
+          <img src="opp-poster.jpg" alt="Oppenheimer Movie Poster">
           <div class="format-badges">
             <span class="format-badge imax">IMAX</span>
           </div>
@@ -580,7 +582,7 @@
     <div class="movies-grid">
       <div class="movie-card">
         <div class="movie-poster">
-          <img src="assets\deadpool&wolverine-poster.jpg" alt="Deadpool & Wolverine Poster">
+          <img src="deadpoolwolverine-poster.jpg" alt="Deadpool & Wolverine Poster">
         </div>
         <div class="movie-info">
           <h3>Deadpool & Wolverine</h3>
@@ -599,7 +601,7 @@
 
       <div class="movie-card">
         <div class="movie-poster">
-          <img src="assets\sonic2-poster.jpg" alt="Movie Poster">
+          <img src="sonic2-poster.jpg" alt="Movie Poster">
         </div>
         <div class="movie-info">
           <h3>Sonic The Hedgehog 2</h3>
@@ -618,7 +620,7 @@
       
       <div class="movie-card">
         <div class="movie-poster">
-          <img src="assets\blackphone2-poster.jpg" alt="Movie Poster">
+          <img src="blackphone2-poster.jpg" alt="Movie Poster">
         </div>
         <div class="movie-info">
           <h3>Black Phone 2</h3>
@@ -729,9 +731,9 @@
       // Add functionality to View Details buttons
       const viewDetailsButtons = document.querySelectorAll('.btn-secondary');
       viewDetailsButtons.forEach(button => {
-        if (button.textContent === 'View Details') {
+        if (button.textContent.trim() === 'View Details') {
           button.addEventListener('click', function() {
-            alert('Booking details will be shown here.');
+            window.location.href = 'new-booking-details.html';
           });
         }
       });
