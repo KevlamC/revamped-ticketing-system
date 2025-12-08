@@ -770,74 +770,8 @@
                         <span>My Bookings</span>
                         <button class="btn-secondary btn-small">View All</button>
                     </div>
-                    <div class="booking-list">
-                        <!-- Upcoming Booking -->
-                        <div class="booking-card">
-                            <div class="booking-header">
-                                <div class="booking-movie">
-                                    <h3>Dune: Part Two</h3>
-                                    <p class="booking-date">Thursday, October 30, 2025</p>
-                                </div>
-                                <span class="booking-status upcoming">UPCOMING</span>
-                            </div>
-                            <div class="booking-details">
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Time</span>
-                                    <span class="booking-detail-value">7:30 PM</span>
-                                </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Screen</span>
-                                    <span class="booking-detail-value">IMAX Screen 1</span>
-                                </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Seats</span>
-                                    <span class="booking-detail-value">F7, F8</span>
-                                </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Booking ID</span>
-                                    <span class="booking-detail-value">#TH2025-4892</span>
-                                </div>
-                            </div>
-                            <div class="booking-actions">
-                                <a class="btn-primary btn-small" href="new-booking-history.html">Booking Details</a>
-                                <button class="btn-secondary btn-small">Add to Calendar</button>
-                                <a class="btn-secondary btn-small" href="cancel-refund.html">Cancel Booking</a>
-                            </div>
-                        </div>
-
-                        <!-- Another Upcoming Booking -->
-                        <div class="booking-card">
-                            <div class="booking-header">
-                                <div class="booking-movie">
-                                    <h3>The Matrix Resurrections</h3>
-                                    <p class="booking-date">Sunday, November 3, 2025</p>
-                                </div>
-                                <span class="booking-status upcoming">UPCOMING</span>
-                            </div>
-                            <div class="booking-details">
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Time</span>
-                                    <span class="booking-detail-value">4:15 PM</span>
-                                </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Screen</span>
-                                    <span class="booking-detail-value">Dolby Atmos Screen 3</span>
-                                </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Seats</span>
-                                    <span class="booking-detail-value">F5, F6, F7</span>
-                                </div>
-                                <div class="booking-detail">
-                                    <span class="booking-detail-label">Booking ID</span>
-                                    <span class="booking-detail-value">#TH2025-4901</span>
-                                </div>
-                            </div>
-                            <div class="booking-actions">
-                                <a class="btn-primary btn-small" href="new-booking-history.html">Booking Details</a>
-                                <button class="btn-secondary btn-small">Add to Calendar</button>
-                                <a class="btn-secondary btn-small" href="cancel-refund.html">Cancel Booking</a>
-                            </div>
-                        </div>
+                    <div id="bookingList" class="booking-list">
+                      <!-- Booking cards will be rendered here from localStorage['theatrum.bookings'] -->
                     </div>
                 </section>
 
@@ -1307,6 +1241,71 @@
                             populateFrom(s);
                         });
                     }
+
+                                        // Render bookings for current user
+                                        (function renderBookings() {
+                                            try {
+                                                const BOOKINGS_KEY = 'theatrum.bookings';
+                                                const bookingList = document.getElementById('bookingList');
+                                                if (!bookingList) return;
+                                                const session = tryParse(localStorage.getItem(SESSION_KEY)) || {};
+                                                const all = tryParse(localStorage.getItem(BOOKINGS_KEY)) || [];
+                                                const userEmail = session.email || session.username || null;
+                                                const my = all.filter(b => {
+                                                    if (!userEmail) return true;
+                                                    return (b.userEmail === userEmail) || (b.userName === session.username) || (b.userEmail === session.username);
+                                                });
+
+                                                if (my.length === 0) {
+                                                    bookingList.innerHTML = '<p class="muted">No bookings yet.</p>';
+                                                    return;
+                                                }
+
+                                                bookingList.innerHTML = '';
+                                                my.reverse().forEach(b => {
+                                                    const card = document.createElement('div');
+                                                    card.className = 'booking-card';
+                                                    // prefer several common showtime keys, fallback to extracting time from date
+                                                    const timeValue = (b.time || b.showtime || b.showTime || b.show_time || b.showtimeLabel || b.showtime_label || '').toString().trim() || (function () {
+                                                        const d = (b.date || '') + '';
+                                                        const m = d.match(/(\d{1,2}:\d{2}\s*(AM|PM|am|pm))/);
+                                                        return m ? m[0] : '';
+                                                    })();
+
+                                                    card.innerHTML = `
+                                                        <div class="booking-header">
+                                                            <div class="booking-movie">
+                                                                <h3>${escapeHtml(b.movie || 'Untitled')}</h3>
+                                                                <p class="booking-date">${escapeHtml(b.date || '')}</p>
+                                                            </div>
+                                                            <span class="booking-status upcoming">${escapeHtml(b.status || 'UPCOMING')}</span>
+                                                        </div>
+                                                        <div class="booking-details">
+                                                            <div class="booking-detail">
+                                                                <span class="booking-detail-label">Time</span>
+                                                                <span class="booking-detail-value">${escapeHtml(timeValue || 'TBD')}</span>
+                                                            </div>
+                                                            <div class="booking-detail">
+                                                                <span class="booking-detail-label">Seats</span>
+                                                                <span class="booking-detail-value">${escapeHtml((b.seats || []).join(', '))}</span>
+                                                            </div>
+                                                            <div class="booking-detail">
+                                                                <span class="booking-detail-label">Booking ID</span>
+                                                                <span class="booking-detail-value">${escapeHtml(b.id || '')}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="booking-actions">
+                                                            <a class="btn-primary btn-small" href="new-booking-history.html">Booking Details</a>
+                                                            <button class="btn-secondary btn-small">Add to Calendar</button>
+                                                            <a class="btn-secondary btn-small" href="cancel-refund.html">Cancel Booking</a>
+                                                        </div>
+                                                    `;
+                                                    bookingList.appendChild(card);
+                                                });
+                                            } catch (e) { console.warn('Render bookings failed', e); }
+                                        })();
+
+                                        function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]; }); }
                 });
             })();
         </script>
