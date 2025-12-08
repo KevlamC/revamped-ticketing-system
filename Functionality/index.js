@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       duration: "3h 10m",
       genre: "Sci-Fi, Adventure",
       score: "★ 8.9/10",
-      videoId: "nb_fFj_0rq8",
+      videoId: "5ZbMTyYpxNU",
       comingSoon: true,
       ctaAction: () => {}
     },
