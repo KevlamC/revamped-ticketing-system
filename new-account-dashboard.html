@@ -1265,8 +1265,8 @@
                                                 my.reverse().forEach(b => {
                                                     const card = document.createElement('div');
                                                     card.className = 'booking-card';
-                                                    // prefer several common showtime keys, fallback to extracting time from date
-                                                    const timeValue = (b.time || b.showtime || b.showTime || b.show_time || b.showtimeLabel || b.showtime_label || '').toString().trim() || (function () {
+                                                    // prefer date first (show date in the Time field), then several common showtime keys; fallback to extracting time from date
+                                                    const timeValue = (b.date || b.time || b.showtime || b.showTime || b.show_time || b.showtimeLabel || b.showtime_label || '').toString().trim() || (function () {
                                                         const d = (b.date || '') + '';
                                                         const m = d.match(/(\d{1,2}:\d{2}\s*(AM|PM|am|pm))/);
                                                         return m ? m[0] : '';
@@ -1276,7 +1276,7 @@
                                                         <div class="booking-header">
                                                             <div class="booking-movie">
                                                                 <h3>${escapeHtml(b.movie || 'Untitled')}</h3>
-                                                                <p class="booking-date">${escapeHtml(b.date || '')}</p>
+                                                                
                                                             </div>
                                                             <span class="booking-status upcoming">${escapeHtml(b.status || 'UPCOMING')}</span>
                                                         </div>
