@@ -5,11 +5,314 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Quantity - THEATRUM</title>
     <link rel="stylesheet" href="styles/index_styles.css">
+    <style>
+      main { background: var(--bg-primary); min-height: 100vh; padding: 120px 20px 80px; }
+      
+      .ticket-container {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      /* Header Section */
+      .ticket-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 50px;
+      }
+
+      .ticket-header h1 {
+        font-size: 3.2rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        letter-spacing: -1px;
+        margin: 0;
+      }
+
+      .back-btn {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(220, 38, 38, 0.08) 100%);
+        border: 1.5px solid rgba(220, 38, 38, 0.4);
+        color: #ff6b6b;
+        padding: 12px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .back-btn:hover {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(220, 38, 38, 0.15) 100%);
+        border-color: rgba(220, 38, 38, 0.6);
+        transform: translateX(-4px);
+      }
+
+      /* Main Content Grid */
+      .ticket-content {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+        gap: 50px;
+        align-items: start;
+      }
+
+      /* Movie Info Card */
+      .movie-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 32px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        position: sticky;
+        top: 140px;
+      }
+
+      .poster-wrapper {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 28px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      #selected-poster {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        display: block;
+      }
+
+      .movie-details {
+        text-align: center;
+      }
+
+      #selected-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0 0 12px 0;
+        letter-spacing: -0.5px;
+      }
+
+      #selected-info {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      /* Selection Section */
+      .selection-section {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      /* Ticket Type Card */
+      .format-card {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(220, 38, 38, 0.02) 100%);
+        border: 1.5px solid rgba(220, 38, 38, 0.3);
+        border-radius: 14px;
+        padding: 24px;
+        text-align: center;
+      }
+
+      .format-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      #screen-format {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--text-primary);
+      }
+
+      /* Ticket Selection Grid */
+      .ticket-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .ticket-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+        border: 1.5px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 24px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+
+      .ticket-card:hover {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.12) 0%, rgba(220, 38, 38, 0.05) 100%);
+        border-color: rgba(220, 38, 38, 0.3);
+        transform: translateY(-4px);
+      }
+
+      .ticket-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 18px;
+      }
+
+      .ticket-info h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 4px 0;
+        letter-spacing: -0.3px;
+      }
+
+      .ticket-info p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* Quantity Controls */
+      .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        justify-content: center;
+      }
+
+      .qty-btn {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(220, 38, 38, 0.08) 100%);
+        border: 1.5px solid rgba(220, 38, 38, 0.4);
+        color: #ff6b6b;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 700;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .qty-btn:hover {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.35) 0%, rgba(220, 38, 38, 0.2) 100%);
+        border-color: rgba(220, 38, 38, 0.6);
+        color: #ff8787;
+        transform: scale(1.08);
+      }
+
+      .qty-display {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        min-width: 60px;
+        text-align: center;
+      }
+
+      /* Summary Section */
+      .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 24px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        backdrop-filter: blur(10px);
+        margin-top: 20px;
+      }
+
+      .summary-item {
+        text-align: center;
+      }
+
+      .summary-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      #ticket-count {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--text-primary);
+      }
+
+      #total-price {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--accent-red);
+      }
+
+      /* Action Button */
+      .action-section {
+        margin-top: 28px;
+      }
+
+      #proceed-to-seats {
+        width: 100%;
+        padding: 18px 32px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--accent-red), #b91c1c);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        letter-spacing: -0.3px;
+      }
+
+      #proceed-to-seats:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(220, 38, 38, 0.45);
+      }
+
+      #proceed-to-seats:active {
+        transform: translateY(-1px);
+      }
+
+      @media (max-width: 900px) {
+        .ticket-content {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .movie-card {
+          position: static;
+        }
+
+        .ticket-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+        }
+
+        .ticket-header h1 {
+          font-size: 2.2rem;
+        }
+
+        .ticket-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
 </head>
 <body>
   <div id="header-placeholder"></div>
   <script>
-    // Load shared header from components/header.html so the navbar stays in sync
     (async () => {
       const placeholder = document.getElementById('header-placeholder');
       if (!placeholder) return;
@@ -17,7 +320,6 @@
         const res = await fetch('components/header.html');
         const html = await res.text();
         placeholder.innerHTML = html;
-        // Re-run any scripts defined inside the fetched fragment
         placeholder.querySelectorAll('script').forEach((oldScript) => {
           const s = document.createElement('script');
           if (oldScript.src) {
@@ -34,215 +336,268 @@
     })();
   </script>
 
-    <main class="container" style="padding-top:80px;padding-bottom:60px;">
-        <div style="max-width:1000px;margin:0 auto;">
-            <div class="section-header" style="margin-bottom:30px;">
-                <div>
-                    <h2>Select Ticket Quantity</h2>
-                    <p class="section-subtitle" style="margin-bottom:16px;">Choose how many tickets you'd like to purchase</p>
-                    <button onclick="window.history.back()" style="display:flex;align-items:center;gap:6px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;white-space:nowrap;">
-                        < Back
-                    </button>
-                </div>
-            </div>
+  <main>
+    <div class="ticket-container">
+      <!-- Header with Back Button -->
+      <div class="ticket-header">
+        <h1>Select Tickets</h1>
+        <button class="back-btn" onclick="window.history.back()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back
+        </button>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="ticket-content">
+        <!-- Movie Info Card -->
+        <div class="movie-card">
+          <div class="poster-wrapper">
+            <img id="selected-poster" src="assets/dune2-poster.jpg" alt="Selected Movie">
+          </div>
+          <div class="movie-details">
+            <h2 id="selected-title">Selected Movie</h2>
+            <p id="selected-info">Select a showtime to see details</p>
+          </div>
         </div>
 
-        <!-- Movie Title -->
-        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;max-width:1000px;margin-left:auto;margin-right:auto;">
-            <h3 id="selected-title" style="font-size:28px;font-weight:800;margin:0;color:var(--text-primary);">Selected Movie</h3>
+        <!-- Ticket Selection -->
+        <div class="selection-section">
+          <!-- Format Info -->
+          <div class="format-card">
+            <div class="format-label">Screen Format</div>
+            <div id="screen-format">Standard</div>
+          </div>
+
+          <!-- Ticket Type Selection -->
+          <div class="ticket-grid">
+            <!-- Adult Tickets -->
+            <div class="ticket-card">
+              <div class="ticket-header-row">
+                <div class="ticket-info">
+                  <h3>Adult</h3>
+                  <p>Ages 13+</p>
+                </div>
+              </div>
+              <div class="quantity-control">
+                <button class="qty-btn" id="adult-decrement" aria-label="Decrease adult tickets">−</button>
+                <div class="qty-display" id="adult-count">0</div>
+                <button class="qty-btn" id="adult-increment" aria-label="Increase adult tickets">+</button>
+              </div>
+            </div>
+
+            <!-- Child Tickets -->
+            <div class="ticket-card">
+              <div class="ticket-header-row">
+                <div class="ticket-info">
+                  <h3>Child</h3>
+                  <p>Ages 3-12</p>
+                </div>
+              </div>
+              <div class="quantity-control">
+                <button class="qty-btn" id="child-decrement" aria-label="Decrease child tickets">−</button>
+                <div class="qty-display" id="child-count">0</div>
+                <button class="qty-btn" id="child-increment" aria-label="Increase child tickets">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="summary-grid">
+            <div class="summary-item">
+              <div class="summary-label">Total Tickets</div>
+              <div id="ticket-count">0</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Total Price</div>
+              <div id="total-price">$0.00</div>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <div class="action-section">
+            <button id="proceed-to-seats">Select Seats</button>
+          </div>
         </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <span class="logo-thea">THEA</span><span class="logo-trum">TRUM</span>
+          </div>
+          <p>Experience cinema the way it was meant to be seen.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417a9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+              </svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h4>Movies</h4>
+          <ul>
+            <li><a href="#now-playing">Now Playing</a></li>
+            <li><a href="#coming-soon">Coming Soon</a></li>
+            <li><a href="#">Movie Formats</a></li>
+            <li><a href="#">Private Events</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Membership</h4>
+          <ul>
+            <li><a href="#">Premium Pass</a></li>
+            <li><a href="#">Rewards Program</a></li>
+            <li><a href="#">Gift Cards</a></li>
+            <li><a href="#">Corporate Sales</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Newsletter</h4>
+          <p>Get the latest movies and exclusive offers</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email">
+            <button class="btn-primary">Subscribe</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 THEATRUM. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Settings</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const screenTextEl = document.getElementById('screen-format');
+    const adultCountEl = document.getElementById('adult-count');
+    const childCountEl = document.getElementById('child-count');
+    const ticketCountEl = document.getElementById('ticket-count');
+    const totalPriceEl = document.getElementById('total-price');
+    const adultDec = document.getElementById('adult-decrement');
+    const adultInc = document.getElementById('adult-increment');
+    const childDec = document.getElementById('child-decrement');
+    const childInc = document.getElementById('child-increment');
+
+    const screenPriceMap = {
+      standard: 17,
+      '3d': 18,
+      imax: 18,
+      dolby: 16
+    };
+
+    try {
+      const rawShow = localStorage.getItem('currentShow');
+      if (rawShow) {
+        const show = JSON.parse(rawShow);
+        const titleEl = document.getElementById('selected-title');
+        const infoEl = document.getElementById('selected-info');
+        const posterEl = document.getElementById('selected-poster');
+
+        if (titleEl && show.movie) titleEl.textContent = show.movie;
+
+        if (infoEl) {
+          const parts = [];
+          if (show.date) parts.push(show.date);
+          if (show.time) parts.push(show.time);
+          if (parts.length) infoEl.textContent = parts.join(' • ');
+        }
+
+        if (posterEl && show.poster) {
+          posterEl.src = show.poster;
+          posterEl.alt = show.movie || 'Selected movie';
+        }
+      }
+    } catch (e) {
+      console.warn('Could not load previous show selection', e);
+    }
+
+    const savedScreenType = (localStorage.getItem('ticketType') || 'standard').toLowerCase();
+    const basePrice = screenPriceMap[savedScreenType] || screenPriceMap.standard;
+    const adultPrice = basePrice;
+    const childPrice = Math.max(0, basePrice - 5);
+
+    if (screenTextEl) screenTextEl.textContent = savedScreenType.toUpperCase();
+
+    let adultCount = Math.max(0, parseInt(localStorage.getItem('adultQty') || '0', 10));
+    let childCount = Math.max(0, parseInt(localStorage.getItem('childQty') || '0', 10));
+
+    const updateTotals = () => {
+      const totalTickets = adultCount + childCount;
+      const total = adultCount * adultPrice + childCount * childPrice;
+      if (adultCountEl) adultCountEl.textContent = adultCount;
+      if (childCountEl) childCountEl.textContent = childCount;
+      if (ticketCountEl) ticketCountEl.textContent = totalTickets;
+      if (totalPriceEl) totalPriceEl.textContent = `$${total.toFixed(2)}`;
+      localStorage.setItem('adultQty', adultCount);
+      localStorage.setItem('childQty', childCount);
+      localStorage.setItem('ticketQty', totalTickets);
+      const unit = totalTickets > 0 ? total / totalTickets : adultPrice;
+      localStorage.setItem('ticketUnitPrice', String(unit));
+      localStorage.setItem('ticketType', savedScreenType);
+    };
+
+    adultInc && adultInc.addEventListener('click', () => {
+      adultCount = Math.min(10, adultCount + 1);
+      updateTotals();
+    });
+    adultDec && adultDec.addEventListener('click', () => {
+      adultCount = Math.max(0, adultCount - 1);
+      updateTotals();
+    });
+    childInc && childInc.addEventListener('click', () => {
+      childCount = Math.min(10, childCount + 1);
+      updateTotals();
+    });
+    childDec && childDec.addEventListener('click', () => {
+      childCount = Math.max(0, childCount - 1);
+      updateTotals();
+    });
+
+    updateTotals();
+  </script>
+  <script src="scripts/booking.js"></script>
+</body>
+</html>
         <p id="selected-info" style="margin:0 0 24px 0;font-size:13px;color:var(--text-secondary);max-width:1000px;margin-left:auto;margin-right:auto;">Select a showtime to see details</p>
 
         <div style="display:grid;grid-template-columns:0.8fr 1.2fr;gap:32px;align-items:center;max-width:1000px;margin:0 auto;">
             <!-- Movie Poster Section -->
-            <div style="position:relative;">
-                <div style="background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.05));border-radius:12px;padding:12px;backdrop-filter:blur(10px);border:1px solid var(--border);">
-                    <img id="selected-poster" src="assets/dune2-poster.jpg" alt="Selected Movie" style="width:100%;height:auto;border-radius:8px;box-shadow:0 16px 32px rgba(0,0,0,0.3);">
-                </div>
-            </div>
 
-            <!-- Selection Section -->
-            <div style="padding:0;">
-
-                <!-- Ticket Type Summary (pulled from homepage selection) -->
-                <div style="margin-bottom:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:14px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
-                        <div>
-                            <div style="font-size:12px;color:var(--text-secondary);font-weight:700;">Screen Format</div>
-                            <div id="screen-format" style="font-size:16px;font-weight:800;color:var(--text-primary);">Standard</div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:10px;">
-                            <span style="font-size:12px;color:var(--text-secondary);font-weight:700;">Base Price</span>
-                            <span id="base-price" style="font-size:18px;font-weight:800;color:var(--accent-red);">$12.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quantity Selection -->
-                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:20px;">
-                    <label style="display:block;margin-bottom:12px;font-size:12px;color:var(--text-secondary);font-weight:700;">Select Tickets</label>
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
-                        <div style="padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg-tertiary);display:flex;flex-direction:column;gap:10px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;">
-                                <div>
-                                    <div style="font-weight:800;color:var(--text-primary);">Adult</div>
-                                    <div style="font-size:12px;color:var(--text-secondary);">Ages 13+</div>
-                                </div>
-                                <div id="adult-price" style="font-weight:800;color:var(--accent-red);">$12.00</div>
-                            </div>
-                            <div style="display:flex;align-items:center;gap:12px;">
-                                <button id="adult-decrement" class="btn-secondary" aria-label="Decrease adult tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">−</button>
-                                <div id="adult-count" style="font-size:24px;font-weight:900;min-width:40px;text-align:center;color:var(--text-primary);">0</div>
-                                <button id="adult-increment" class="btn-secondary" aria-label="Increase adult tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">+</button>
-                            </div>
-                        </div>
-
-                        <div style="padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg-tertiary);display:flex;flex-direction:column;gap:10px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;">
-                                <div>
-                                    <div style="font-weight:800;color:var(--text-primary);">Child</div>
-                                    <div style="font-size:12px;color:var(--text-secondary);">Ages 3-12</div>
-                                </div>
-                                <div id="child-price" style="font-weight:800;color:var(--accent-red);">$7.00</div>
-                            </div>
-                            <div style="display:flex;align-items:center;gap:12px;">
-                                <button id="child-decrement" class="btn-secondary" aria-label="Decrease child tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">−</button>
-                                <div id="child-count" style="font-size:24px;font-weight:900;min-width:40px;text-align:center;color:var(--text-primary);">0</div>
-                                <button id="child-increment" class="btn-secondary" aria-label="Increase child tickets" style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;font-weight:800;">+</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Totals -->
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:16px;">
-                    <div style="background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.05));border:1px solid rgba(220,38,38,0.3);border-radius:10px;padding:12px;text-align:center;">
-                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Tickets Selected</div>
-                        <div id="ticket-count" style="font-size:22px;font-weight:900;color:var(--text-primary);">1</div>
-                    </div>
-                    <div style="background:linear-gradient(135deg,rgba(220,38,38,0.15),rgba(220,38,38,0.08));border:1px solid rgba(220,38,38,0.4);border-radius:10px;padding:12px;text-align:center;">
-                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Total</div>
-                        <div id="total-price" style="font-size:26px;font-weight:900;color:var(--accent-red);">$12.00</div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div style="display:flex;gap:10px;flex-direction:column;">
-                    <button id="proceed-to-seats" class="btn-primary btn-large" style="padding:12px 28px;border-radius:6px;font-weight:700;font-size:14px;width:100%;">Select Seats</button>
-                </div>
-            </div>
-        </div>
-    </main>
-<script>
-      const screenTextEl = document.getElementById('screen-format');
-      const basePriceEl = document.getElementById('base-price');
-      const adultPriceEl = document.getElementById('adult-price');
-      const childPriceEl = document.getElementById('child-price');
-      const adultCountEl = document.getElementById('adult-count');
-      const childCountEl = document.getElementById('child-count');
-      const ticketCountEl = document.getElementById('ticket-count');
-      const totalPriceEl = document.getElementById('total-price');
-      const adultDec = document.getElementById('adult-decrement');
-      const adultInc = document.getElementById('adult-increment');
-      const childDec = document.getElementById('child-decrement');
-      const childInc = document.getElementById('child-increment');
-
-      // Price presets based on screen type selection from the homepage
-      const screenPriceMap = {
-        standard: 17,
-        '3d': 18,
-        imax: 18,
-        dolby: 16
-      };
-
-      // Populate movie details from saved selection
-      try {
-        const rawShow = localStorage.getItem('currentShow');
-        if (rawShow) {
-      const show = JSON.parse(rawShow);
-      const titleEl = document.getElementById('selected-title');
-      const infoEl = document.getElementById('selected-info');
-      const posterEl = document.getElementById('selected-poster');
-
-      if (titleEl && show.movie) titleEl.textContent = show.movie;
-
-      if (infoEl) {
-        const parts = [];
-        if (show.date) parts.push(show.date);
-        if (show.time) parts.push(show.time);
-        if (parts.length) infoEl.textContent = parts.join(' • ');
-      }
-
-      if (posterEl && show.poster) {
-        posterEl.src = show.poster;
-        posterEl.alt = show.movie || 'Selected movie';
-      }
-    }
-  } catch (e) {
-        console.warn('Could not load previous show selection', e);
-      }
-
-      // Determine base price from saved screen selection (falls back to standard)
-      const savedScreenType = (localStorage.getItem('ticketType') || 'standard').toLowerCase();
-      const basePrice = screenPriceMap[savedScreenType] || screenPriceMap.standard;
-      const adultPrice = basePrice;
-      const childPrice = Math.max(0, basePrice - 5);
-
-      // Show chosen screen/price
-      if (screenTextEl) screenTextEl.textContent = savedScreenType.toUpperCase();
-      if (basePriceEl) basePriceEl.textContent = `$${basePrice.toFixed(2)}`;
-      if (adultPriceEl) adultPriceEl.textContent = `$${adultPrice.toFixed(2)}`;
-      if (childPriceEl) childPriceEl.textContent = `$${childPrice.toFixed(2)}`;
-
-      // Initialize counts
-      let adultCount = Math.max(0, parseInt(localStorage.getItem('adultQty') || '0', 10));
-      let childCount = Math.max(0, parseInt(localStorage.getItem('childQty') || '0', 10));
-
-      const updateTotals = () => {
-        const totalTickets = adultCount + childCount;
-        const total = adultCount * adultPrice + childCount * childPrice;
-        if (adultCountEl) adultCountEl.textContent = adultCount;
-        if (childCountEl) childCountEl.textContent = childCount;
-        if (ticketCountEl) ticketCountEl.textContent = totalTickets;
-        if (totalPriceEl) totalPriceEl.textContent = `$${total.toFixed(2)}`;
-        // Persist for seat selection and checkout compatibility
-        localStorage.setItem('adultQty', adultCount);
-        localStorage.setItem('childQty', childCount);
-        localStorage.setItem('ticketQty', totalTickets);
-        // Use blended unit price to keep downstream totals consistent
-        const unit = totalTickets > 0 ? total / totalTickets : adultPrice;
-        localStorage.setItem('ticketUnitPrice', String(unit));
-        localStorage.setItem('ticketType', savedScreenType);
-      };
-
-      adultInc &&
-        adultInc.addEventListener('click', () => {
-          adultCount = Math.min(10, adultCount + 1);
-          updateTotals();
-        });
-      adultDec &&
-        adultDec.addEventListener('click', () => {
-          adultCount = Math.max(0, adultCount - 1);
-          updateTotals();
-        });
-      childInc &&
-        childInc.addEventListener('click', () => {
-          childCount = Math.min(10, childCount + 1);
-          updateTotals();
-        });
-      childDec &&
-        childDec.addEventListener('click', () => {
-          childCount = Math.max(0, childCount - 1);
-          updateTotals();
-        });
-
-      // Initialize totals on load
-      updateTotals();
-</script>
-<script src="scripts/booking.js"></script>
-
-  <div id="footer-placeholder"></div>
-  <script src="scripts/load-footer.js"></script>
 </body>
 </html>
 
